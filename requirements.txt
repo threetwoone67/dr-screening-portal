@@ -1,12 +1,15 @@
 fastapi
 uvicorn
 python-multipart
-torch==2.2.2
-torchvision==0.17.2
+
+torch==2.1.2
+torchvision==0.16.2
+
 timm==1.0.7
 pillow
 numpy==1.26.4
 opencv-python-headless
 huggingface_hub
+
 tensorflow-cpu==2.15.0
 keras==2.15.0
