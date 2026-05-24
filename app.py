@@ -4,13 +4,14 @@ import os
 import base64
 import time
 from typing import Dict, Any, Tuple, Optional, List
+from huggingface_hub import hf_hub_download
 
 import cv2
 import numpy as np
 try:
     import keras
 except Exception:
-    from tensorflow import keras
+     from tensorflow import keras
 import torch
 import torch.nn.functional as F
 import timm
@@ -38,33 +39,24 @@ except Exception:
 # - "medical" = ใช้ Grad-CAM จริง แต่ช้ากว่า
 GRADCAM_MODE = os.getenv("GRADCAM_MODE", "fast").lower()
 
-def find_first_existing(paths: List[str], default_path: str) -> str:
-    for path in paths:
-        if os.path.exists(path):
-            return path
-    return default_path
+# =========================
+# DOWNLOAD MODELS FROM HUGGING FACE
+# =========================
 
+BINARY_PATH = hf_hub_download(
+    repo_id="threewoone67-dr/dr-binary-classifier",
+    filename="binary_model.pth"
+)
 
-BINARY_PATH = find_first_existing([
-    "models/binary_model.pth",
-    "binary_model.pth",
-], "models/binary_model.pth")
+SEVERITY_PATH = hf_hub_download(
+    repo_id="threewoone67-dr/dr-severity-classifier",
+    filename="severity_model.pth"
+)
 
-SEVERITY_PATH = find_first_existing([
-    "models/severity_model.pth",
-    "severity_model.pth",
-], "models/severity_model.pth")
-
-# ใช้โมเดลแยกตาซ้าย/ขวา .h5 ตัวใหม่ก่อน ถ้าไม่เจอค่อย fallback ไปชื่อเดิม
-EYE_MODEL_PATH = find_first_existing([
-    "models/eye_classifier_accuracy_95 (1).h5",
-    "models/eye_classifier_accuracy_95.h5",
-    "models/eye_classifier_final.h5",
-    "eye_classifier_accuracy_95 (1).h5",
-    "eye_classifier_accuracy_95.h5",
-    "eye_classifier_final.h5",
-], "models/eye_classifier_accuracy_95 (1).h5")
-
+EYE_MODEL_PATH = hf_hub_download(
+    repo_id="threewoone67-dr/dr-eye-side-classifier",
+    filename="eye_classifier_accuracy_95 (1).h5"
+)
 # ค่า default: output 0 = Left Eye, output 1 = Right Eye
 # ถ้าโมเดล .h5 เป็น sigmoid 1 output จะตีความว่า <0.5 = Left Eye, >=0.5 = Right Eye
 EYE_LABELS = ["Left Eye", "Right Eye"]
