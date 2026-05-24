@@ -3,6 +3,7 @@ import json
 import os
 import base64
 import time
+import threading
 from typing import Dict, Any, Tuple, Optional, List
 from huggingface_hub import hf_hub_download
 
@@ -40,48 +41,38 @@ except Exception:
 GRADCAM_MODE = os.getenv("GRADCAM_MODE", "fast").lower()
 
 # =========================
-# DOWNLOAD MODELS FROM HUGGING FACE
+# MODEL / CONFIG GLOBALS
 # =========================
+# สำคัญสำหรับ Render:
+# ห้าม download/load model ตอน import ไฟล์ เพราะ Render จะยังหา port ไม่เจอ
+# เราจะให้ FastAPI เปิด port ก่อน แล้วค่อยโหลดโมเดลแบบ background
+BINARY_PATH = ""
+SEVERITY_PATH = ""
+EYE_MODEL_PATH = ""
 
-BINARY_PATH = hf_hub_download(
-    repo_id="threewoone67-dr/dr-binary-classifier",
-    filename="binary_model.pth"
-)
-
-SEVERITY_PATH = hf_hub_download(
-    repo_id="threewoone67-dr/dr-severity-classifier",
-    filename="severity_model.pth"
-)
-
-EYE_MODEL_PATH = hf_hub_download(
-    repo_id="threewoone67-dr/dr-eye-side-classifier",
-    filename="eye_classifier_accuracy_95 (1).h5"
-)
-# ค่า default: output 0 = Left Eye, output 1 = Right Eye
-# ถ้าโมเดล .h5 เป็น sigmoid 1 output จะตีความว่า <0.5 = Left Eye, >=0.5 = Right Eye
 EYE_LABELS = ["Left Eye", "Right Eye"]
 
-# =========================
-# CONFIG
-# =========================
-with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-    config = json.load(f)
+config = {}
+IMG_SIZE = 224
+MEAN = [0.485, 0.456, 0.406]
+STD = [0.229, 0.224, 0.225]
 
-IMG_SIZE = int(config["img_size"])
-MEAN = config["normalization"]["mean"]
-STD = config["normalization"]["std"]
+binary_cfg = {}
+severity_cfg = {}
 
-binary_cfg = config["binary"]
-severity_cfg = config["severity"]
+binary_names = ["No_DR", "DR"]
+severity_names = ["No_DR", "Mild", "Moderate", "Severe", "PDR"]
 
-binary_names = binary_cfg.get("target_names", ["No_DR", "DR"])
-severity_names = severity_cfg.get("target_names", ["No_DR", "Mild", "Moderate", "Severe", "PDR"])
+transform = None
 
-transform = transforms.Compose([
-    transforms.Resize((IMG_SIZE, IMG_SIZE)),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=MEAN, std=STD),
-])
+binary_model = None
+severity_model = None
+eye_model = None
+
+MODEL_READY = False
+MODEL_LOADING = False
+MODEL_ERROR = ""
+MODEL_LOCK = threading.Lock()
 
 # =========================
 # CHECKPOINT LOADER
@@ -236,46 +227,143 @@ def load_torch_model(model_path: str, model_name: str, num_classes: int, name: s
     return model
 
 
-binary_model = load_torch_model(
-    BINARY_PATH,
-    binary_cfg["model_name"],
-    int(binary_cfg["num_classes"]),
-    name="BINARY"
-)
-
-severity_model = load_torch_model(
-    SEVERITY_PATH,
-    severity_cfg["model_name"],
-    int(severity_cfg["num_classes"]),
-    name="SEVERITY"
-)
 
 # =========================
-# EYE MODEL
+# MODEL LOADING / WARMUP
 # =========================
-eye_model = None
-try:
-    print("\n===== LOADING EYE MODEL =====")
-    print("EYE MODEL PATH =", EYE_MODEL_PATH)
-    print("EYE EXISTS =", os.path.exists(EYE_MODEL_PATH))
+def load_all_models():
+    """โหลด config + download Hugging Face models + โหลดโมเดลทั้งหมด
 
-    if os.path.exists(EYE_MODEL_PATH):
-        eye_model = keras.models.load_model(EYE_MODEL_PATH, compile=False)
-        print("EYE MODEL LOADED OK")
-    else:
-        print("EYE MODEL NOT FOUND")
+    ฟังก์ชันนี้ถูกเรียกแบบ background หลัง FastAPI เปิด port แล้ว
+    เพื่อแก้ปัญหา Render ขึ้น "No open ports detected"
+    """
+    global BINARY_PATH, SEVERITY_PATH, EYE_MODEL_PATH
+    global config, IMG_SIZE, MEAN, STD, binary_cfg, severity_cfg
+    global binary_names, severity_names, transform
+    global binary_model, severity_model, eye_model
+    global MODEL_READY, MODEL_LOADING, MODEL_ERROR
 
-except Exception as e:
-    print("EYE MODEL LOAD ERROR:", e)
-    eye_model = None
+    with MODEL_LOCK:
+        if MODEL_READY:
+            return True
+        if MODEL_LOADING:
+            return False
+        MODEL_LOADING = True
+        MODEL_ERROR = ""
 
-
-# =========================
-# WARMUP
-# =========================
-def warmup_models():
-    """รัน dummy inference 1 รอบตอนเปิด server เพื่อลด delay รอบแรก"""
     try:
+        print("===== START LOADING CONFIG / MODELS =====")
+
+        with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+            config = json.load(f)
+
+        IMG_SIZE = int(config["img_size"])
+        MEAN = config["normalization"]["mean"]
+        STD = config["normalization"]["std"]
+
+        binary_cfg = config["binary"]
+        severity_cfg = config["severity"]
+
+        binary_names = binary_cfg.get("target_names", ["No_DR", "DR"])
+        severity_names = severity_cfg.get("target_names", ["No_DR", "Mild", "Moderate", "Severe", "PDR"])
+
+        transform = transforms.Compose([
+            transforms.Resize((IMG_SIZE, IMG_SIZE)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=MEAN, std=STD),
+        ])
+
+        print("===== DOWNLOADING MODELS FROM HUGGING FACE =====")
+        BINARY_PATH = hf_hub_download(
+            repo_id="threewoone67-dr/dr-binary-classifier",
+            filename="binary_model.pth"
+        )
+
+        SEVERITY_PATH = hf_hub_download(
+            repo_id="threewoone67-dr/dr-severity-classifier",
+            filename="severity_model.pth"
+        )
+
+        EYE_MODEL_PATH = hf_hub_download(
+            repo_id="threewoone67-dr/dr-eye-side-classifier",
+            filename="eye_classifier_accuracy_95 (1).h5"
+        )
+
+        binary_model = load_torch_model(
+            BINARY_PATH,
+            binary_cfg["model_name"],
+            int(binary_cfg["num_classes"]),
+            name="BINARY"
+        )
+
+        severity_model = load_torch_model(
+            SEVERITY_PATH,
+            severity_cfg["model_name"],
+            int(severity_cfg["num_classes"]),
+            name="SEVERITY"
+        )
+
+        print("\n===== LOADING EYE MODEL =====")
+        print("EYE MODEL PATH =", EYE_MODEL_PATH)
+        print("EYE EXISTS =", os.path.exists(EYE_MODEL_PATH))
+
+        if os.path.exists(EYE_MODEL_PATH):
+            eye_model = keras.models.load_model(EYE_MODEL_PATH, compile=False)
+            print("EYE MODEL LOADED OK")
+        else:
+            print("EYE MODEL NOT FOUND")
+            eye_model = None
+
+        warmup_models()
+
+        with MODEL_LOCK:
+            MODEL_READY = True
+            MODEL_LOADING = False
+            MODEL_ERROR = ""
+
+        print("===== ALL MODELS READY =====")
+        return True
+
+    except Exception as e:
+        with MODEL_LOCK:
+            MODEL_READY = False
+            MODEL_LOADING = False
+            MODEL_ERROR = str(e)
+        print("MODEL LOAD ERROR:", e)
+        return False
+
+
+def start_model_loading_background():
+    thread = threading.Thread(target=load_all_models, daemon=True)
+    thread.start()
+
+
+def ensure_models_ready(timeout_sec: int = 600):
+    """รอโมเดลโหลดก่อน predict ถ้ายังไม่พร้อม"""
+    start = time.time()
+
+    if not MODEL_READY and not MODEL_LOADING:
+        start_model_loading_background()
+
+    while not MODEL_READY:
+        if MODEL_ERROR:
+            raise RuntimeError(f"Model loading failed: {MODEL_ERROR}")
+
+        if time.time() - start > timeout_sec:
+            raise TimeoutError("Model loading timeout")
+
+        time.sleep(1)
+
+    return True
+
+
+def warmup_models():
+    """รัน dummy inference 1 รอบเพื่อลด delay รอบแรก"""
+    try:
+        if binary_model is None or severity_model is None or transform is None:
+            print("MODEL WARMUP SKIPPED: models not ready")
+            return
+
         dummy_pil = Image.new("RGB", (IMG_SIZE, IMG_SIZE), (0, 0, 0))
         dummy_tensor = preprocess_image(dummy_pil).to(DEVICE)
 
@@ -307,6 +395,8 @@ app.add_middleware(
 
 
 def preprocess_image(image: Image.Image):
+    if transform is None:
+        raise RuntimeError("Image transform is not ready")
     image = image.convert("RGB")
     return transform(image).unsqueeze(0)
 
@@ -478,8 +568,9 @@ def make_medical_gradcam(image: Image.Image, model, target_class: int):
 
 
 @app.on_event("startup")
-def _startup_warmup():
-    warmup_models()
+def _startup_load_models_background():
+    # เปิด port ให้ Render เห็นก่อน แล้วโหลดโมเดลต่อใน background
+    start_model_loading_background()
 
 
 @app.get("/")
@@ -490,6 +581,10 @@ def root():
 @app.get("/model-status")
 def model_status():
     return {
+        "status": "ready" if MODEL_READY else ("loading" if MODEL_LOADING else "not_ready"),
+        "ready": MODEL_READY,
+        "loading": MODEL_LOADING,
+        "error": MODEL_ERROR,
         "binary_model": {
             "path": BINARY_PATH,
             "loaded": binary_model is not None,
@@ -513,6 +608,7 @@ async def predict(
     file: UploadFile = File(...),
     gradcam: str = Query(default=GRADCAM_MODE)
 ):
+    ensure_models_ready()
     total_t0 = time.perf_counter()
 
     # -------------------------
@@ -641,4 +737,5 @@ async def predict(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run(app, host="0.0.0.0", port=port)
