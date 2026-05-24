@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+torch
+torchvision
+timm
+pillow
+numpy==1.26.4
+python-multipart
+opencv-python-headless
+tensorflow==2.17.0
+keras==3.5.0

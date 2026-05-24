@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings | DR Screening Portal</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="language.js"></script>
+<script src="auth.js"></script>
+<script src="settings-global.js"></script>
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#f3f7ff;--card:#fff;--text:#122b4d;--muted:#607895;--border:#e5edf8;
+  --primary:#2f5be8;--primary2:#1d4ed8;--shadow:0 8px 28px rgba(29,78,216,.06);
+  --side:#fff;--soft:#f8fbff;
+}
+[data-theme="dark"]{
+  --bg:#07111f;--card:#101c2e;--text:#eaf2ff;--muted:#9fb3cc;--border:#223552;
+  --primary:#6285ff;--primary2:#3158ff;--shadow:0 8px 28px rgba(0,0,0,.28);
+  --side:#081425;--soft:#16243a;
+}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"Noto Sans Thai",Inter,system-ui,'Segoe UI',sans-serif;
+  transition:.2s background,.2s color;
+}
+a{text-decoration:none;color:inherit}
+button,select{font-family:inherit}
+
+/* SIDEBAR STANDARD */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:260px;
+  background:var(--side);border-right:1px solid var(--border);
+  padding:22px 16px;display:flex;flex-direction:column;justify-content:space-between;
+  overflow-y:auto;box-shadow:8px 0 30px rgba(15,43,76,.04);z-index:10;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  padding:4px 4px 18px;margin-bottom:14px;border-bottom:1px solid var(--border);
+}
+.brand-logo{
+  width:52px;height:52px;border-radius:16px;background:#fff;border:1px solid var(--border);
+  display:grid;place-items:center;overflow:hidden;box-shadow:0 8px 18px rgba(36,72,216,.10);flex:0 0 auto;
+}
+.brand-logo img{width:48px;height:48px;object-fit:contain}
+.brand-logo-fallback{display:none;font-weight:950;color:#2448d8}
+.brand-title{font-size:17px;font-weight:950;line-height:1.1;color:#2448d8}
+.brand-sub{font-size:11px;color:var(--muted);font-weight:800;margin-top:4px}
+.nav{display:flex;flex-direction:column;gap:7px}
+.nav-group{font-size:11px;color:#94a3b8;font-weight:950;margin:10px 12px 2px}
+.nav a{
+  min-height:42px;border-radius:14px;padding:9px 12px;display:flex;align-items:center;gap:10px;
+  color:#526174;font-size:14px;font-weight:900;transition:.15s;
+}
+.nav a .ico{width:22px;text-align:center;flex:0 0 auto}
+.nav a:hover{background:#eef4ff;color:#2448d8}
+.nav a.active{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 12px 26px rgba(64,89,232,.24)}
+.side-foot{display:flex;flex-direction:column;gap:12px;padding-top:18px}
+.kmutnb-card{
+  display:flex;gap:10px;align-items:center;padding:13px;border-radius:16px;
+  background:var(--soft);border:1px solid var(--border);
+}
+.kmutnb-logo{
+  width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid #f2c8c8;
+  display:grid;place-items:center;overflow:hidden;flex:0 0 auto;
+}
+.kmutnb-logo img{width:40px;height:40px;object-fit:contain}
+.kmutnb-fallback{display:none;color:#b71c1c;font-weight:950;font-size:12px}
+.kmutnb-text b{display:block;font-size:12px;line-height:1.3;color:var(--text)}
+.kmutnb-text span{display:block;font-size:11px;line-height:1.35;color:var(--muted);margin-top:3px}
+.logout{
+  width:100%;border:1px solid #fecaca;background:#fff5f5;color:#dc2626;
+  border-radius:14px;padding:12px 14px;font-weight:950;cursor:pointer;
+}
+.logout:hover{background:#fee2e2}
+
+main{padding:34px;max-width:1240px;margin-left:260px}
+h1{font-size:34px;margin:6px 0}.muted{color:var(--muted)}
+.hero{background:linear-gradient(135deg,#4169f2,#1d4ed8);color:white;border-radius:24px;padding:32px;margin:24px 0;box-shadow:0 18px 42px rgba(47,91,232,.18)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow)}
+.card h2{margin-top:0}select,button{border:1px solid var(--border);border-radius:14px;padding:12px 14px;font-weight:900}select{width:100%;background:var(--card);color:var(--text)}button{background:var(--primary);color:white;cursor:pointer}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.pill{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:rgba(47,91,232,.1);color:var(--primary);font-weight:800}.status{margin-top:12px;font-size:14px}
+
+/* dark fine tune */
+[data-theme="dark"] .brand-logo,[data-theme="dark"] .kmutnb-logo{background:#0c1829;border-color:var(--border)}
+[data-theme="dark"] .nav a{color:#cbd5e1}
+[data-theme="dark"] .nav a:hover{background:#1e293b;color:#93c5fd}
+[data-theme="dark"] .logout{background:#172033;border-color:#7f1d1d;color:#fca5a5}
+@media(max-width:900px){
+  .sidebar{position:static;width:100%;height:auto}
+  main{margin-left:0;padding:22px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div>
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="logo-new.jpg" alt="DR Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <span class="brand-logo-fallback">DR</span>
+      </div>
+      <div>
+        <div class="brand-title">Diabetic<br>Retinopathy</div>
+        <div class="brand-sub">DR Screening Portal</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="dashboard.html"><span class="ico">🏠</span><span data-i18n="navHome">หน้าหลัก</span></a>
+      <a href="user.html"><span class="ico">👤</span><span data-i18n="navUser">บัญชีผู้ใช้</span></a>
+      <a href="patients.html"><span class="ico">👥</span><span data-i18n="navPatients">ข้อมูลผู้ป่วย</span></a>
+      <div class="nav-group" data-i18n="navScreeningGroup">การตรวจ</div>
+      <a href="create-patient.html"><span class="ico">➕</span><span data-i18n="navCreate">สร้างคนไข้ใหม่</span></a>
+      <a href="retina-analysis.html"><span class="ico">🔬</span><span data-i18n="navAnalysis">วิเคราะห์จอประสาทตา</span></a>
+      <a href="retina-report-new.html"><span class="ico">📄</span><span data-i18n="navReport">รายงานผล</span></a>
+      <a href="appointment-followup.html"><span class="ico">📅</span><span data-i18n="navAppointment">การนัดหมาย</span></a>
+      <a href="patient-transfer.html"><span class="ico">🔁</span><span data-i18n="navTransfer">โอนย้ายผู้ป่วย</span></a>
+      <a href="knowledge-dr.html"><span class="ico">💡</span><span data-i18n="navKnowledge">เกร็ดความรู้</span></a>
+      <a href="screening-history.html"><span class="ico">🕘</span><span data-i18n="navHistory">ประวัติการตรวจ</span></a>
+      <a class="active" href="settings.html"><span class="ico">⚙️</span><span data-i18n="navSettings">ตั้งค่า</span></a>
+    </nav>
+  </div>
+
+  <div class="side-foot">
+    <div class="kmutnb-card">
+      <div class="kmutnb-logo">
+        <img src="institution-logo.png" alt="KMUTNB Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <span class="kmutnb-fallback">มจพ</span>
+      </div>
+      <div class="kmutnb-text">
+        <b data-i18n="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</b>
+        <span data-i18n="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</span>
+      </div>
+    </div>
+    <button class="logout" id="logoutBtn" type="button" data-i18n="logout">ออกจากระบบ</button>
+  </div>
+</aside>
+
+<main>
+  <div class="muted" data-i18n="settingsBreadcrumb">Settings / System</div>
+  <h1 data-i18n="settingsTitle">ตั้งค่าระบบ</h1>
+  <p class="muted" data-i18n="settingsDesc">จัดการภาษา โหมดการแสดงผล และข้อมูลพื้นฐานของระบบ</p>
+
+  <section class="hero">
+    <h2 data-i18n="settingsTitle">ตั้งค่าระบบ</h2>
+    <p data-i18n="settingsDesc">จัดการภาษา โหมดการแสดงผล และข้อมูลพื้นฐานของระบบ</p>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <div class="row"><h2 data-i18n="language">ภาษา</h2><span class="pill" id="languageStatus">ไทย</span></div>
+      <select id="languageSelect" data-language-select aria-label="Language">
+        <option value="th">ไทย</option>
+        <option value="en">English</option>
+      </select>
+      <p class="muted status" data-i18n="languageHelp">เมื่อเปลี่ยนภาษา ระบบจะจำค่าและใช้กับทุกหน้า</p>
+    </div>
+
+    <div class="card">
+      <div class="row"><h2 data-i18n="theme">โหมดมืด-สว่าง</h2><span class="pill" id="themeStatus">Light</span></div>
+      <button id="themeToggleBtn" type="button"><span data-theme-label>โหมดมืด</span></button>
+      <p class="muted status" data-i18n="themeHelp">เมื่อเปลี่ยนโหมด ระบบจะจำค่าและใช้กับทุกหน้า</p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="systemInfo">ข้อมูลระบบ</h2>
+      <p><b>DR Screening Portal</b></p>
+      <p class="muted">Supabase · <span data-i18n="ready">พร้อมใช้งาน</span></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="organization">หน่วยงาน</h2>
+      <p id="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</p>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  const LANG_KEYS=["dr_lang","dr_language","language","site_language","dr_dashboard_language"];
+  const DICT={
+    th:{
+      navHome:"หน้าหลัก",navUser:"บัญชีผู้ใช้",navPatients:"ข้อมูลผู้ป่วย",navScreeningGroup:"การตรวจ",
+      navCreate:"สร้างคนไข้ใหม่",navAnalysis:"วิเคราะห์จอประสาทตา",navReport:"รายงานผล",navAppointment:"การนัดหมาย",
+      navTransfer:"โอนย้ายผู้ป่วย",navKnowledge:"เกร็ดความรู้",navHistory:"ประวัติการตรวจ",navSettings:"ตั้งค่า",
+      orgName:"มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ",orgSub:"ระบบตรวจคัดกรองจอประสาทตาเบาหวาน",
+      logout:"ออกจากระบบ",settingsBreadcrumb:"ตั้งค่า / ระบบ",settingsTitle:"ตั้งค่าระบบ",
+      settingsDesc:"จัดการภาษา โหมดการแสดงผล และข้อมูลพื้นฐานของระบบ",
+      language:"ภาษา",languageHelp:"เมื่อเปลี่ยนภาษา ระบบจะจำค่าและใช้กับทุกหน้า",
+      theme:"โหมดมืด-สว่าง",themeHelp:"เมื่อเปลี่ยนโหมด ระบบจะจำค่าและใช้กับทุกหน้า",
+      darkMode:"โหมดมืด",lightMode:"โหมดสว่าง",systemInfo:"ข้อมูลระบบ",ready:"พร้อมใช้งาน",organization:"หน่วยงาน"
+    },
+    en:{
+      navHome:"Home",navUser:"User Account",navPatients:"Patient Information",navScreeningGroup:"Screening",
+      navCreate:"Create New Patient",navAnalysis:"Retina Analysis",navReport:"Report",navAppointment:"Appointment",
+      navTransfer:"Patient Transfer",navKnowledge:"Knowledge",navHistory:"Screening History",navSettings:"Settings",
+      orgName:"King Mongkut's University of Technology North Bangkok",orgSub:"Diabetic Retinopathy Screening System",
+      logout:"Logout",settingsBreadcrumb:"Settings / System",settingsTitle:"System Settings",
+      settingsDesc:"Manage language, display mode, and system information",
+      language:"Language",languageHelp:"Language changes are saved and applied across pages.",
+      theme:"Dark / Light Mode",themeHelp:"Display mode changes are saved and applied across pages.",
+      darkMode:"Dark mode",lightMode:"Light mode",systemInfo:"System Information",ready:"Ready",organization:"Organization"
+    }
+  };
+  function getLang(){
+    const v=(localStorage.getItem("dr_lang")||localStorage.getItem("dr_language")||localStorage.getItem("language")||localStorage.getItem("site_language")||localStorage.getItem("dr_dashboard_language")||"th").toLowerCase();
+    return v.startsWith("en") ? "en" : "th";
+  }
+  function setLang(v){
+    const lang=String(v||"th").toLowerCase().startsWith("en") ? "en" : "th";
+    LANG_KEYS.forEach(k=>localStorage.setItem(k,lang));
+    applyLanguage();
+    try{ if(window.applyLanguage && window.applyLanguage!==applyLanguage) window.applyLanguage(); }catch(e){}
+  }
+  function t(k){const lang=getLang();return (DICT[lang]&&DICT[lang][k])||(window.t&&window.t(k))||DICT.th[k]||k}
+  function applyLanguage(){
+    const lang=getLang();
+    document.documentElement.lang=lang;
+    document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder)});
+    document.querySelectorAll("[data-language-select], #languageSelect").forEach(sel=>{sel.value=lang});
+    const status=document.getElementById("languageStatus"); if(status) status.textContent=lang==="en"?"English":"ไทย";
+    const org=document.getElementById("orgName"); if(org) org.textContent=t("orgName");
+    updateThemeText();
+  }
+  function getTheme(){return (localStorage.getItem("dr_theme")||localStorage.getItem("dr_dashboard_theme")||"light")==="dark"?"dark":"light"}
+  function setTheme(theme){
+    theme=theme==="dark"?"dark":"light";
+    localStorage.setItem("dr_theme",theme);
+    localStorage.setItem("dr_dashboard_theme",theme);
+    if(window.DR_SETTINGS&&DR_SETTINGS.setTheme) DR_SETTINGS.setTheme(theme);
+    applyTheme();
+  }
+  function applyTheme(){
+    const theme=getTheme();
+    document.documentElement.setAttribute("data-theme",theme);
+    document.body.classList.toggle("dark-mode",theme==="dark");
+    document.body.classList.toggle("light-mode",theme!=="dark");
+    updateThemeText();
+  }
+  function updateThemeText(){
+    const theme=getTheme();
+    const status=document.getElementById("themeStatus"); if(status) status.textContent=theme==="dark"?"Dark":"Light";
+    document.querySelectorAll("[data-theme-label]").forEach(el=>{el.textContent=theme==="dark"?t("lightMode"):t("darkMode")});
+  }
+  async function logout(){
+    try{
+      if(window.supabase && window.DR_CONFIG && DR_CONFIG.SUPABASE_URL && DR_CONFIG.SUPABASE_ANON_KEY){
+        const db=window.supabase.createClient(DR_CONFIG.SUPABASE_URL,DR_CONFIG.SUPABASE_ANON_KEY);
+        await db.auth.signOut();
+      }
+    }catch(e){}
+    ["dr_logged_in","dr_current_email","dr_current_name","currentUserEmail","currentUserName","userRole","dr_user","dr_session","rememberedUser"].forEach(k=>localStorage.removeItem(k));
+    Object.keys(localStorage).forEach(k=>{const x=k.toLowerCase(); if(x.includes("supabase")||x.includes("sb-")||x.includes("auth-token")) localStorage.removeItem(k);});
+    sessionStorage.clear();
+    location.href="index.html?logout=1";
+  }
+  document.addEventListener("DOMContentLoaded",async()=>{
+    try{ if(window.DR_AUTH&&typeof DR_AUTH.requireAuth==="function") await DR_AUTH.requireAuth(); }catch(e){}
+    applyTheme(); applyLanguage();
+    document.querySelectorAll("[data-language-select], #languageSelect").forEach(sel=>sel.addEventListener("change",()=>setLang(sel.value)));
+    const themeBtn=document.getElementById("themeToggleBtn"); if(themeBtn) themeBtn.addEventListener("click",()=>setTheme(getTheme()==="dark"?"light":"dark"));
+    const logoutBtn=document.getElementById("logoutBtn"); if(logoutBtn) logoutBtn.addEventListener("click",logout);
+  });
+  window.addEventListener("storage",(e)=>{
+    if(LANG_KEYS.includes(e.key)) applyLanguage();
+    if(["dr_theme","dr_dashboard_theme","theme"].includes(e.key)) applyTheme();
+  });
+  window.addEventListener("focus",()=>{applyTheme();applyLanguage();});
+  window.getLang=getLang;
+  window.setLang=setLang;
+  window.applyLanguage=applyLanguage;
+})();
+</script>
+</body>
+</html>

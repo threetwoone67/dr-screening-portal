@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Patients Management</title>
+
+<link rel="stylesheet" href="admin.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:16px;
+margin-bottom:22px;
+}
+
+.stat-card{
+background:#fff;
+border-radius:16px;
+padding:18px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.stat-card h3{
+font-size:14px;
+color:#64748b;
+margin-bottom:8px;
+}
+
+.stat-card strong{
+font-size:28px;
+color:#0f172a;
+}
+
+.chart-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:22px;
+margin-bottom:22px;
+}
+
+.chart-box{
+background:#fff;
+border-radius:18px;
+padding:22px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.chart-box canvas{
+width:100% !important;
+height:280px !important;
+}
+
+.btn-history{
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+padding:7px 12px;
+cursor:pointer;
+}
+
+.btn-delete{
+background:#dc2626;
+color:white;
+border:none;
+border-radius:8px;
+padding:7px 12px;
+cursor:pointer;
+margin-left:6px;
+}
+
+.btn-delete:hover{
+background:#b91c1c;
+}
+
+.history-modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(15,23,42,0.55);
+z-index:9999;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.history-box{
+background:#fff;
+width:100%;
+max-width:900px;
+max-height:85vh;
+overflow:auto;
+border-radius:18px;
+padding:24px;
+}
+
+.history-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+}
+
+.close-modal{
+background:#dc2626;
+color:white;
+border:none;
+border-radius:10px;
+padding:8px 14px;
+cursor:pointer;
+}
+
+.patient-info,
+.history-card{
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:16px;
+margin-bottom:14px;
+background:#f8fafc;
+}
+
+.badge-dr{
+display:inline-block;
+padding:5px 10px;
+border-radius:999px;
+background:#e0f2fe;
+color:#0369a1;
+font-weight:700;
+}
+
+@media(max-width:900px){
+.chart-grid{
+grid-template-columns:1fr;
+}
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar" id="adminSidebar"></aside>
+
+<main class="main">
+
+<section class="top">
+<div>
+<h1>บัญชีผู้ป่วย</h1>
+<p>ดูข้อมูลผู้ป่วย สถิติ และประวัติการตรวจ</p>
+</div>
+
+<div class="admin-badge">
+<strong>Admin</strong><br>
+<small id="adminEmail">กำลังโหลด...</small>
+</div>
+</section>
+
+<section class="stats-grid">
+<div class="stat-card">
+<h3>ผู้ป่วยทั้งหมด</h3>
+<strong id="totalPatients">0</strong>
+</div>
+
+<div class="stat-card">
+<h3>ชาย</h3>
+<strong id="malePatients">0</strong>
+</div>
+
+<div class="stat-card">
+<h3>หญิง</h3>
+<strong id="femalePatients">0</strong>
+</div>
+
+<div class="stat-card">
+<h3>อื่นๆ</h3>
+<strong id="otherPatients">0</strong>
+</div>
+
+<div class="stat-card">
+<h3>จำนวนการตรวจทั้งหมด</h3>
+<strong id="totalVisits">0</strong>
+</div>
+</section>
+
+<section class="chart-grid">
+<div class="chart-box">
+<h2>สถิติผู้ป่วยแยกตามเพศ</h2>
+<canvas id="genderChart"></canvas>
+</div>
+
+<div class="chart-box">
+<h2>สถิติระดับเบาหวานขึ้นจอประสาทตา</h2>
+<canvas id="drChart"></canvas>
+</div>
+</section>
+
+<section class="panel" style="margin-top:22px;">
+
+<h2>รายการผู้ป่วย</h2>
+<p>กดดูประวัติเพื่อดูข้อมูลผู้ป่วยและประวัติการตรวจ</p>
+
+<table>
+<thead>
+<tr>
+<th>ชื่อ</th>
+<th>HN</th>
+<th>อายุ</th>
+<th>เพศ</th>
+<th>รหัสผู้ป่วย</th>
+<th>จัดการ</th>
+</tr>
+</thead>
+
+<tbody id="patientsTable">
+<tr>
+<td colspan="6" style="text-align:center;color:#64748b;">
+กำลังโหลดข้อมูล...
+</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+</main>
+
+<div class="history-modal" id="historyModal">
+<div class="history-box">
+
+<div class="history-header">
+<h2 id="historyTitle">ประวัติการตรวจ</h2>
+<button class="close-modal" onclick="closeHistoryModal()">ปิด</button>
+</div>
+
+<div id="historyContent"></div>
+
+</div>
+</div>
+
+<script src="admin-core.js"></script>
+
+<script>
+let genderChartObj = null;
+let drChartObj = null;
+
+
+// โหลดประวัติการตรวจจาก Supabase table analysis_reports แทน visits
+async function loadVisitsFromSupabase() {
+  try {
+    let { data, error } = await supabaseClient
+      .from("analysis_reports")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.warn("load analysis_reports error, fallback visits:", error);
+      const fallback = await supabaseClient
+        .from("visits")
+        .select("*")
+        .order("id", { ascending: false });
+      data = fallback.data || [];
+      error = fallback.error;
+    }
+
+    if (error) throw error;
+    visits = Array.isArray(data) ? data : [];
+    console.log("VISITS DATA =", visits);
+  } catch (err) {
+    console.error("load visit/report history failed:", err);
+    visits = [];
+  }
+}
+
+
+renderSidebar("patients");
+applySavedTheme();
+startAdminPatientsPage();
+
+async function startAdminPatientsPage(){
+const ok = await checkAdmin();
+if(!ok) return;
+await startPage();
+}
+
+async function startPage(){
+
+document.getElementById("patientsTable").innerHTML = `
+<tr>
+<td colspan="6" style="text-align:center;color:#64748b;">
+กำลังโหลดข้อมูล...
+</td>
+</tr>
+`;
+
+await loadPatientsFromSupabase();
+await loadVisitsFromSupabase();
+
+renderPatients();
+renderStats();
+renderCharts();
+applyAdminLanguage("patients");
+}
+
+function getPatientName(patient){
+return patient.full_name || patient.name || "-";
+}
+
+function getPatientHN(patient){
+return patient.hn || patient.patient_code || "-";
+}
+
+function getPatientCode(patient){
+return patient.patient_code || "-";
+}
+
+function getPatientSexText(patient){
+const sex = patient.sex || patient.gender || "-";
+
+if(sex === "Male" || sex === "ชาย") return "ชาย";
+if(sex === "Female" || sex === "หญิง") return "หญิง";
+if(sex === "Other" || sex === "อื่นๆ") return "อื่นๆ";
+
+return sex;
+}
+
+function getPatientSexRaw(patient){
+const sex = patient.sex || patient.gender || "";
+
+if(sex === "Male" || sex === "ชาย") return "male";
+if(sex === "Female" || sex === "หญิง") return "female";
+if(sex === "Other" || sex === "อื่นๆ") return "other";
+
+return "other";
+}
+
+function renderPatients(){
+
+const table = document.getElementById("patientsTable");
+table.innerHTML = "";
+
+if(!patients || patients.length === 0){
+table.innerHTML = `
+<tr>
+<td colspan="6" style="text-align:center;color:#64748b;">
+ยังไม่มีข้อมูลผู้ป่วย
+</td>
+</tr>
+`;
+return;
+}
+
+patients.forEach((patient,index)=>{
+table.innerHTML += `
+<tr>
+<td>${getPatientName(patient)}</td>
+<td>${getPatientHN(patient)}</td>
+<td>${patient.age || "-"}</td>
+<td>${getPatientSexText(patient)}</td>
+<td>${getPatientCode(patient)}</td>
+<td>
+<button class="btn-history" onclick="viewPatientHistory(${index})">
+ดูประวัติ
+</button>
+
+<button class="btn-delete" onclick="deletePatient(${index})">
+ลบ
+</button>
+</td>
+</tr>
+`;
+});
+}
+
+function renderStats(){
+
+const male = patients.filter(p => getPatientSexRaw(p) === "male").length;
+const female = patients.filter(p => getPatientSexRaw(p) === "female").length;
+const other = patients.filter(p => getPatientSexRaw(p) === "other").length;
+
+document.getElementById("totalPatients").textContent = patients.length;
+document.getElementById("malePatients").textContent = male;
+document.getElementById("femalePatients").textContent = female;
+document.getElementById("otherPatients").textContent = other;
+document.getElementById("totalVisits").textContent = visits.length;
+}
+
+function getSeverityValue(visit){
+
+const reportData = visit.report_data || {};
+
+const raw = String(
+visit.severity_result ??
+visit.binary_result ??
+visit.overall_result ??
+reportData.overall_result ??
+reportData.severity_result ??
+visit.severity_level ??
+visit.severity ??
+visit.dr_level ??
+visit.drLevel ??
+visit.level ??
+visit.prediction ??
+visit.result ??
+visit.diagnosis ??
+visit.final_result ??
+""
+).toLowerCase();
+
+if(raw === "0" || raw.includes("no dr") || raw.includes("normal") || raw.includes("ปกติ") || raw.includes("ไม่มี")) return 0;
+if(raw === "1" || raw.includes("mild")) return 1;
+if(raw === "2" || raw.includes("moderate")) return 2;
+if(raw === "3" || raw.includes("severe")) return 3;
+if(raw === "4" || raw.includes("pdr") || raw.includes("proliferative")) return 4;
+
+return null;
+}
+
+function renderCharts(){
+
+const male = patients.filter(p => getPatientSexRaw(p) === "male").length;
+const female = patients.filter(p => getPatientSexRaw(p) === "female").length;
+const other = patients.filter(p => getPatientSexRaw(p) === "other").length;
+
+const drCounts = [0,0,0,0,0];
+
+visits.forEach(v=>{
+const level = getSeverityValue(v);
+if(level !== null){
+drCounts[level]++;
+}
+});
+
+if(genderChartObj){
+genderChartObj.destroy();
+}
+
+if(drChartObj){
+drChartObj.destroy();
+}
+
+genderChartObj = new Chart(document.getElementById("genderChart"), {
+type:"doughnut",
+data:{
+labels:["ชาย","หญิง","อื่นๆ"],
+datasets:[{
+data:[male,female,other]
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+});
+
+drChartObj = new Chart(document.getElementById("drChart"), {
+type:"bar",
+data:{
+labels:[
+"0 No DR",
+"1 Mild",
+"2 Moderate",
+"3 Severe",
+"4 PDR"
+],
+datasets:[{
+label:"จำนวนผลตรวจ",
+data:drCounts
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+scales:{
+y:{
+beginAtZero:true,
+ticks:{
+precision:0
+}
+}
+}
+}
+});
+}
+
+function findPatientVisits(patient){
+  const normalize = (v) => String(v || "").trim().toLowerCase();
+
+  const patientId = normalize(patient.id);
+  const patientHN = normalize(patient.hn);
+  const patientCode = normalize(patient.patient_code);
+  const patientName = normalize(patient.full_name || patient.name);
+
+  return visits.filter(v => {
+    const reportData = v.report_data || {};
+    const reportPatient = reportData.patient || {};
+
+    const visitPatientId = normalize(v.patient_id || v.patientId || reportPatient.id);
+    const visitHN = normalize(v.hn || v.patient_hn || v.patientHN || reportPatient.hn);
+    const visitPatientCode = normalize(v.patient_code || v.patientCode || reportPatient.patient_code);
+    const visitName = normalize(v.patient_name || v.patientName || v.full_name || v.name || reportPatient.full_name || reportPatient.name);
+
+    return (
+      (patientHN && (visitHN === patientHN || visitPatientCode === patientHN)) ||
+      (patientCode && (visitPatientCode === patientCode || visitHN === patientCode)) ||
+      (patientId && visitPatientId === patientId) ||
+      (patientName && visitName === patientName)
+    );
+  });
+}
+
+function formatVisitDate(value){
+  if(!value) return "-";
+  const d = new Date(value);
+  if(isNaN(d.getTime())) return value;
+  return d.toLocaleString("th-TH", {
+    year:"numeric", month:"short", day:"numeric",
+    hour:"2-digit", minute:"2-digit"
+  });
+}
+
+function getReportValue(visit, keys, fallback="-"){
+  const reportData = visit.report_data || {};
+  for(const key of keys){
+    if(visit[key] !== undefined && visit[key] !== null && visit[key] !== "") return visit[key];
+    if(reportData[key] !== undefined && reportData[key] !== null && reportData[key] !== "") return reportData[key];
+  }
+  return fallback;
+}
+
+function viewPatientHistory(index){
+
+const patient = patients[index];
+const patientVisits = findPatientVisits(patient);
+
+document.getElementById("historyTitle").textContent =
+"ประวัติการตรวจของ " + getPatientName(patient) + " (" + getPatientHN(patient) + ")";
+
+const box = document.getElementById("historyContent");
+
+box.innerHTML = `
+<div class="patient-info">
+<h3>ข้อมูลผู้ป่วย</h3>
+<p><strong>ชื่อ:</strong> ${getPatientName(patient)}</p>
+<p><strong>HN:</strong> ${getPatientHN(patient)}</p>
+<p><strong>รหัสผู้ป่วย:</strong> ${getPatientCode(patient)}</p>
+<p><strong>อายุ:</strong> ${patient.age || "-"}</p>
+<p><strong>เพศ:</strong> ${getPatientSexText(patient)}</p>
+</div>
+`;
+
+if(patientVisits.length === 0){
+box.innerHTML += `
+<p style="text-align:center;color:#64748b;padding:30px;">
+ยังไม่มีประวัติการตรวจของผู้ป่วยรายนี้
+</p>
+`;
+}else{
+
+patientVisits.forEach((visit,i)=>{
+
+const reportData = visit.report_data || {};
+
+const date = formatVisitDate(
+visit.created_at || visit.visit_date || visit.date || visit.createdAt || visit.time
+);
+
+const eye = getReportValue(visit, ["eye_side","eyeSide","eye","side"], "-");
+
+const severity = String(
+visit.severity_result ||
+visit.binary_result ||
+visit.overall_result ||
+reportData.overall_result ||
+reportData.severity_result ||
+visit.severity_label ||
+visit.severity ||
+visit.prediction ||
+visit.result ||
+"-"
+);
+
+const confidence = String(
+visit.severity_confidence ||
+visit.binary_confidence ||
+visit.confidence ||
+reportData.severity_confidence ||
+reportData.binary_confidence ||
+reportData.confidence ||
+"-"
+);
+
+const note = String(
+visit.note ||
+visit.clinical_note ||
+visit.doctor_note ||
+visit.recommendation ||
+reportData.note ||
+"-"
+);
+
+const reportId = visit.report_id || visit.reportId || visit.id || "-";
+
+box.innerHTML += `
+<div class="history-card">
+<h3>ครั้งที่ ${i + 1}</h3>
+<p><strong>วันที่ตรวจ:</strong> ${date}</p>
+<p><strong>เลขรายงาน:</strong> ${reportId}</p>
+<p><strong>ข้างตา:</strong> ${eye}</p>
+<p><strong>ผลวิเคราะห์:</strong> <span class="badge-dr">${severity}</span></p>
+<p><strong>ความมั่นใจ:</strong> ${confidence}</p>
+<p><strong>คำแนะนำ / หมายเหตุ:</strong> ${note}</p>
+${visit.original_image ? `
+  <div style="margin-top:12px">
+    <img 
+      src="${visit.original_image}" 
+      style="
+        width:120px;
+        height:120px;
+        object-fit:cover;
+        border-radius:12px;
+        border:1px solid #ddd;
+      "
+    />
+  </div>
+` : ""}
+<div style="margin-top:12px">
+  <a
+    href="retina-report-new.html?report_id=${reportId}&token=${visit.token || ""}"
+    target="_blank"
+    style="
+      background:#2563eb;
+      color:white;
+      padding:8px 14px;
+      border-radius:10px;
+      text-decoration:none;
+      display:inline-block;
+      font-size:14px;
+      font-weight:600;
+    "
+  >
+    เปิดรายงาน
+  </a>
+</div>
+</div>
+`;
+});
+}
+
+document.getElementById("historyModal").style.display = "flex";
+}
+
+function closeHistoryModal(){
+document.getElementById("historyModal").style.display = "none";
+}
+
+async function deletePatient(index){
+
+  const patient = patients[index];
+
+  const confirmDelete = confirm(
+    "ต้องการลบผู้ป่วย " + getPatientName(patient) + " หรือไม่?"
+  );
+
+  if(!confirmDelete) return;
+
+  // เก็บข้อมูลไว้ในหน้ากู้คืนก่อนลบจริง
+  let recoveryList = [];
+
+  try{
+    recoveryList = JSON.parse(localStorage.getItem("dr_recovery")) || [];
+  }catch(e){
+    recoveryList = [];
+  }
+
+  recoveryList.push({
+    id: Date.now(),
+    type: "patient",
+    data: patient,
+    deletedAt: new Date().toLocaleString("th-TH")
+  });
+
+  localStorage.setItem("dr_recovery", JSON.stringify(recoveryList));
+
+  // ลบจาก Supabase จริง
+  const { error } = await supabaseClient
+    .from("patients")
+    .delete()
+    .eq("id", patient.id);
+
+  if(error){
+    console.error("delete patient error:", error);
+
+    // ถ้าลบไม่สำเร็จ เอาออกจาก recovery กลับ
+    recoveryList = recoveryList.filter(item => item.data.id !== patient.id);
+    localStorage.setItem("dr_recovery", JSON.stringify(recoveryList));
+
+    alert("ลบผู้ป่วยไม่สำเร็จ อาจมีประวัติการตรวจผูกอยู่กับผู้ป่วยนี้");
+    return;
+  }
+
+  alert("ลบผู้ป่วยสำเร็จ และย้ายไปหน้ากู้คืนแล้ว");
+
+  await loadPatientsFromSupabase();
+  await loadVisitsFromSupabase();
+
+  renderPatients();
+  renderStats();
+  renderCharts();
+}
+</script>
+
+</body>
+</html>

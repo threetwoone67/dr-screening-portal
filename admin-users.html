@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>User Accounts</title>
+
+<link rel="stylesheet" href="admin.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+.user-grid{
+display:grid;
+grid-template-columns:1fr 0.85fr;
+gap:22px;
+}
+
+.chart-wrap{
+max-width:280px;
+margin:15px auto 0;
+}
+
+.stat-row{
+display:flex;
+justify-content:space-between;
+padding:13px 0;
+border-bottom:1px solid #e5eaf2;
+}
+
+.badge{
+padding:6px 12px;
+border-radius:999px;
+font-weight:bold;
+font-size:13px;
+}
+
+.badge-active{
+background:#dcfce7;
+color:#16a34a;
+}
+
+.badge-inactive{
+background:#fee2e2;
+color:#dc2626;
+}
+
+.badge-disabled{
+background:#e5e7eb;
+color:#64748b;
+}
+
+.badge-role{
+background:#e0edff;
+color:#2563eb;
+}
+
+.med-box{
+background:linear-gradient(135deg,#eef7ff,#ffffff);
+border:1px solid #dbeafe;
+border-radius:18px;
+padding:18px;
+margin-top:14px;
+}
+
+.dark .med-box{
+background:#0f172a;
+border-color:#334155;
+}
+
+.action-btn{
+margin-right:6px;
+margin-bottom:6px;
+}
+
+.name-link{
+background:none;
+color:#2563eb;
+padding:0;
+font-weight:bold;
+text-decoration:underline;
+border:none;
+cursor:pointer;
+}
+
+.name-link:hover{
+color:#1d4ed8;
+}
+
+.modal-overlay{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.45);
+z-index:9999;
+justify-content:center;
+align-items:center;
+}
+
+.modal-card{
+width:560px;
+max-width:92%;
+background:white;
+border-radius:22px;
+padding:24px;
+box-shadow:0 20px 50px rgba(0,0,0,0.25);
+}
+
+.modal-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:16px;
+}
+
+.modal-header h2{
+margin:0;
+}
+
+.modal-close{
+background:#ef4444;
+color:white;
+border:none;
+border-radius:10px;
+padding:8px 14px;
+cursor:pointer;
+}
+
+.dark .modal-card{
+background:#1e293b;
+color:white;
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar" id="adminSidebar"></aside>
+
+<main class="main">
+
+<section class="top">
+<div>
+<h1>บัญชีผู้ใช้งาน</h1>
+<p>ภาพรวมบัญชีแพทย์และพยาบาลในระบบตรวจคัดกรอง</p>
+</div>
+
+<div class="admin-badge">
+<strong>Admin</strong><br>
+<small id="adminEmail">กำลังโหลด...</small>
+</div>
+</section>
+
+<section class="cards">
+<div class="card">
+<h3>ผู้ใช้งานทั้งหมด</h3>
+<h2 id="totalUsers">0</h2>
+</div>
+
+<div class="card">
+<h3>แพทย์</h3>
+<h2 id="doctorUsers">0</h2>
+</div>
+
+<div class="card">
+<h3>พยาบาล</h3>
+<h2 id="nurseUsers">0</h2>
+</div>
+
+<div class="card">
+<h3>Active</h3>
+<h2 id="activeUsersCard" style="color:#16a34a;">0</h2>
+</div>
+</section>
+
+<section class="user-grid">
+
+<div class="panel">
+<h2>ภาพรวมประเภทบัญชี</h2>
+<p>แสดงจำนวนผู้ใช้งานแยกเป็นแพทย์และพยาบาล</p>
+
+<div class="chart-wrap">
+<canvas id="roleChart"></canvas>
+</div>
+</div>
+
+<div class="panel">
+<h2>สรุปสถานะการเข้าใช้งาน</h2>
+<p>Active คำนวณจากการเปิดใช้งานเว็บล่าสุด</p>
+
+<div class="stat-row">
+<span>Active</span>
+<strong id="activeUsers">0</strong>
+</div>
+
+<div class="stat-row">
+<span>Inactive</span>
+<strong id="inactiveUsers">0</strong>
+</div>
+
+<div class="stat-row">
+<span>Disabled</span>
+<strong id="disabledUsers">0</strong>
+</div>
+
+<div class="stat-row">
+<span>ไม่ได้กำหนดบทบาท</span>
+<strong id="unknownUsers">0</strong>
+</div>
+
+<div class="med-box">
+<h3>Clinical Access Note</h3>
+<p>
+บัญชีที่ถูกปิดใช้งานจะยังอยู่ในระบบ แต่ใช้เพื่อระงับสิทธิ์การเข้าถึงข้อมูลผู้ป่วยชั่วคราว ส่วนสถานะ Active/Inactive จะอัปเดตจากเวลาที่ผู้ใช้เปิดระบบล่าสุด
+</p>
+</div>
+</div>
+
+</section>
+
+<section class="panel" style="margin-top:22px;">
+<h2>รายการบัญชีผู้ใช้งาน</h2>
+<p>กดที่ชื่อผู้ใช้งานเพื่อดูข้อมูลส่วนตัว</p>
+
+<table>
+<thead>
+<tr>
+<th>ชื่อ</th>
+<th>อีเมล</th>
+<th>เบอร์โทร</th>
+<th>Role</th>
+<th>สถานะ</th>
+<th>เข้าใช้งานล่าสุด</th>
+<th>จัดการ</th>
+</tr>
+</thead>
+
+<tbody id="usersTable"></tbody>
+</table>
+</section>
+
+<div id="userDetailModal" class="modal-overlay">
+<div class="modal-card">
+<div class="modal-header">
+<h2>ข้อมูลส่วนตัวผู้ใช้งาน</h2>
+<button onclick="closeUserDetail()" class="modal-close">×</button>
+</div>
+
+<table>
+<tbody>
+<tr>
+<td>ชื่อ</td>
+<td id="detailName">-</td>
+</tr>
+
+<tr>
+<td>อีเมล</td>
+<td id="detailEmail">-</td>
+</tr>
+
+<tr>
+<td>เบอร์โทร</td>
+<td id="detailPhone">-</td>
+</tr>
+
+<tr>
+<td>Role</td>
+<td id="detailRole">-</td>
+</tr>
+
+<tr>
+<td>สถานะ</td>
+<td id="detailStatus">-</td>
+</tr>
+
+<tr>
+<td>เข้าใช้งานล่าสุด</td>
+<td id="detailLastSeen">-</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</main>
+
+<script src="admin-core.js"></script>
+
+<script>
+renderSidebar("users");
+applySavedTheme();
+
+let profileUsers = [];
+let roleChart = null;
+
+startUsersPage();
+
+async function startUsersPage(){
+  const ok = await checkAdmin();
+  if(!ok) return;
+  await loadUsers();
+}
+
+async function loadUsers() {
+usersTable.innerHTML = `
+<tr>
+<td colspan="7" style="text-align:center;color:#64748b;">
+กำลังโหลดข้อมูล...
+</td>
+</tr>
+`;
+
+const { data, error } = await supabaseClient
+.from("profiles")
+.select("id, full_name, email, phone, role, is_active, last_seen_at")
+.order("full_name", { ascending: true });
+
+if (error) {
+usersTable.innerHTML = `
+<tr>
+<td colspan="7" style="text-align:center;color:red;">
+${error.message}
+</td>
+</tr>
+`;
+return;
+}
+
+profileUsers = (data || []).filter(user => {
+const email = String(user.email || "").toLowerCase();
+const role = String(user.role || "").toLowerCase();
+
+return (
+email !== "kchalima0@gmail.com" &&
+role !== "admin" &&
+role !== "super_admin" &&
+role !== "super admin"
+);
+});
+
+updateSummary();
+renderUsers();
+renderChart();
+applyAdminLanguage("users");
+}
+
+function isOnline(user) {
+if (user.is_active === false) return false;
+if (!user.last_seen_at) return false;
+
+const lastSeen = new Date(user.last_seen_at).getTime();
+const now = Date.now();
+
+return now - lastSeen <= 5 * 60 * 1000;
+}
+
+function isDisabled(user) {
+return user.is_active === false;
+}
+
+function formatLastSeen(value) {
+if (!value) return "-";
+
+const d = new Date(value);
+
+return d.toLocaleString("th-TH", {
+dateStyle: "short",
+timeStyle: "short"
+});
+}
+
+function normalizeRole(role) {
+const r = String(role || "").toLowerCase();
+
+if (r === "doctor") return "doctor";
+if (r === "nurse" || r === "nurse_assistant" || r === "assistant") return "nurse";
+
+return "ไม่ระบุ";
+}
+
+function updateSummary() {
+const total = profileUsers.length;
+
+const doctors = profileUsers.filter(u =>
+normalizeRole(u.role) === "doctor"
+).length;
+
+const nurses = profileUsers.filter(u =>
+normalizeRole(u.role) === "nurse"
+).length;
+
+const active = profileUsers.filter(u => isOnline(u)).length;
+const disabled = profileUsers.filter(u => isDisabled(u)).length;
+const inactive = profileUsers.filter(u => !isOnline(u) && !isDisabled(u)).length;
+const unknown = profileUsers.filter(u => normalizeRole(u.role) === "ไม่ระบุ").length;
+
+totalUsers.textContent = total;
+doctorUsers.textContent = doctors;
+nurseUsers.textContent = nurses;
+
+activeUsersCard.textContent = active;
+activeUsers.textContent = active;
+inactiveUsers.textContent = inactive;
+disabledUsers.textContent = disabled;
+unknownUsers.textContent = unknown;
+}
+
+function renderUsers() {
+usersTable.innerHTML = "";
+
+if (profileUsers.length === 0) {
+usersTable.innerHTML = `
+<tr>
+<td colspan="7" style="text-align:center;color:#64748b;">
+ยังไม่มีข้อมูลผู้ใช้งาน
+</td>
+</tr>
+`;
+return;
+}
+
+profileUsers.forEach(user => {
+const online = isOnline(user);
+const disabled = isDisabled(user);
+
+let statusText = "Inactive";
+let statusClass = "badge-inactive";
+
+if (disabled) {
+statusText = "Disabled";
+statusClass = "badge-disabled";
+} else if (online) {
+statusText = "Active";
+statusClass = "badge-active";
+}
+
+const role = normalizeRole(user.role);
+
+usersTable.innerHTML += `
+<tr>
+<td>
+<button class="name-link" onclick="showUserDetail('${user.id}')">
+${user.full_name || "-"}
+</button>
+</td>
+<td>${user.email || "-"}</td>
+<td>${user.phone || "-"}</td>
+<td><span class="badge badge-role">${role}</span></td>
+<td><span class="badge ${statusClass}">${statusText}</span></td>
+<td>${formatLastSeen(user.last_seen_at)}</td>
+<td>
+<button class="action-btn" onclick="toggleActive('${user.id}', ${disabled})">
+${disabled ? "เปิดใช้งาน" : "ปิดใช้งาน"}
+</button>
+<button class="btn-danger action-btn" onclick="deleteUser('${user.id}')">
+ลบ
+</button>
+</td>
+</tr>
+`;
+});
+}
+
+function renderChart() {
+const doctor = profileUsers.filter(u =>
+normalizeRole(u.role) === "doctor"
+).length;
+
+const nurse = profileUsers.filter(u =>
+normalizeRole(u.role) === "nurse"
+).length;
+
+const unknown = profileUsers.filter(u =>
+normalizeRole(u.role) === "ไม่ระบุ"
+).length;
+
+if (roleChart) roleChart.destroy();
+
+roleChart = new Chart(document.getElementById("roleChart"), {
+type: "doughnut",
+data: {
+labels: ["Doctor", "Nurse", "ไม่ระบุ"],
+datasets: [{
+data: [doctor, nurse, unknown]
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: true,
+cutout: "62%",
+plugins: {
+legend: {
+position: "bottom"
+}
+}
+}
+});
+}
+
+function showUserDetail(id) {
+const user = profileUsers.find(u => String(u.id) === String(id));
+
+if (!user) return;
+
+const online = isOnline(user);
+const disabled = isDisabled(user);
+
+let statusText = "Inactive";
+
+if (disabled) {
+statusText = "Disabled";
+} else if (online) {
+statusText = "Active";
+}
+
+detailName.textContent = user.full_name || "-";
+detailEmail.textContent = user.email || "-";
+detailPhone.textContent = user.phone || "-";
+detailRole.textContent = normalizeRole(user.role);
+detailStatus.textContent = statusText;
+detailLastSeen.textContent = formatLastSeen(user.last_seen_at);
+
+document.getElementById("userDetailModal").style.display = "flex";
+}
+
+function closeUserDetail() {
+document.getElementById("userDetailModal").style.display = "none";
+}
+
+document.getElementById("userDetailModal").addEventListener("click", function(event) {
+if (event.target.id === "userDetailModal") {
+closeUserDetail();
+}
+});
+
+async function toggleActive(id, currentlyDisabled) {
+const nextValue = currentlyDisabled ? true : false;
+
+const { error } = await supabaseClient
+.from("profiles")
+.update({ is_active: nextValue })
+.eq("id", id);
+
+if (error) {
+alert("อัปเดตสถานะไม่สำเร็จ: " + error.message);
+return;
+}
+
+loadUsers();
+}
+
+async function deleteUser(id) {
+const user = profileUsers.find(u => String(u.id) === String(id));
+
+if (!user) return;
+
+if (!confirm("ต้องการลบบัญชีนี้หรือไม่?")) return;
+
+const deletedItems = JSON.parse(localStorage.getItem("dr_recovery") || "[]");
+
+deletedItems.push({
+id: Date.now(),
+type: "user",
+data: user,
+deletedAt: new Date().toLocaleString("th-TH")
+});
+
+localStorage.setItem("dr_recovery", JSON.stringify(deletedItems));
+
+const { error } = await supabaseClient
+.from("profiles")
+.delete()
+.eq("id", id);
+
+if (error) {
+alert("ลบไม่สำเร็จ: " + error.message);
+return;
+}
+
+closeUserDetail();
+loadUsers();
+}
+
+setInterval(loadUsers, 30000);
+</script>
+
+</body>
+</html>

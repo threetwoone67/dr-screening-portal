@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Recovery System</title>
+
+<link rel="stylesheet" href="admin.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+.recovery-tabs{
+display:flex;
+gap:10px;
+margin-bottom:18px;
+flex-wrap:wrap;
+}
+
+.recovery-tabs button{
+border:none;
+padding:10px 16px;
+border-radius:10px;
+background:#e5e7eb;
+cursor:pointer;
+font-weight:600;
+}
+
+.recovery-tabs button.active{
+background:#2563eb;
+color:white;
+}
+
+.badge-type{
+display:inline-block;
+padding:5px 10px;
+border-radius:999px;
+font-weight:700;
+font-size:13px;
+}
+
+.badge-admin{background:#fee2e2;color:#991b1b;}
+.badge-user{background:#dbeafe;color:#1e40af;}
+.badge-patient{background:#dcfce7;color:#166534;}
+
+.info-small{
+color:#64748b;
+font-size:13px;
+line-height:1.5;
+}
+
+.action-group{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+}
+
+.btn-view{
+background:#6366f1;
+color:white;
+border:none;
+border-radius:8px;
+padding:7px 12px;
+cursor:pointer;
+}
+
+.btn-green{
+background:#16a34a;
+color:white;
+border:none;
+border-radius:8px;
+padding:7px 12px;
+cursor:pointer;
+}
+
+.btn-danger{
+background:#dc2626;
+color:white;
+border:none;
+border-radius:8px;
+padding:7px 12px;
+cursor:pointer;
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(15,23,42,0.55);
+z-index:9999;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.modal-box{
+background:white;
+width:100%;
+max-width:650px;
+max-height:85vh;
+overflow:auto;
+border-radius:18px;
+padding:24px;
+}
+
+.modal-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+}
+
+.close-modal{
+background:#dc2626;
+color:white;
+border:none;
+border-radius:8px;
+padding:7px 12px;
+cursor:pointer;
+}
+
+.detail-box{
+background:#f8fafc;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:16px;
+margin-bottom:12px;
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar" id="adminSidebar"></aside>
+
+<main class="main">
+
+<section class="top">
+<div>
+<h1>การกู้คืนข้อมูล</h1>
+<p>ดูรายการที่ถูกลบ แยกประเภท พร้อมกู้คืนหรือลบถาวร</p>
+</div>
+
+<div class="admin-badge">
+<strong>Admin</strong><br>
+<small id="adminEmail">กำลังโหลด...</small>
+</div>
+</section>
+
+<section class="cards">
+
+<div class="card">
+<h3>รายการที่ถูกลบทั้งหมด</h3>
+<h2 id="totalRecovery">0</h2>
+</div>
+
+<div class="card">
+<h3>แอดมินที่ถูกลบ</h3>
+<h2 id="deletedAdmins">0</h2>
+</div>
+
+<div class="card">
+<h3>ผู้ใช้งานที่ถูกลบ</h3>
+<h2 id="deletedUsers">0</h2>
+</div>
+
+<div class="card">
+<h3>ผู้ป่วยที่ถูกลบ</h3>
+<h2 id="deletedPatients">0</h2>
+</div>
+
+</section>
+
+<section class="panel">
+
+<h2>รายการข้อมูลที่ถูกลบ</h2>
+<p>สามารถตรวจสอบรายละเอียดก่อนกู้คืนได้ เพื่อป้องกันการลบผิด</p>
+
+<div class="recovery-tabs">
+<button class="active" onclick="setFilter('all', this)">ทั้งหมด</button>
+<button onclick="setFilter('admin', this)">แอดมิน</button>
+<button onclick="setFilter('user', this)">ผู้ใช้งาน</button>
+<button onclick="setFilter('patient', this)">ผู้ป่วย</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>ประเภท</th>
+<th>ชื่อ / ข้อมูลหลัก</th>
+<th>อีเมล / HN</th>
+<th>ข้อมูลสำคัญ</th>
+<th>วันที่ลบ</th>
+<th>จัดการ</th>
+</tr>
+</thead>
+
+<tbody id="recoveryTable"></tbody>
+</table>
+
+</section>
+
+</main>
+
+<div class="modal" id="detailModal">
+<div class="modal-box">
+
+<div class="modal-header">
+<h2 id="detailTitle">รายละเอียดข้อมูลที่ถูกลบ</h2>
+<button class="close-modal" onclick="closeDetailModal()">ปิด</button>
+</div>
+
+<div id="detailContent"></div>
+
+</div>
+</div>
+
+<script src="admin-core.js"></script>
+
+<script>
+let currentFilter = "all";
+
+renderSidebar("recovery");
+applySavedTheme();
+startRecoveryPage();
+
+async function startRecoveryPage(){
+const ok = await checkAdmin();
+if(!ok) return;
+reloadRecovery();
+renderRecovery();
+applyAdminLanguage("recovery");
+}
+
+function reloadRecovery(){
+recovery = safeParse("dr_recovery", []);
+}
+
+function setFilter(type, btn){
+currentFilter = type;
+
+document.querySelectorAll(".recovery-tabs button").forEach(b=>{
+b.classList.remove("active");
+});
+
+btn.classList.add("active");
+renderRecovery();
+}
+
+function renderRecovery(){
+
+reloadRecovery();
+
+const table = document.getElementById("recoveryTable");
+
+const adminsCount = recovery.filter(item => item.type === "admin").length;
+const usersCount = recovery.filter(item => item.type === "user").length;
+const patientsCount = recovery.filter(item => item.type === "patient").length;
+
+document.getElementById("totalRecovery").textContent = recovery.length;
+document.getElementById("deletedAdmins").textContent = adminsCount;
+document.getElementById("deletedUsers").textContent = usersCount;
+document.getElementById("deletedPatients").textContent = patientsCount;
+
+table.innerHTML = "";
+
+let list = recovery;
+
+if(currentFilter !== "all"){
+list = recovery.filter(item => item.type === currentFilter);
+}
+
+if(list.length === 0){
+table.innerHTML = `
+<tr>
+<td colspan="6" style="text-align:center;color:#64748b;">
+ไม่มีข้อมูลที่ถูกลบในหมวดนี้
+</td>
+</tr>
+`;
+return;
+}
+
+list.forEach((item)=>{
+const realIndex = recovery.indexOf(item);
+const data = item.data || {};
+
+table.innerHTML += `
+<tr>
+<td>${getTypeBadge(item.type)}</td>
+
+<td>
+<strong>${getMainName(item)}</strong>
+<div class="info-small">${getSubName(item)}</div>
+</td>
+
+<td>
+${getEmailOrHN(item)}
+</td>
+
+<td>
+<div class="info-small">${getImportantInfo(item)}</div>
+</td>
+
+<td>
+${item.deletedAt || "-"}
+</td>
+
+<td>
+<div class="action-group">
+<button class="btn-view" onclick="viewDetail(${realIndex})">
+ดูรายละเอียด
+</button>
+
+<button class="btn-green" onclick="restoreData(${realIndex})">
+กู้คืน
+</button>
+
+<button class="btn-danger" onclick="deleteForever(${realIndex})">
+ลบถาวร
+</button>
+</div>
+</td>
+</tr>
+`;
+});
+}
+
+function getTypeLabel(type){
+if(type === "admin") return "แอดมิน";
+if(type === "user") return "ผู้ใช้งาน";
+if(type === "patient") return "ผู้ป่วย";
+return type || "-";
+}
+
+function getTypeBadge(type){
+if(type === "admin"){
+return `<span class="badge-type badge-admin">แอดมิน</span>`;
+}
+
+if(type === "user"){
+return `<span class="badge-type badge-user">ผู้ใช้งาน</span>`;
+}
+
+if(type === "patient"){
+return `<span class="badge-type badge-patient">ผู้ป่วย</span>`;
+}
+
+return `<span class="badge-type">${type || "-"}</span>`;
+}
+
+function getMainName(item){
+const d = item.data || {};
+
+return (
+d.name ||
+d.full_name ||
+d.fullName ||
+d.display_name ||
+d.email ||
+d.hn ||
+d.patient_code ||
+"-"
+);
+}
+
+function getSubName(item){
+const d = item.data || {};
+
+if(item.type === "patient"){
+return "รหัสผู้ป่วย: " + (d.patient_code || "-");
+}
+
+if(item.type === "admin"){
+return "บทบาท: " + (d.role || "Admin");
+}
+
+if(item.type === "user"){
+return "สถานะ: " + (d.status || d.role || "-");
+}
+
+return "-";
+}
+
+function getEmailOrHN(item){
+const d = item.data || {};
+
+if(item.type === "patient"){
+return d.hn || d.patient_code || "-";
+}
+
+return d.email || "-";
+}
+
+function getImportantInfo(item){
+const d = item.data || {};
+
+if(item.type === "patient"){
+return `
+อายุ: ${d.age || "-"}<br>
+เพศ: ${formatSex(d.sex || d.gender)}<br>
+เบอร์โทร: ${d.phone || "-"}
+`;
+}
+
+if(item.type === "admin"){
+return `
+อีเมล: ${d.email || "-"}<br>
+เบอร์โทร: ${d.phone || "-"}<br>
+สิทธิ์: ${d.role || "-"}
+`;
+}
+
+if(item.type === "user"){
+return `
+อีเมล: ${d.email || "-"}<br>
+เบอร์โทร: ${d.phone || "-"}<br>
+สถานะ: ${d.status || "-"}
+`;
+}
+
+return "-";
+}
+
+function formatSex(sex){
+if(sex === "Male" || sex === "ชาย") return "ชาย";
+if(sex === "Female" || sex === "หญิง") return "หญิง";
+if(sex === "Other" || sex === "อื่นๆ") return "อื่นๆ";
+return sex || "-";
+}
+
+function viewDetail(index){
+
+const item = recovery[index];
+const d = item.data || {};
+
+document.getElementById("detailTitle").textContent =
+"รายละเอียด " + getTypeLabel(item.type);
+
+let html = `
+<div class="detail-box">
+<p><strong>ประเภท:</strong> ${getTypeLabel(item.type)}</p>
+<p><strong>วันที่ลบ:</strong> ${item.deletedAt || "-"}</p>
+</div>
+`;
+
+if(item.type === "patient"){
+html += `
+<div class="detail-box">
+<h3>ข้อมูลผู้ป่วย</h3>
+<p><strong>ชื่อ:</strong> ${d.full_name || d.name || "-"}</p>
+<p><strong>HN:</strong> ${d.hn || "-"}</p>
+<p><strong>รหัสผู้ป่วย:</strong> ${d.patient_code || "-"}</p>
+<p><strong>อายุ:</strong> ${d.age || "-"}</p>
+<p><strong>เพศ:</strong> ${formatSex(d.sex || d.gender)}</p>
+<p><strong>เบอร์โทร:</strong> ${d.phone || "-"}</p>
+</div>
+`;
+}
+
+else if(item.type === "admin"){
+html += `
+<div class="detail-box">
+<h3>ข้อมูลแอดมิน</h3>
+<p><strong>ชื่อ:</strong> ${d.name || "-"}</p>
+<p><strong>อีเมล:</strong> ${d.email || "-"}</p>
+<p><strong>เบอร์โทร:</strong> ${d.phone || "-"}</p>
+<p><strong>บทบาท:</strong> ${d.role || "-"}</p>
+</div>
+`;
+}
+
+else if(item.type === "user"){
+html += `
+<div class="detail-box">
+<h3>ข้อมูลผู้ใช้งาน</h3>
+<p><strong>ชื่อ:</strong> ${d.name || d.full_name || "-"}</p>
+<p><strong>อีเมล:</strong> ${d.email || "-"}</p>
+<p><strong>เบอร์โทร:</strong> ${d.phone || "-"}</p>
+<p><strong>สถานะ:</strong> ${d.status || "-"}</p>
+<p><strong>บทบาท:</strong> ${d.role || "-"}</p>
+</div>
+`;
+}
+
+html += `
+<div class="detail-box">
+<h3>ข้อมูลดิบ</h3>
+<pre style="white-space:pre-wrap;font-size:12px;">${JSON.stringify(d, null, 2)}</pre>
+</div>
+`;
+
+document.getElementById("detailContent").innerHTML = html;
+document.getElementById("detailModal").style.display = "flex";
+}
+
+function closeDetailModal(){
+document.getElementById("detailModal").style.display = "none";
+}
+
+async function restoreData(index){
+
+const item = recovery[index];
+const data = item.data || {};
+
+const ok = confirm("ต้องการกู้คืนข้อมูลนี้หรือไม่?");
+if(!ok) return;
+
+if(item.type === "admin"){
+admins.push(data);
+}
+
+if(item.type === "user"){
+users.push(data);
+}
+
+if(item.type === "patient"){
+
+const payload = {
+patient_code: data.patient_code || null,
+full_name: data.full_name || data.name || null,
+hn: data.hn || null,
+age: data.age ? Number(data.age) : null,
+sex: data.sex || data.gender || null,
+phone: data.phone || null
+};
+
+const { error } = await supabaseClient
+.from("patients")
+.insert([payload]);
+
+if(error){
+console.error("restore patient error:", error);
+alert("กู้คืนผู้ป่วยไม่สำเร็จ อาจมี HN หรือ patient_code ซ้ำ");
+return;
+}
+}
+
+recovery.splice(index, 1);
+saveAll();
+
+renderRecovery();
+alert("กู้คืนข้อมูลสำเร็จ");
+}
+
+function deleteForever(index){
+
+const ok = confirm("ต้องการลบข้อมูลนี้ถาวรหรือไม่? การกระทำนี้ย้อนกลับไม่ได้");
+if(!ok) return;
+
+recovery.splice(index, 1);
+saveAll();
+
+renderRecovery();
+alert("ลบถาวรสำเร็จ");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+    "img_size": 224,
+    "normalization": {
+        "mean": [
+            0.485,
+            0.456,
+            0.406
+        ],
+        "std": [
+            0.229,
+            0.224,
+            0.225
+        ]
+    },
+    "binary": {
+        "model_name": "mobilenetv4_conv_small.e2400_r224_in1k",
+        "num_classes": 2,
+        "target_names": [
+            "No_DR",
+            "DR"
+        ]
+    },
+    "severity": {
+        "model_name": "tf_efficientnetv2_b0.in1k",
+        "num_classes": 5,
+        "target_names": [
+            "No_DR",
+            "Mild",
+            "Moderate",
+            "Severe",
+            "PDR"
+        ]
+    }
+}

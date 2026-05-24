@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>โอนย้ายผู้ป่วย | DR Screening Portal</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Noto Sans Thai", Arial, sans-serif;
+      background: #f6f9ff;
+      color: #102a43;
+    }
+
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+      background: #f6f9ff;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: #ffffff;
+      border-right: 1px solid #e6edf7;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      box-shadow: 8px 0 30px rgba(15, 43, 76, 0.04);
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .logo-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 6px 22px;
+      border-bottom: 1px solid #eef3f8;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid #e6edf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 22px rgba(15, 43, 76, 0.06);
+      overflow: hidden;
+      flex-shrink: 0;
+      font-size: 28px;
+    }
+
+    .logo-icon img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .logo-text h2 {
+      font-size: 15px;
+      color: #2563eb;
+      font-weight: 900;
+      line-height: 1.3;
+    }
+
+    .logo-text p {
+      font-size: 12px;
+      color: #8a94a6;
+      margin-top: 2px;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      border-radius: 16px;
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 15px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-item span {
+      font-size: 19px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .nav-item:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.22);
+    }
+
+    .submenu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-left: 16px;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      padding-left: 10px;
+      border-left: 2px solid #e6edf7;
+    }
+
+    .nav-sub-item {
+      padding: 12px 14px;
+      font-size: 14px;
+      border-radius: 14px;
+      background: #f8fbff;
+      color: #64748b;
+      box-shadow: none;
+    }
+
+    .nav-sub-item:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .hospital-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: #f8fbff;
+      border: 1px solid #e6edf7;
+    }
+
+    .hospital-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid #e6edf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      font-size: 22px;
+    }
+
+    .hospital-icon img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .hospital-card strong {
+      display: block;
+      color: #0f2b4c;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .hospital-card p {
+      color: #7b8794;
+      font-size: 12px;
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .main-content {
+      margin-left: 280px;
+      width: calc(100% - 280px);
+      padding: 30px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .welcome-label {
+      color: #2563eb;
+      font-weight: 900;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      color: #0f2b4c;
+      font-weight: 900;
+      line-height: 1.3;
+    }
+
+    .page-header p {
+      margin-top: 6px;
+      color: #718096;
+      font-size: 15px;
+    }
+
+    .header-badge {
+      background: #ffffff;
+      border: 1px solid #e6edf7;
+      border-radius: 22px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      box-shadow: 0 10px 28px rgba(15, 43, 76, 0.06);
+      min-width: 250px;
+    }
+
+    .header-badge-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: #eff6ff;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .header-badge strong {
+      color: #0f2b4c;
+      font-weight: 900;
+    }
+
+    .header-badge span {
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .summary-card {
+      background: #ffffff;
+      border: 1px solid #e6edf7;
+      border-radius: 24px;
+      padding: 22px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      box-shadow: 0 12px 30px rgba(15, 43, 76, 0.06);
+      transition: 0.2s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(15, 43, 76, 0.1);
+    }
+
+    .summary-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: #eff6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .summary-card p {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .summary-card strong {
+      color: #0f2b4c;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e6edf7;
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(15, 43, 76, 0.06);
+    }
+
+    .card h2 {
+      color: #0f2b4c;
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #dbe4f0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-family: "Noto Sans Thai", Arial, sans-serif;
+      font-weight: 800;
+      color: #0f2b4c;
+      outline: none;
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      border: none;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-family: "Noto Sans Thai", Arial, sans-serif;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+    }
+
+    .primary-btn:hover {
+      filter: brightness(0.96);
+    }
+
+    .secondary-btn {
+      background: #ffffff;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+    }
+
+    .guide-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .guide-item {
+      padding: 16px;
+      border-radius: 18px;
+      background: #f8fbff;
+      border: 1px solid #e6edf7;
+    }
+
+    .guide-item strong {
+      color: #0f2b4c;
+      font-size: 15px;
+      font-weight: 900;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .guide-item p {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .status-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .status-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid #e6edf7;
+      background: #ffffff;
+    }
+
+    .status-item strong {
+      color: #0f2b4c;
+      font-weight: 900;
+    }
+
+    .status-item p {
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .urgent {
+      background: #fef2f2;
+      color: #ef4444;
+    }
+
+    .follow {
+      background: #fff7ed;
+      color: #f97316;
+    }
+
+    .normal {
+      background: #ecfdf5;
+      color: #16a34a;
+    }
+
+    body.dark-mode {
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    body.dark-mode .app-layout,
+    body.dark-mode .main-content {
+      background: #0f172a;
+    }
+
+    body.dark-mode .sidebar {
+      background: #111827;
+      border-right-color: #1f2937;
+      box-shadow: none;
+    }
+
+    body.dark-mode .logo-box {
+      border-bottom-color: #1f2937;
+    }
+
+    body.dark-mode .logo-icon,
+    body.dark-mode .hospital-icon {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    body.dark-mode .logo-text h2 {
+      color: #93c5fd;
+    }
+
+    body.dark-mode .logo-text p,
+    body.dark-mode .hospital-card p,
+    body.dark-mode .page-header p,
+    body.dark-mode .header-badge span,
+    body.dark-mode .summary-card p,
+    body.dark-mode .card-desc,
+    body.dark-mode label,
+    body.dark-mode .guide-item p,
+    body.dark-mode .status-item p {
+      color: #94a3b8;
+    }
+
+    body.dark-mode .nav-item {
+      color: #cbd5e1;
+    }
+
+    body.dark-mode .nav-item:hover {
+      background: #1e293b;
+      color: #93c5fd;
+      box-shadow: none;
+    }
+
+    body.dark-mode .nav-item.active {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.22);
+    }
+
+    body.dark-mode .submenu {
+      border-left-color: #334155;
+    }
+
+    body.dark-mode .nav-sub-item {
+      background: #1e293b;
+      color: #cbd5e1;
+    }
+
+    body.dark-mode .nav-sub-item:hover {
+      background: #263348;
+      color: #93c5fd;
+    }
+
+    body.dark-mode .hospital-card,
+    body.dark-mode .header-badge,
+    body.dark-mode .summary-card,
+    body.dark-mode .card,
+    body.dark-mode .status-item {
+      background: #172033;
+      border-color: #263348;
+      box-shadow: none;
+    }
+
+    body.dark-mode .guide-item {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    body.dark-mode .page-header h1,
+    body.dark-mode .hospital-card strong,
+    body.dark-mode .header-badge strong,
+    body.dark-mode .summary-card strong,
+    body.dark-mode .card h2,
+    body.dark-mode .guide-item strong,
+    body.dark-mode .status-item strong {
+      color: #f8fafc;
+    }
+
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background: #0f172a;
+      border-color: #334155;
+      color: #f8fafc;
+    }
+
+    body.dark-mode input::placeholder,
+    body.dark-mode textarea::placeholder {
+      color: #64748b;
+    }
+
+    body.dark-mode .secondary-btn {
+      background: #172033;
+      color: #cbd5e1;
+      border-color: #334155;
+    }
+
+    @media (max-width: 1200px) {
+      .summary-grid,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .app-layout {
+        flex-direction: column;
+      }
+
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 18px;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .status-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    .patient-suggestions {
+      margin-top: 10px;
+      border: 1px solid #dce7f7;
+      border-radius: 14px;
+      background: #ffffff;
+      max-height: 230px;
+      overflow: auto;
+      display: none;
+    }
+    .patient-suggestions.show { display: block; }
+    .patient-option {
+      padding: 12px 14px;
+      border-bottom: 1px solid #edf2fa;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+    .patient-option:last-child { border-bottom: 0; }
+    .patient-option:hover {
+      background: #eef5ff;
+    }
+    .patient-option strong {
+      display: block;
+      font-size: 14px;
+      color: #102a43;
+    }
+    .patient-option small {
+      display: block;
+      font-size: 12px;
+      color: #6b7c93;
+      margin-top: 2px;
+    }
+    .mini-pill {
+      border-radius: 999px;
+      background: #eaf1ff;
+      color: #2f5be8;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .selected-patient-box {
+      margin-top: 10px;
+      background: #f8fbff;
+      border: 1px solid #dce7f7;
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: none;
+      font-size: 13px;
+      color: #344767;
+    }
+    .selected-patient-box.show { display: block; }
+    .small-action {
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #eef5ff;
+      color: #2f5be8;
+      margin-left: 6px;
+    }
+    .small-action.danger {
+      background: #fff1f2;
+      color: #e11d48;
+    }
+    .small-action.done {
+      background: #ecfdf3;
+      color: #16a34a;
+    }
+    .loading-line {
+      padding: 18px;
+      border: 1px dashed #dce7f7;
+      border-radius: 14px;
+      text-align: center;
+      color: #8aa0bb;
+      font-weight: 700;
+    }
+
+  
+    .status-item:hover {
+      border-color: #2f5be8;
+      background: #f8fbff;
+      transform: translateY(-1px);
+      transition: .15s ease;
+    }
+
+    .transfer-top-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-bottom:12px;}
+    .transfer-lang-select{padding:10px 14px;border:1px solid #dbe6f4;border-radius:14px;background:#fff;color:#10213f;font-weight:800;box-shadow:0 8px 24px rgba(15,23,42,.06);}
+    .logout-btn{margin-top:12px;width:100%;border:1px solid #fecaca;background:#fff5f5;color:#dc2626;border-radius:14px;padding:12px 14px;font-weight:900;cursor:pointer;}
+    .logout-btn:hover{background:#fee2e2;}
+
+
+
+    /* === DR global sidebar + language sync patch === */
+    .logo-icon{position:relative;overflow:hidden;}
+    .logo-icon img,.hospital-icon img{display:block;}
+    .transfer-top-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-bottom:12px;}
+    .transfer-lang-select{padding:10px 14px;border:1px solid #dbe6f4;border-radius:14px;background:#fff;color:#10213f;font-weight:800;box-shadow:0 8px 24px rgba(15,23,42,.06);}
+    body.dark-mode .transfer-lang-select{background:#172033;color:#f8fafc;border-color:#334155;}
+    .logout-btn{margin-top:12px;width:100%;border:1px solid #fecaca;background:#fff5f5;color:#dc2626;border-radius:14px;padding:12px 14px;font-weight:900;cursor:pointer;}
+    .logout-btn:hover{background:#fee2e2;}
+    body.dark-mode .logout-btn{background:#172033;border-color:#7f1d1d;color:#fca5a5;}
+
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="logo-box">
+          <div class="logo-icon">
+            <img src="logo-new.jpg" alt="KMUTNB Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='👁️';">
+          </div>
+
+          <div class="logo-text">
+            <h2>Diabetic<br>Retinopathy</h2>
+            <p>DR Screening Portal</p>
+          </div>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="dashboard.html" class="nav-item">
+            <span>🏠</span>
+            หน้าหลัก
+          </a>
+
+          <a href="dashboard.html#account" class="nav-item">
+            <span>👤</span>
+            บัญชีผู้ใช้
+          </a>
+
+          <a href="dashboard.html#patients" class="nav-item">
+            <span>👥</span>
+            ข้อมูลผู้ป่วย
+          </a>
+
+          <a href="dashboard.html#newPatient" class="nav-item">
+            <span>🩺</span>
+            การตรวจ
+          </a>
+
+          <div class="submenu">
+            <a href="dashboard.html#newPatient" class="nav-item nav-sub-item">
+              <span>➕</span>
+              สร้างคนไข้ใหม่
+            </a>
+
+            <a href="retina-analysis.html" class="nav-item nav-sub-item">
+              <span>🔬</span>
+              วิเคราะห์จอประสาทตา
+            </a>
+
+            <a href="retina-report-new.html" class="nav-item nav-sub-item">
+              <span>📄</span>
+              รายงานผล
+            </a>
+
+            <a href="appointment-followup.html" class="nav-item nav-sub-item">
+              <span>📅</span>
+              การนัดหมาย
+            </a>
+          </div>
+
+          <a href="patient-transfer.html" class="nav-item active">
+            <span>🔁</span>
+            โอนย้ายผู้ป่วย
+          </a>
+
+          <a href="knowledge-dr.html" class="nav-item">
+            <span>💡</span>
+            เกร็ดความรู้
+          </a>
+
+          <a href="dashboard.html#settings" class="nav-item">
+            <span>⚙️</span>
+            ตั้งค่า
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="hospital-card">
+          <div class="hospital-icon">
+            <img src="institution-logo.png" alt="KMUTNB Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='🏥';">
+          </div>
+
+          <div>
+            <strong>มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</strong>
+            <p>ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section class="page-header">
+        <div>
+          <p class="welcome-label">โอนย้ายผู้ป่วย / Patient Transfer</p>
+          <h1>ระบบโอนย้ายและส่งต่อผู้ป่วย</h1>
+          <p>
+            บันทึกข้อมูลการส่งต่อผู้ป่วยจากผลคัดกรองจอประสาทตา
+            เพื่อให้ทีมรักษาติดตามต่อได้อย่างเป็นระบบ
+          </p>
+        </div>
+
+        <div class="header-badge">
+          <div class="header-badge-icon">🔁</div>
+          <div>
+            <strong>Transfer Management</strong><br>
+            <span>จัดการการส่งต่อผู้ป่วย</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-icon">📋</div>
+          <div>
+            <p>รายการส่งต่อทั้งหมด</p>
+            <strong id="statTotalTransfers">0</strong>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-icon">⚠️</div>
+          <div>
+            <p>เร่งด่วน</p>
+            <strong id="statUrgentTransfers">0</strong>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-icon">⏳</div>
+          <div>
+            <p>รอดำเนินการ</p>
+            <strong id="statPendingTransfers">0</strong>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-icon">✅</div>
+          <div>
+            <p>ส่งต่อสำเร็จ</p>
+            <strong id="statDoneTransfers">0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="card">
+          <h2>แบบฟอร์มโอนย้ายผู้ป่วย</h2>
+          <p class="card-desc">
+            ใช้สำหรับบันทึกข้อมูลการส่งต่อผู้ป่วยไปยังแพทย์เฉพาะทาง แผนกจักษุ หรือหน่วยงานปลายทาง
+            โดยควรระบุเหตุผลและระดับความเร่งด่วนให้ชัดเจน
+          </p>
+
+          <form id="transferForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>ค้นหาผู้ป่วย</label>
+                <input type="text" id="patientSearch" placeholder="ชื่อ / HN / รหัสผู้ป่วย" autocomplete="off">
+                <div id="patientSuggestions" class="patient-suggestions"></div>
+                <div id="selectedPatientBox" class="selected-patient-box"></div>
+              </div>
+
+              <div class="form-group">
+                <label>ผลการคัดกรองล่าสุด</label>
+                <select id="screeningResult">
+                  <option value="">เลือกผลการคัดกรอง</option>
+                  <option>No DR</option>
+                  <option>Mild DR</option>
+                  <option>Moderate DR</option>
+                  <option>Severe DR</option>
+                  <option>Referable DR</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>ประเภทการโอนย้าย</label>
+                <select id="transferType">
+                  <option>ส่งต่อภายในหน่วยงาน</option>
+                  <option>ส่งต่อแผนกจักษุ</option>
+                  <option>ส่งต่อโรงพยาบาลอื่น</option>
+                  <option>นัดติดตามเฉพาะทาง</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>ระดับความเร่งด่วน</label>
+                <select id="priority">
+                  <option>ปกติ</option>
+                  <option>ควรติดตามเร็ว</option>
+                  <option>เร่งด่วน</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>หน่วยงานปลายทาง</label>
+                <input type="text" id="destination" placeholder="เช่น แผนกจักษุ / โรงพยาบาลปลายทาง">
+              </div>
+
+              <div class="form-group">
+                <label>แพทย์ / ผู้รับผิดชอบปลายทาง</label>
+                <input type="text" id="receiver" placeholder="เช่น นพ. / พญ. / เจ้าหน้าที่">
+              </div>
+
+              <div class="form-group">
+                <label>วันที่ต้องการส่งต่อ</label>
+                <input type="date" id="transferDate">
+              </div>
+
+              <div class="form-group">
+                <label>เบอร์ติดต่อปลายทาง</label>
+                <input type="text" id="contactPhone" placeholder="เช่น 02-xxx-xxxx">
+              </div>
+
+              <div class="form-group full">
+                <label>เหตุผลในการโอนย้าย</label>
+                <textarea id="reason" placeholder="เช่น พบผล Moderate DR จากระบบ AI ต้องส่งต่อเพื่อประเมินโดยจักษุแพทย์"></textarea>
+              </div>
+
+              <div class="form-group full">
+                <label>หมายเหตุจากแพทย์ / ผู้ตรวจ</label>
+                <textarea id="doctorNote" placeholder="บันทึกเพิ่มเติม เช่น อาการร่วม ประวัติโรคประจำตัว หรือข้อควรติดตาม"></textarea>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button type="reset" class="secondary-btn">ล้างข้อมูล</button>
+              <button type="button" id="printTransferBtn" class="secondary-btn">พิมพ์ใบส่งตัว PDF</button>
+              <button type="submit" class="primary-btn">บันทึกการโอนย้าย</button>
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <div class="card">
+            <h2>แนวทางการส่งต่อ</h2>
+            <p class="card-desc">คำแนะนำสำหรับการใช้งานในระบบจริง</p>
+
+            <div class="guide-list">
+              <div class="guide-item">
+                <strong>1. ตรวจสอบตัวตนผู้ป่วย</strong>
+                <p>ตรวจสอบชื่อ HN รหัสผู้ป่วย และเบอร์ติดต่อก่อนบันทึกการส่งต่อ</p>
+              </div>
+
+              <div class="guide-item">
+                <strong>2. ระบุผลคัดกรองล่าสุด</strong>
+                <p>ควรเลือกผล AI หรือผลตรวจล่าสุด เพื่อให้ปลายทางทราบเหตุผลในการส่งต่อ</p>
+              </div>
+
+              <div class="guide-item">
+                <strong>3. เลือกระดับความเร่งด่วน</strong>
+                <p>กรณี Severe DR หรือมีอาการตามัวเฉียบพลัน ควรเลือกเร่งด่วน</p>
+              </div>
+
+              <div class="guide-item">
+                <strong>4. บันทึกหมายเหตุแพทย์</strong>
+                <p>ช่วยให้การดูแลต่อเนื่อง ลดการตกหล่นของข้อมูลสำคัญ</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 20px;">
+            <h2>รายการส่งต่อล่าสุด</h2>
+            <p class="card-desc">ตัวอย่างสถานะการส่งต่อที่ควรมีในระบบ</p>
+
+            <div class="status-list" id="transferList">
+              <div class="loading-line">กำลังโหลดรายการส่งต่อ...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+    let currentProfile = {};
+    let patientsCache = [];
+    let transfersCache = [];
+    let selectedPatient = null;
+    let selectedTransfer = null;
+
+    function applySavedTheme() {
+      const savedTheme =
+        localStorage.getItem("dr_dashboard_theme") ||
+        localStorage.getItem("dr_theme") ||
+        "light";
+      document.body.classList.toggle("dark-mode", savedTheme === "dark");
+    }
+
+    function safe(value) {
+      return value === null || value === undefined || value === "" ? "-" : String(value);
+    }
+
+    function escapeHTML(value) {
+      return safe(value).replace(/[&<>"']/g, function(c) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        }[c];
+      });
+    }
+
+    function todayISO() {
+      return new Date().toISOString().split("T")[0];
+    }
+
+    function normalizePriority(value) {
+      const text = safe(value).toLowerCase();
+      if (text.includes("เร่ง") || text.includes("urgent")) return "urgent";
+      if (text.includes("เร็ว") || text.includes("follow")) return "follow";
+      return "normal";
+    }
+
+    function normalizeStatus(value) {
+      const text = safe(value).toLowerCase();
+      if (text.includes("สำเร็จ") || text.includes("complete") || text.includes("done")) return "completed";
+      if (text.includes("ยกเลิก") || text.includes("cancel")) return "cancelled";
+      return "pending";
+    }
+
+    function statusText(status) {
+      const s = normalizeStatus(status);
+      if (s === "completed") return "ส่งต่อสำเร็จ";
+      if (s === "cancelled") return "ยกเลิก";
+      return "รอดำเนินการ";
+    }
+
+    function priorityLabel(priority) {
+      const p = normalizePriority(priority);
+      if (p === "urgent") return "เร่งด่วน";
+      if (p === "follow") return "ติดตามเร็ว";
+      return "ปกติ";
+    }
+
+    function priorityBadgeClass(priority) {
+      const p = normalizePriority(priority);
+      if (p === "urgent") return "urgent";
+      if (p === "follow") return "follow";
+      return "normal";
+    }
+
+    async function loadSession() {
+      const { data } = await db.auth.getUser();
+      currentUser = data && data.user ? data.user : null;
+
+      if (currentUser) {
+        const { data: profile } = await db
+          .from("profiles")
+          .select("*")
+          .eq("id", currentUser.id)
+          .maybeSingle();
+
+        currentProfile = profile || {};
+      }
+    }
+
+    function getUserName() {
+      return (
+        currentProfile.full_name ||
+        currentProfile.name ||
+        currentProfile.display_name ||
+        (currentUser && currentUser.email) ||
+        "-"
+      );
+    }
+
+    async function loadPatientsOnce() {
+      const { data, error } = await db
+        .from("patients")
+        .select("*")
+        .order("id", { ascending: false })
+        .limit(300);
+
+      if (error) {
+        console.warn("โหลด patients ไม่สำเร็จ:", error.message);
+        patientsCache = [];
+        return;
+      }
+
+      patientsCache = data || [];
+      console.log("patients loaded:", patientsCache.length, patientsCache[0]);
+    }
+
+    function patientNameOf(p) {
+      return (
+        p.full_name ||
+        p.name ||
+        p.patient_name ||
+        p.fullname ||
+        p.display_name ||
+        p.first_name ||
+        "-"
+      );
+    }
+
+    function patientCodeOf(p) {
+      return (
+        p.patient_code ||
+        p.code ||
+        p.hn ||
+        p.patient_hn ||
+        p.id ||
+        "-"
+      );
+    }
+
+    function patientPhoneOf(p) {
+      return p.phone || p.tel || p.telephone || p.mobile || "-";
+    }
+
+    function patientSearchText(p) {
+      return Object.values(p || {})
+        .filter(v => v !== null && v !== undefined)
+        .map(v => String(v).toLowerCase())
+        .join(" ");
+    }
+
+    async function loadTransfersOnce() {
+      const { data, error } = await db
+        .from("patient_transfers")
+        .select("*")
+        .order("transfer_date", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(80);
+
+      if (error) {
+        console.warn("โหลด patient_transfers ไม่สำเร็จ:", error.message);
+        transfersCache = [];
+        return;
+      }
+      transfersCache = data || [];
+    }
+
+    function renderPatientSuggestions() {
+      const input = document.getElementById("patientSearch");
+      const box = document.getElementById("patientSuggestions");
+      const q = (input.value || "").trim().toLowerCase();
+
+      selectedPatient = null;
+      document.getElementById("selectedPatientBox").classList.remove("show");
+
+      if (!q) {
+        box.classList.remove("show");
+        box.innerHTML = "";
+        return;
+      }
+
+      const rows = patientsCache
+        .filter(p => patientSearchText(p).includes(q))
+        .slice(0, 12);
+
+      if (!rows.length) {
+        box.classList.add("show");
+        box.innerHTML =
+          '<div class="patient-option"><div><strong>ไม่พบผู้ป่วย</strong><small>ถ้ามีข้อมูลใน Supabase ให้เปิด Console ดูข้อความ patients loaded ว่าโหลดได้กี่คน</small></div></div>';
+        return;
+      }
+
+      box.classList.add("show");
+      box.innerHTML = rows.map(p => {
+        const name = patientNameOf(p);
+        const code = patientCodeOf(p);
+        const hn = p.hn || p.patient_hn || code || "-";
+        const phone = patientPhoneOf(p);
+
+        return `
+          <div class="patient-option" data-id="${escapeHTML(p.id)}">
+            <div>
+              <strong>${escapeHTML(name)}</strong>
+              <small>HN: ${escapeHTML(hn)} | Code: ${escapeHTML(code)} | Tel: ${escapeHTML(phone)}</small>
+            </div>
+            <span class="mini-pill">เลือก</span>
+          </div>
+        `;
+      }).join("");
+
+      box.querySelectorAll(".patient-option[data-id]").forEach(el => {
+        el.addEventListener("click", () => {
+          const id = el.getAttribute("data-id");
+          selectedPatient = patientsCache.find(p => String(p.id) === String(id));
+          if (!selectedPatient) return;
+
+          const name = patientNameOf(selectedPatient);
+          const code = patientCodeOf(selectedPatient);
+          const hn = selectedPatient.hn || selectedPatient.patient_hn || code || "-";
+          const phone = patientPhoneOf(selectedPatient);
+
+          input.value = name + " | " + code;
+
+          box.classList.remove("show");
+          document.getElementById("selectedPatientBox").classList.add("show");
+          document.getElementById("selectedPatientBox").innerHTML =
+            `<b>ผู้ป่วยที่เลือก:</b> ${escapeHTML(name)}<br>
+             HN: ${escapeHTML(hn)} | รหัสผู้ป่วย: ${escapeHTML(code)} | โทร: ${escapeHTML(phone)}`;
+        });
+      });
+    }
+
+    function renderStats() {
+      const total = transfersCache.length;
+      const urgent = transfersCache.filter(x => normalizePriority(x.priority) === "urgent").length;
+      const pending = transfersCache.filter(x => normalizeStatus(x.status) === "pending").length;
+      const done = transfersCache.filter(x => normalizeStatus(x.status) === "completed").length;
+
+      document.getElementById("statTotalTransfers").textContent = total;
+      document.getElementById("statUrgentTransfers").textContent = urgent;
+      document.getElementById("statPendingTransfers").textContent = pending;
+      document.getElementById("statDoneTransfers").textContent = done;
+    }
+
+
+    function setSelectByTextOrValue(id, value) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const v = safe(value);
+      const opt = [...el.options].find(o =>
+        o.value === v ||
+        o.textContent.trim() === v ||
+        o.value.toLowerCase() === v.toLowerCase() ||
+        o.textContent.trim().toLowerCase() === v.toLowerCase()
+      );
+      if (opt) {
+        el.value = opt.value;
+      } else if (v && v !== "-") {
+        const newOpt = document.createElement("option");
+        newOpt.value = v;
+        newOpt.textContent = v;
+        el.appendChild(newOpt);
+        el.value = v;
+      }
+    }
+
+    function fillTransferForm(t) {
+      selectedTransfer = t;
+      window.selectedTransfer = t;
+      const patientText =
+        safe(t.patient_name) +
+        (t.patient_code || t.hn ? " | " + safe(t.patient_code || t.hn) : "");
+
+      const patientInput = document.getElementById("patientSearch");
+      if (patientInput) patientInput.value = patientText;
+
+      selectedPatient = patientsCache.find(p =>
+        String(patientCodeOf(p)) === String(t.patient_code || t.hn) ||
+        String(p.hn || p.patient_hn || "") === String(t.hn || t.patient_code || "") ||
+        String(p.id || "") === String(t.patient_id || "")
+      ) || null;
+
+      const box = document.getElementById("selectedPatientBox");
+      if (box) {
+        box.classList.add("show");
+        box.innerHTML =
+          `<b>รายการส่งต่อที่เลือก:</b> ${escapeHTML(patientText)}<br>
+           HN: ${escapeHTML(t.hn || "-")} | วันที่ส่งต่อ: ${escapeHTML(t.transfer_date || "-")} | สถานะ: ${escapeHTML(statusText(t.status))}`;
+      }
+
+      setSelectByTextOrValue("screeningResult", t.screening_result);
+      setSelectByTextOrValue("transferType", t.transfer_type);
+      setSelectByTextOrValue("priority", t.priority);
+      setSelectByTextOrValue("appointmentStatus", t.status);
+
+      const destination = document.getElementById("destination");
+      if (destination) destination.value = safe(t.destination_unit || t.destination);
+
+      const receiver = document.getElementById("receiver");
+      if (receiver) receiver.value = safe(t.destination_doctor);
+
+      const contactPhone = document.getElementById("contactPhone");
+      if (contactPhone) contactPhone.value = safe(t.destination_phone);
+
+      const transferDate = document.getElementById("transferDate");
+      if (transferDate && t.transfer_date) transferDate.value = t.transfer_date;
+
+      const reason = document.getElementById("reason");
+      if (reason) reason.value = safe(t.reason);
+
+      const doctorNote = document.getElementById("doctorNote");
+      if (doctorNote) doctorNote.value = safe(t.doctor_note);
+
+      document.getElementById("patientSuggestions")?.classList.remove("show");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderTransfers() {
+      const box = document.getElementById("transferList");
+      if (!box) return;
+
+      if (!transfersCache.length) {
+        box.innerHTML = '<div class="loading-line">ยังไม่มีข้อมูลการส่งต่อจาก Supabase</div>';
+        return;
+      }
+
+      box.innerHTML = transfersCache.slice(0, 10).map(t => {
+        const title = `${safe(t.hn || t.patient_code)} - ${safe(t.screening_result)}`;
+        const desc = `${safe(t.transfer_type)} → ${safe(t.destination_unit || t.destination)}`;
+        const cls = priorityBadgeClass(t.priority);
+        return `
+          <div class="status-item" data-transfer-id="${escapeHTML(t.id)}" style="cursor:pointer;">
+            <div>
+              <strong>${escapeHTML(title)}</strong>
+              <p>${escapeHTML(desc)}</p>
+              <p style="font-size:11px;color:#8aa0bb;margin-top:4px;">
+                วันที่ส่งต่อ: ${escapeHTML(t.transfer_date || "-")} | สถานะ: ${escapeHTML(statusText(t.status))}
+              </p>
+            </div>
+            <div style="text-align:right;">
+              <span class="badge ${cls}">${escapeHTML(priorityLabel(t.priority))}</span><br>
+              <button class="small-action" data-action="select" data-id="${escapeHTML(t.id)}">เลือก</button>
+              <button class="small-action done" data-action="complete" data-id="${escapeHTML(t.id)}">สำเร็จ</button>
+              <button class="small-action danger" data-action="delete" data-id="${escapeHTML(t.id)}">ลบ</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      box.querySelectorAll(".status-item[data-transfer-id]").forEach(item => {
+        item.addEventListener("click", () => {
+          const id = item.getAttribute("data-transfer-id");
+          const transfer = transfersCache.find(x => String(x.id) === String(id));
+          if (transfer) fillTransferForm(transfer);
+        });
+      });
+
+      box.querySelectorAll("button[data-action]").forEach(btn => {
+        btn.addEventListener("click", async (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const id = btn.getAttribute("data-id");
+          const action = btn.getAttribute("data-action");
+
+          if (action === "select") {
+            const transfer = transfersCache.find(x => String(x.id) === String(id));
+            if (transfer) fillTransferForm(transfer);
+            return;
+          }
+
+          if (action === "complete") {
+            await updateTransferStatus(id, "completed");
+          }
+
+          if (action === "delete") {
+            if (confirm("ต้องการลบรายการส่งต่อนี้ใช่ไหม?")) {
+              await deleteTransfer(id);
+            }
+          }
+        });
+      });
+    }
+
+    async function updateTransferStatus(id, status) {
+      const { error } = await db
+        .from("patient_transfers")
+        .update({ status })
+        .eq("id", id);
+
+      if (error) {
+        alert("อัปเดตสถานะไม่สำเร็จ: " + error.message);
+        return;
+      }
+
+      await refreshTransfers();
+    }
+
+    async function deleteTransfer(id) {
+      const { error } = await db
+        .from("patient_transfers")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        alert("ลบรายการไม่สำเร็จ: " + error.message);
+        return;
+      }
+
+      await refreshTransfers();
+    }
+
+    async function refreshTransfers() {
+      await loadTransfersOnce();
+      renderStats();
+      renderTransfers();
+    }
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+
+      const patientInput = document.getElementById("patientSearch").value.trim();
+      const screeningResult = document.getElementById("screeningResult").value;
+      const transferType = document.getElementById("transferType").value;
+      const priority = document.getElementById("priority").value;
+      const destination = document.getElementById("destination").value.trim();
+      const receiver = document.getElementById("receiver").value.trim();
+      const transferDate = document.getElementById("transferDate").value || todayISO();
+      const contactPhone = document.getElementById("contactPhone").value.trim();
+      const reason = document.getElementById("reason").value.trim();
+      const doctorNote = document.getElementById("doctorNote").value.trim();
+
+      if (!patientInput || !destination || !reason) {
+        alert("กรุณาเลือก/กรอกผู้ป่วย หน่วยงานปลายทาง และเหตุผลในการโอนย้าย");
+        return;
+      }
+
+      const patientName = selectedPatient ? patientNameOf(selectedPatient) : patientInput;
+
+      const patientCode = selectedPatient ? patientCodeOf(selectedPatient) : patientInput;
+
+      const payload = {
+        patient_id: selectedPatient?.id || null,
+        patient_code: patientCode,
+        patient_name: patientName,
+        hn: selectedPatient?.hn || null,
+        screening_result: screeningResult || null,
+        transfer_type: transferType || null,
+        priority: priority || "ปกติ",
+        status: "pending",
+        destination_unit: destination,
+        destination_doctor: receiver || null,
+        destination_phone: contactPhone || null,
+        transfer_date: transferDate,
+        reason,
+        doctor_note: doctorNote || null,
+        created_by: currentUser?.id || null,
+        created_by_name: getUserName(),
+        created_by_role: currentProfile.role || currentProfile.user_role || null
+      };
+
+      const { error } = await db
+        .from("patient_transfers")
+        .insert([payload]);
+
+      if (error) {
+        alert("บันทึกการโอนย้ายไม่สำเร็จ: " + error.message);
+        return;
+      }
+
+      alert("บันทึกการโอนย้ายผู้ป่วยสำเร็จ");
+      document.getElementById("transferForm").reset();
+      selectedPatient = null;
+      document.getElementById("selectedPatientBox").classList.remove("show");
+      await refreshTransfers();
+    }
+
+    async function initPage() {
+      applySavedTheme();
+      window.addEventListener("storage", applySavedTheme);
+
+      await loadSession();
+      await Promise.all([loadPatientsOnce(), loadTransfersOnce()]);
+
+      renderStats();
+      renderTransfers();
+
+      const patientSearch = document.getElementById("patientSearch");
+      patientSearch.addEventListener("input", renderPatientSuggestions);
+
+      document.getElementById("transferDate").value = todayISO();
+      document.getElementById("transferForm").addEventListener("submit", handleSubmit);
+    }
+
+    document.addEventListener("DOMContentLoaded", initPage);
+  </script>
+
+
+<script>
+(function(){
+  const I18N = {
+    th: {
+      langName:'ไทย', pageTitle:'ระบบโอนย้ายและส่งต่อผู้ป่วย', pageSubtitle:'บันทึกข้อมูลการส่งต่อผู้ป่วยจากผลคัดกรองจอประสาทตา เพื่อให้ทีมรักษาติดตามต่อได้อย่างเป็นระบบ', breadcrumb:'โอนย้ายผู้ป่วย / Patient Transfer', headerBadgeTitle:'Transfer Management', headerBadgeSub:'จัดการการส่งต่อผู้ป่วย',
+      navHome:'หน้าหลัก', navUser:'บัญชีผู้ใช้', navPatients:'ข้อมูลผู้ป่วย', navScreen:'การตรวจ', navCreate:'สร้างคนไข้ใหม่', navAnalysis:'วิเคราะห์จอประสาทตา', navReport:'รายงานผล', navAppointment:'การนัดหมาย', navTransfer:'โอนย้ายผู้ป่วย', navKnowledge:'เกร็ดความรู้', navHistory:'ประวัติการตรวจ', navSettings:'ตั้งค่า',
+      statTotal:'รายการส่งต่อทั้งหมด', statUrgent:'เร่งด่วน', statPending:'รอดำเนินการ', statDone:'ส่งต่อสำเร็จ', formTitle:'แบบฟอร์มโอนย้ายผู้ป่วย', formDesc:'ใช้สำหรับบันทึกข้อมูลการส่งต่อผู้ป่วยไปยังแพทย์เฉพาะทาง แผนกจักษุ หรือหน่วยงานปลายทาง โดยควรระบุเหตุผลและระดับความเร่งด่วนให้ชัดเจน',
+      patientSearch:'ค้นหาผู้ป่วย', screening:'ผลการคัดกรองล่าสุด', transferType:'ประเภทการโอนย้าย', priority:'ระดับความเร่งด่วน', destination:'หน่วยงานปลายทาง', receiver:'แพทย์ / ผู้รับผิดชอบปลายทาง', transferDate:'วันที่ต้องการส่งต่อ', phone:'เบอร์ติดต่อปลายทาง', reason:'เหตุผลในการโอนย้าย', doctorNote:'หมายเหตุจากแพทย์ / ผู้ตรวจ',
+      phPatient:'ชื่อ / HN / รหัสผู้ป่วย', phDestination:'เช่น แผนกจักษุ / โรงพยาบาลปลายทาง', phReceiver:'เช่น นพ. / พญ. / เจ้าหน้าที่', phPhone:'เช่น 02-xxx-xxxx', phReason:'เช่น พบผล Moderate DR จากระบบ AI ต้องส่งต่อเพื่อประเมินโดยจักษุแพทย์', phNote:'บันทึกเพิ่มเติม เช่น อาการร่วม ประวัติโรคประจำตัว หรือข้อควรติดตาม',
+      clear:'ล้างข้อมูล', print:'พิมพ์ใบส่งตัว PDF', save:'บันทึกการโอนย้าย', guideTitle:'แนวทางการส่งต่อ', guideDesc:'คำแนะนำสำหรับการใช้งานในระบบจริง', latestTitle:'รายการส่งต่อล่าสุด', latestDesc:'ตัวอย่างสถานะการส่งต่อที่ควรมีในระบบ',
+      guide1:'1. ตรวจสอบตัวตนผู้ป่วย', guide1p:'ตรวจสอบชื่อ HN รหัสผู้ป่วย และเบอร์ติดต่อก่อนบันทึกการส่งต่อ', guide2:'2. ระบุผลคัดกรองล่าสุด', guide2p:'ควรเลือกผล AI หรือผลตรวจล่าสุด เพื่อให้ปลายทางทราบเหตุผลในการส่งต่อ', guide3:'3. เลือกระดับความเร่งด่วน', guide3p:'กรณี Severe DR หรือมีอาการตามัวเฉียบพลัน ควรเลือกเร่งด่วน', guide4:'4. บันทึกหมายเหตุแพทย์', guide4p:'ช่วยให้การดูแลต่อเนื่อง ลดการตกหล่นของข้อมูลสำคัญ',
+      orgName:'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ', orgSub:'ระบบตรวจคัดกรองจอประสาทตาเบาหวาน', logout:'ออกจากระบบ', loadingTransfers:'กำลังโหลดรายการส่งต่อ...', noTransfer:'ยังไม่มีข้อมูลการส่งต่อจาก Supabase', noPatient:'ไม่พบผู้ป่วย', choose:'เลือก', selectedPatient:'ผู้ป่วยที่เลือก', selectedTransfer:'รายการส่งต่อที่เลือก', patientCode:'รหัสผู้ป่วย', phoneShort:'โทร', transferDateList:'วันที่ส่งต่อ', status:'สถานะ', complete:'สำเร็จ', delete:'ลบ', alertDelete:'ต้องการลบรายการส่งต่อนี้ใช่ไหม?', updateFail:'อัปเดตสถานะไม่สำเร็จ: ', deleteFail:'ลบรายการไม่สำเร็จ: ', saveFail:'บันทึกการโอนย้ายไม่สำเร็จ: ', saveSuccess:'บันทึกการโอนย้ายผู้ป่วยสำเร็จ', alertRequired:'กรุณาเลือก/กรอกผู้ป่วย หน่วยงานปลายทาง และเหตุผลในการโอนย้าย', pending:'รอดำเนินการ', completed:'ส่งต่อสำเร็จ', cancelled:'ยกเลิก', follow:'ติดตามเร็ว', normal:'ปกติ', urgent:'เร่งด่วน',
+      optChooseScreening:'เลือกผลการคัดกรอง', optInternal:'ส่งต่อภายในหน่วยงาน', optEye:'ส่งต่อแผนกจักษุ', optHospital:'ส่งต่อโรงพยาบาลอื่น', optSpecialFollow:'นัดติดตามเฉพาะทาง', optFastFollow:'ควรติดตามเร็ว'
+    },
+    en: {
+      langName:'English', pageTitle:'Patient Transfer and Referral System', pageSubtitle:'Record referral information from diabetic retinopathy screening results for continuous clinical follow-up.', breadcrumb:'Patient Transfer / Referral', headerBadgeTitle:'Transfer Management', headerBadgeSub:'Manage patient referrals',
+      navHome:'Home', navUser:'User Account', navPatients:'Patient Information', navScreen:'Screening', navCreate:'Create New Patient', navAnalysis:'Retina Analysis', navReport:'Report', navAppointment:'Appointment', navTransfer:'Patient Transfer', navKnowledge:'Knowledge', navHistory:'Screening History', navSettings:'Settings',
+      statTotal:'Total transfers', statUrgent:'Urgent', statPending:'Pending', statDone:'Completed', formTitle:'Patient Transfer Form', formDesc:'Use this form to refer patients to an ophthalmology department, specialist physician, or destination unit. Clearly specify the reason and urgency level.',
+      patientSearch:'Search patient', screening:'Latest screening result', transferType:'Transfer type', priority:'Urgency level', destination:'Destination unit', receiver:'Destination doctor / responsible person', transferDate:'Preferred transfer date', phone:'Destination contact number', reason:'Reason for transfer', doctorNote:'Doctor / examiner note',
+      phPatient:'Name / HN / Patient code', phDestination:'e.g. Ophthalmology department / destination hospital', phReceiver:'e.g. doctor / nurse / staff', phPhone:'e.g. 02-xxx-xxxx', phReason:'e.g. Moderate DR detected by AI; refer for ophthalmologist evaluation', phNote:'Additional notes such as symptoms, underlying disease, or follow-up concerns',
+      clear:'Clear', print:'Print Transfer PDF', save:'Save Transfer', guideTitle:'Referral Guide', guideDesc:'Guidance for practical clinical use', latestTitle:'Latest Transfers', latestDesc:'Recent referral records in the system',
+      guide1:'1. Verify patient identity', guide1p:'Check name, HN, patient code, and contact number before saving the referral.', guide2:'2. Select latest screening result', guide2p:'Use the latest AI or clinical result so the destination unit understands the referral reason.', guide3:'3. Choose urgency level', guide3p:'Select urgent for Severe DR or sudden blurred vision.', guide4:'4. Record clinical notes', guide4p:'Supports continuity of care and reduces missed information.',
+      orgName:"King Mongkut's University of Technology North Bangkok", orgSub:'Diabetic Retinopathy Screening System', logout:'Logout', loadingTransfers:'Loading transfer records...', noTransfer:'No transfer records found in Supabase', noPatient:'No patient found', choose:'Select', selectedPatient:'Selected patient', selectedTransfer:'Selected transfer record', patientCode:'Patient code', phoneShort:'Tel', transferDateList:'Transfer date', status:'Status', complete:'Complete', delete:'Delete', alertDelete:'Delete this transfer record?', updateFail:'Failed to update status: ', deleteFail:'Failed to delete record: ', saveFail:'Failed to save transfer: ', saveSuccess:'Patient transfer saved successfully', alertRequired:'Please select/fill patient, destination unit, and transfer reason.', pending:'Pending', completed:'Completed', cancelled:'Cancelled', follow:'Follow soon', normal:'Normal', urgent:'Urgent',
+      optChooseScreening:'Select screening result', optInternal:'Internal transfer', optEye:'Ophthalmology department referral', optHospital:'Transfer to another hospital', optSpecialFollow:'Specialist follow-up appointment', optFastFollow:'Follow soon'
+    }
+  };
+  const LANG_KEYS=['dr_lang','dr_language','language','app_lang','site_lang'];
+  const getLang=()=>{ const raw=LANG_KEYS.map(k=>localStorage.getItem(k)).find(Boolean)||'th'; return String(raw).toLowerCase().startsWith('en')?'en':'th'; };
+  const saveLang=(v)=>{ const l=String(v).toLowerCase().startsWith('en')?'en':'th'; LANG_KEYS.forEach(k=>localStorage.setItem(k,l)); return l; };
+  const d=()=>I18N[getLang()]||I18N.th;
+  const setText=(el,v)=>{ if(el && v!==undefined) el.textContent=v; };
+  const setPH=(id,v)=>{ const el=document.getElementById(id); if(el) el.placeholder=v; };
+  const icon=(a)=>a?.querySelector('span')?.outerHTML||'';
+  const setNav=(selector,key)=>{ const el=document.querySelector(selector); if(el) el.innerHTML=icon(el)+' '+d()[key]; };
+  function setOptions(id, opts){
+    const el=document.getElementById(id); if(!el) return;
+    const old=el.value;
+    el.innerHTML=opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('');
+    if([...el.options].some(o=>o.value===old)) el.value=old;
+  }
+  window.statusText=function(status){ const s=String(status||'').toLowerCase(); if(s.includes('complete')||s.includes('done')||s.includes('สำเร็จ')) return d().completed; if(s.includes('cancel')||s.includes('ยกเลิก')) return d().cancelled; return d().pending; };
+  window.priorityLabel=function(priority){ const p=String(priority||'').toLowerCase(); if(p.includes('urgent')||p.includes('เร่ง')) return d().urgent; if(p.includes('follow')||p.includes('เร็ว')) return d().follow; return d().normal; };
+  window.applyTransferLanguage=function(){
+    const lang=getLang(), T=d(); document.documentElement.lang=lang;
+    setText(document.querySelector('.welcome-label'),T.breadcrumb); setText(document.querySelector('.page-header h1'),T.pageTitle); setText(document.querySelector('.page-header > div:first-child p:not(.welcome-label)'),T.pageSubtitle); setText(document.querySelector('.header-badge strong'),T.headerBadgeTitle); setText(document.querySelector('.header-badge span'),T.headerBadgeSub);
+    setNav('.nav-menu a[href="dashboard.html"]','navHome'); setNav('.nav-menu a[href="dashboard.html#account"]','navUser'); setNav('.nav-menu a[href="dashboard.html#patients"]','navPatients'); setNav('.nav-menu a[href="dashboard.html#newPatient"]','navScreen');
+    const sub=document.querySelectorAll('.nav-sub-item'); if(sub[0]) sub[0].innerHTML=icon(sub[0])+' '+T.navCreate; if(sub[1]) sub[1].innerHTML=icon(sub[1])+' '+T.navAnalysis; if(sub[2]) sub[2].innerHTML=icon(sub[2])+' '+T.navReport; if(sub[3]) sub[3].innerHTML=icon(sub[3])+' '+T.navAppointment;
+    setNav('.nav-menu a[href="patient-transfer.html"]','navTransfer'); setNav('.nav-menu a[href="knowledge-dr.html"]','navKnowledge'); setNav('.nav-menu a[href="dashboard.html#settings"]','navSettings');
+    setText(document.querySelector('.hospital-card strong'),T.orgName); setText(document.querySelector('.hospital-card p'),T.orgSub);
+    document.querySelectorAll('.summary-card p').forEach((el,i)=>setText(el,[T.statTotal,T.statUrgent,T.statPending,T.statDone][i]));
+    const cards=document.querySelectorAll('.card'); if(cards[0]){setText(cards[0].querySelector('h2'),T.formTitle);setText(cards[0].querySelector('.card-desc'),T.formDesc);} if(cards[1]){setText(cards[1].querySelector('h2'),T.guideTitle);setText(cards[1].querySelector('.card-desc'),T.guideDesc);} if(cards[2]){setText(cards[2].querySelector('h2'),T.latestTitle);setText(cards[2].querySelector('.card-desc'),T.latestDesc);}
+    document.querySelectorAll('#transferForm label').forEach((el,i)=>setText(el,[T.patientSearch,T.screening,T.transferType,T.priority,T.destination,T.receiver,T.transferDate,T.phone,T.reason,T.doctorNote][i]));
+    setPH('patientSearch',T.phPatient); setPH('destination',T.phDestination); setPH('receiver',T.phReceiver); setPH('contactPhone',T.phPhone); setPH('reason',T.phReason); setPH('doctorNote',T.phNote);
+    document.querySelectorAll('.action-row button').forEach((el,i)=>setText(el,[T.clear,T.print,T.save][i]));
+    const guide=cards[1]?.querySelectorAll('.guide-item'); if(guide){[T.guide1,T.guide2,T.guide3,T.guide4].forEach((v,i)=>setText(guide[i]?.querySelector('strong'),v));[T.guide1p,T.guide2p,T.guide3p,T.guide4p].forEach((v,i)=>setText(guide[i]?.querySelector('p'),v));}
+    setOptions('screeningResult', [['',T.optChooseScreening],['No DR','No DR'],['Mild DR','Mild DR'],['Moderate DR','Moderate DR'],['Severe DR','Severe DR'],['Referable DR','Referable DR']]);
+    setOptions('transferType', [['internal',T.optInternal],['ophthalmology',T.optEye],['external_hospital',T.optHospital],['special_followup',T.optSpecialFollow]]);
+    setOptions('priority', [['normal',T.normal],['follow',T.optFastFollow],['urgent',T.urgent]]);
+    const sel=document.getElementById('transferLangSelect'); if(sel) sel.value=lang; const logout=document.getElementById('transferLogoutBtn'); if(logout) logout.textContent=T.logout;
+    if(typeof renderTransfers==='function') renderTransfers();
+  };
+  function ensureLangSelect(){ if(document.getElementById('transferLangSelect')) return; const select=document.createElement('select'); select.id='transferLangSelect'; select.className='transfer-lang-select'; select.innerHTML='<option value="th">ไทย</option><option value="en">English</option>'; select.value=getLang(); select.addEventListener('change',()=>{saveLang(select.value);window.applyTransferLanguage();}); const header=document.querySelector('.page-header'), badge=document.querySelector('.header-badge'); const wrap=document.createElement('div'); wrap.className='transfer-top-actions'; wrap.appendChild(select); if(header&&badge) header.insertBefore(wrap,badge); else document.body.prepend(wrap); }
+  function ensureLogout(){ if(document.getElementById('transferLogoutBtn')) return; const btn=document.createElement('button'); btn.type='button'; btn.id='transferLogoutBtn'; btn.className='logout-btn'; btn.textContent=d().logout; btn.onclick=async()=>{try{await db.auth.signOut();}catch(e){} location.href='index.html';}; const bottom=document.querySelector('.sidebar-bottom')||document.querySelector('.sidebar'); if(bottom) bottom.appendChild(btn); }
+  function ensurePrint(){ const btn=document.getElementById('printTransferBtn')||document.querySelector('.action-row button:nth-child(2)'); if(btn) btn.onclick=(e)=>{e.preventDefault();window.print();}; }
+  // Patch existing dynamic renderers so strings follow current language.
+  window.addEventListener('storage',e=>{ if(LANG_KEYS.includes(e.key)) window.applyTransferLanguage(); if(['dr_theme','dr_dashboard_theme','theme'].includes(e.key)&&typeof applySavedTheme==='function') applySavedTheme(); });
+  window.addEventListener('focus',()=>window.applyTransferLanguage());
+  document.addEventListener('DOMContentLoaded',()=>{ ensureLangSelect(); ensureLogout(); ensurePrint(); window.applyTransferLanguage(); setTimeout(window.applyTransferLanguage,700); });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>วิเคราะห์จอประสาทตา | DR Screening Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg:#f4f7fd; --card:#ffffff; --text:#10213f; --muted:#64748b; --line:#e5edf8;
+      --blue:#315be8; --blue2:#2145c7; --soft:#eef4ff; --danger:#ef4444; --success:#16a34a;
+      --warning:#f59e0b; --purple:#6d28d9; --shadow:0 20px 45px rgba(24,44,92,.08); --radius:22px;
+    }
+    [data-theme="dark"] {
+      --bg:#0f172a; --card:#172033; --text:#f8fafc; --muted:#a8b3c7; --line:#26354f;
+      --blue:#5b7cff; --blue2:#4163e5; --soft:#1e2b45; --shadow:0 20px 45px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{text-decoration:none;color:inherit} button,input,select,textarea{font:inherit}
+    .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}
+    .sidebar{background:var(--card);border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;padding:6px 4px 18px;border-bottom:1px solid var(--line)}
+    .logo{width:42px;height:42px;border-radius:14px;background:#fff;display:grid;place-items:center;color:var(--blue);font-weight:900;box-shadow:0 8px 18px rgba(49,91,232,.12);border:1px solid var(--line)}
+    .brand h1{font-size:15px;margin:0;line-height:1.1;color:#0f4cdb} .brand p{font-size:11px;margin:4px 0 0;color:var(--muted)}
+    .nav{display:flex;flex-direction:column;gap:7px} .nav-title{font-size:11px;color:#9aa8bd;font-weight:900;margin:10px 10px 2px}
+    .nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;color:var(--muted);font-weight:850;font-size:14px}
+    .nav a:hover{background:var(--soft);color:var(--blue)} .nav a.active{background:var(--blue);color:#fff;box-shadow:0 14px 26px rgba(49,91,232,.25)}
+    .footer-card{margin-top:auto;background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:14px;font-size:12px;color:var(--muted);line-height:1.35}
+    .logout{border:1px solid #fecaca;color:#dc2626;background:#fff;border-radius:14px;padding:12px;font-weight:900;cursor:pointer} [data-theme="dark"] .logout{background:#172033}
+    .main{padding:26px 32px 40px;max-width:1680px;width:100%;margin:0 auto}
+    .topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:16px}
+    .breadcrumb{font-size:13px;color:var(--blue);font-weight:900;margin-bottom:8px} h2{font-size:30px;margin:0 0 8px} .subtitle{margin:0;color:var(--muted);font-weight:750}
+    .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .lang{height:46px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:0 38px 0 14px;font-weight:900;min-width:116px}
+    .top-btn,.btn{border:0;border-radius:14px;padding:0 18px;height:46px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+    .top-btn{background:var(--card);border:1px solid var(--line);color:var(--blue);box-shadow:0 10px 24px rgba(37,99,235,.06)}
+    .top-btn.primary,.btn.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:none;box-shadow:0 10px 24px rgba(49,91,232,.22)}
+    .btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--text)} .btn.soft{background:var(--soft);color:var(--blue);border:1px solid var(--line)} .btn.danger{background:#fee2e2;color:#dc2626}
+    .hero{background:linear-gradient(135deg,#315be8,#2448d7);color:#fff;border-radius:28px;padding:26px 32px;box-shadow:var(--shadow);position:relative;overflow:hidden;margin-bottom:18px}
+    .hero:after{content:"";position:absolute;right:-60px;top:-70px;width:230px;height:230px;border-radius:50%;background:rgba(255,255,255,.13)} .hero h3{margin:0;font-size:24px} .hero p{margin:8px 0 0;color:rgba(255,255,255,.88);font-weight:750}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+    .stat{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;display:flex;gap:14px;align-items:center;box-shadow:var(--shadow)}
+    .icon{width:48px;height:48px;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:22px} .stat small{display:block;color:var(--muted);font-weight:900} .stat strong{font-size:25px}
+    .grid{display:grid;grid-template-columns:minmax(430px,.86fr) minmax(650px,1.35fr);gap:18px;align-items:start}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px} .card h3{margin:0 0 8px;font-size:20px} .card p{margin:0 0 14px;color:var(--muted);font-weight:700;line-height:1.5}
+    input,select,textarea{width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:13px 14px;outline:none} input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(49,91,232,.10)}
+    .patient-list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:240px;overflow:auto}
+    .patient-item{border:1px solid var(--line);background:#f8fbff;border-radius:16px;padding:14px;cursor:pointer;display:flex;gap:12px;align-items:center} [data-theme="dark"] .patient-item{background:#111827}
+    .patient-item.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(49,91,232,.12);background:var(--soft)}
+    .avatar{width:44px;height:44px;border-radius:16px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:900} .patient-item b{display:block} .patient-item span{color:var(--muted);font-size:12px;font-weight:800}
+    .patient-details{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px} .field-box{border:1px solid var(--line);background:#f9fbff;border-radius:14px;padding:12px;min-height:66px} [data-theme="dark"] .field-box{background:#111827} .field-box small{display:block;color:var(--muted);font-weight:900;margin-bottom:5px} .field-box b{font-size:14px}
+    .history-mini{margin-top:14px;border:1px solid var(--line);border-radius:16px;padding:14px;background:#fbfdff} [data-theme="dark"] .history-mini{background:#111827} .history-mini b{display:block;margin-bottom:6px}
+    .upload{border:2px dashed #b8cdf5;border-radius:22px;background:linear-gradient(180deg,rgba(238,244,255,.72),rgba(255,255,255,.38));padding:18px;text-align:center} [data-theme="dark"] .upload{background:#111827}
+    .preview-wrap{margin-top:0;background:#020617;border-radius:22px;overflow:hidden;min-height:430px;display:grid;place-items:center;position:relative;border:1px solid rgba(255,255,255,.08)} .preview-wrap img,.preview-wrap video{width:100%;max-height:620px;object-fit:contain;display:block}
+    .image-toolbar{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}.image-toolbar .btn{height:40px;border-radius:12px;padding:0 14px;font-size:13px}.image-caption{text-align:center;color:var(--muted);font-weight:850;margin-top:8px;font-size:13px}
+    .empty-preview{color:#9aa8bd;font-weight:900;padding:42px;text-align:center} .thumbs{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}.thumb-wrap{position:relative;width:90px;height:72px}.thumb{width:90px;height:72px;border-radius:14px;object-fit:cover;border:3px solid transparent;cursor:pointer;background:#020617}.thumb.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(49,91,232,.15)}.thumb-del{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border:none;border-radius:999px;background:#ef4444;color:#fff;font-size:13px;font-weight:900;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 18px rgba(239,68,68,.25)}
+    .action-row{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}.save-hint{margin-top:8px;text-align:right;color:var(--muted);font-size:12px;font-weight:800}.btn[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none!important}
+    .result{margin-top:16px;border-left:0;background:transparent;border-radius:18px;padding:0}.result h3{margin:0 0 8px}
+    .badge{display:inline-flex;padding:7px 11px;border-radius:999px;font-weight:900;font-size:12px;background:#ede9fe;color:#5b21b6;margin:0 6px 6px 0} .badge.green{background:#dcfce7;color:#166534} .badge.red{background:#fee2e2;color:#991b1b}.badge.blue{background:#dbeafe;color:#1d4ed8}.badge.orange{background:#ffedd5;color:#9a3412}
+    .medical-card{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)} [data-theme="dark"] .medical-card{background:#111827}
+    .result-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}.result-title-block h3{margin:0 0 8px}.result-status{display:flex;gap:8px;flex-wrap:wrap}.result-grid{display:grid;grid-template-columns:170px 1fr;gap:18px;align-items:start}.mini-fundus{width:170px;height:150px;border-radius:18px;object-fit:cover;background:#020617;border:1px solid var(--line)}.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.metric{border:1px solid var(--line);border-radius:16px;background:#f8fbff;padding:12px}[data-theme="dark"] .metric{background:#0f172a}.metric small{display:block;color:var(--muted);font-weight:900;margin-bottom:4px}.metric b{font-size:16px}.patient-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.summary-item{border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--soft)}.summary-item small{display:block;color:var(--muted);font-weight:900}.summary-item b{font-size:13px}.grad-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.grad-panel{border:1px solid var(--line);border-radius:18px;padding:12px;background:#f8fbff}[data-theme="dark"] .grad-panel{background:#0f172a}.grad-panel b{display:block;margin-bottom:8px}.grad-grid img{width:100%;border-radius:16px;border:1px solid var(--line);background:#020617;max-height:360px;object-fit:contain}
+    .camera-modal{position:fixed;inset:0;background:rgba(2,6,23,.72);display:none;align-items:center;justify-content:center;z-index:50;padding:20px} .camera-modal.show{display:flex}
+    .camera-box{width:min(860px,96vw);background:var(--card);border-radius:24px;padding:18px;box-shadow:0 30px 80px rgba(0,0,0,.35)} .camera-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px} .camera-head h3{margin:0} #cameraVideo{width:100%;background:#000;border-radius:18px;max-height:560px}
+    .hidden{display:none!important} .toast{position:fixed;right:24px;bottom:24px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:14px 16px;font-weight:900;display:none;z-index:99} .toast.show{display:block}
+
+    /* Sidebar logo / KMUTNB emblem */
+    .logo{position:relative;overflow:hidden}
+    .logo img{width:100%;height:100%;object-fit:cover;border-radius:14px;display:none}
+    .logo .logo-fallback{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;color:var(--blue)}
+    .footer-card{display:flex;align-items:center;gap:10px}
+    .footer-card .uni-emblem{width:42px;height:42px;min-width:42px;border-radius:12px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;color:var(--blue);font-weight:900}
+    .footer-card .uni-emblem img{width:100%;height:100%;object-fit:contain;display:none}
+    .footer-card .uni-text{display:flex;flex-direction:column;gap:3px}
+    [data-theme="dark"] .footer-card .uni-emblem{background:#182235}
+
+    @media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.grid,.stats{grid-template-columns:1fr}.main{padding:18px}.patient-details,.grad-grid,.result-grid{grid-template-columns:1fr}.topbar{flex-direction:column}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">
+        <img alt="DR Logo" data-logo-fallbacks="logo-new.jpg,./logo-new.jpg,images/logo-new.jpg,assets/logo-new.jpg">
+        <span class="logo-fallback">DR</span>
+      </div>
+      <div>
+        <h1>Diabetic<br>Retinopathy</h1>
+        <p>DR Screening Portal</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="dashboard.html" data-i18n="navHome">🏠 หน้าหลัก</a>
+      <a href="user.html" data-i18n="navUser">👤 บัญชีผู้ใช้</a>
+      <a href="patients.html" data-i18n="navPatients">👥 ข้อมูลผู้ป่วย</a>
+      <div class="nav-title" data-i18n="navScreeningGroup">การตรวจ</div>
+      <a href="create-patient.html" data-i18n="navCreate">➕ สร้างคนไข้ใหม่</a>
+      <a href="retina-analysis.html" class="active" data-i18n="navAnalysis">🔬 วิเคราะห์จอประสาทตา</a>
+      <a href="retina-report-new.html" data-i18n="navReport">📄 รายงานผล</a>
+      <a href="appointment-followup.html" data-i18n="navAppointment">📅 การนัดหมาย</a>
+      <a href="patient-transfer.html" data-i18n="navTransfer">🔁 โอนย้ายผู้ป่วย</a>
+      <a href="knowledge-dr.html" data-i18n="navKnowledge">💡 เกร็ดความรู้</a>
+      <a href="screening-history.html" data-i18n="navHistory">🕘 ประวัติการตรวจ</a>
+      <a href="settings.html" data-i18n="navSettings">⚙️ ตั้งค่า</a>
+    </nav>
+    <div class="footer-card">
+      <div class="uni-emblem">
+        <img alt="KMUTNB Logo" data-logo-fallbacks="logo-kmutnb.png,institution-logo.png,./logo-kmutnb.png,./institution-logo.png,images/logo-kmutnb.png,assets/logo-kmutnb.png">
+        <span class="uni-fallback">มจพ</span>
+      </div>
+      <div class="uni-text">
+        <b data-i18n="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</b>
+        <span data-i18n="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</span>
+      </div>
+    </div>
+    <button class="logout" id="logoutBtn" data-i18n="logout">ออกจากระบบ</button>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="breadcrumb" data-i18n="breadcrumb">การตรวจ / วิเคราะห์จอประสาทตา</div>
+        <h2 data-i18n="pageTitle">วิเคราะห์ระดับเบาหวานขึ้นจอประสาทตา</h2>
+        <p class="subtitle" data-i18n="pageSubtitle">เลือกผู้ป่วย อัปโหลดหรือถ่ายภาพจอประสาทตา แล้ววิเคราะห์ด้วย AI</p>
+      </div>
+      <div class="top-actions">
+        <select class="lang" id="langSelect"><option value="th">ไทย</option><option value="en">English</option></select>
+        <a class="top-btn" href="dashboard.html" data-i18n="backHome">🏠 หน้าหลัก</a>
+        <a class="top-btn primary" href="retina-report-new.html" data-i18n="viewReport">📄 รายงานผล</a>
+      </div>
+    </div>
+
+    <section class="hero"><h3 data-i18n="heroTitle">ศูนย์วิเคราะห์ภาพจอประสาทตา</h3><p data-i18n="heroText">แยกตาซ้าย/ขวา → ตรวจพบ DR หรือไม่ → ประเมินระดับความรุนแรง → แสดง Grad-CAM</p></section>
+
+    <section class="stats">
+      <div class="stat"><div class="icon">👤</div><div><small data-i18n="statPatient">ผู้ป่วยที่เลือก</small><strong id="statPatientName">-</strong></div></div>
+      <div class="stat"><div class="icon">🖼️</div><div><small data-i18n="statImages">รูปที่อัปโหลด</small><strong id="statImages">0</strong></div></div>
+      <div class="stat"><div class="icon">🔬</div><div><small data-i18n="statAnalysis">ผลวิเคราะห์</small><strong id="statAnalysis">0</strong></div></div>
+      <div class="stat"><div class="icon">📄</div><div><small data-i18n="statReport">สถานะรายงาน</small><strong id="statReport" data-i18n="notSaved">ยังไม่บันทึก</strong></div></div>
+    </section>
+
+    <section class="grid">
+      <div>
+        <div class="card">
+          <h3 data-i18n="patientTitle">ค้นหาและเลือกผู้ป่วย</h3>
+          <p data-i18n="patientDesc">ค้นหาจากชื่อ, HN, รหัสผู้ป่วย หรือเบอร์โทร</p>
+          <input id="patientSearch" placeholder="ค้นหา เช่น ชื่อ / HN / เบอร์โทร" data-i18n-placeholder="patientPlaceholder">
+          <div class="patient-list" id="patientList"><div class="empty-preview" data-i18n="loadingPatients">กำลังโหลดรายชื่อผู้ป่วย...</div></div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h3 data-i18n="patientInfo">ข้อมูลผู้ป่วย</h3>
+          <p data-i18n="patientInfoDesc">ข้อมูลนี้จะถูกใช้ประกอบรายงานผลการตรวจ</p>
+          <div id="selectedPatientBox" class="patient-details"></div>
+          <div class="history-mini" id="historyMini"><b data-i18n="historyTitle">ประวัติการตรวจของผู้ป่วยรายนี้</b><span data-i18n="noHistory">ยังไม่มีประวัติการตรวจ</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="preview-wrap" id="previewWrap"><div class="empty-preview" data-i18n="emptyPreview">ยังไม่มีรูปภาพ กรุณาเลือกรูปหรือถ่ายภาพก่อน</div></div>
+          <div class="image-caption" id="imageCaption" data-i18n="imageCaptionEmpty">ยังไม่ได้เลือกรูปหลัก</div>
+
+          <div class="image-toolbar">
+            <input id="fileInput" type="file" accept="image/*" multiple class="hidden" />
+            <button class="btn primary" id="pickBtn" data-i18n="pickImage">＋ เพิ่มรูปภาพ</button>
+            <button class="btn ghost" id="cameraBtn" data-i18n="takePhoto">📷 ถ่ายภาพ</button>
+            <button class="btn danger" id="deleteCurrentBtn" data-i18n="deleteCurrent">ลบรูปหลัก</button>
+          </div>
+          <div class="thumbs" id="thumbs"></div>
+
+          <div class="action-row">
+            <button class="btn ghost" id="clearBtn" data-i18n="clearImages">ล้างรูปภาพทั้งหมด</button>
+            <button class="btn primary" id="analyzeBtn" data-i18n="analyzeBtn">วิเคราะห์ด้วย AI</button>
+            <button class="btn primary" id="saveBtn" data-i18n="saveReport" disabled>บันทึกและดูรายงาน</button>
+          </div>
+          <div class="save-hint" data-i18n="saveHint">หลังวิเคราะห์แล้วต้องกด “บันทึกและดูรายงาน” เพื่อส่งผลตรวจไป Supabase และเก็บรูปใน Storage</div>
+
+          <div class="result" id="resultBox">
+            <h3 data-i18n="resultTitle">ผลการวิเคราะห์</h3>
+            <p data-i18n="resultEmpty">ยังไม่มีผลการวิเคราะห์</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="camera-modal" id="cameraModal">
+  <div class="camera-box">
+    <div class="camera-head"><h3 data-i18n="cameraTitle">📷 ถ่ายภาพจอประสาทตา</h3><button class="btn danger" id="closeCamera" data-i18n="closeCamera">ปิดกล้อง</button></div>
+    <video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvas" class="hidden"></canvas>
+    <div class="action-row" style="justify-content:center"><button class="btn primary" id="captureBtn" data-i18n="capturePhoto">ถ่ายภาพ</button><button class="btn ghost" id="switchCamera" data-i18n="switchCamera">สลับกล้อง</button></div>
+    <p style="text-align:center;color:var(--muted);font-weight:700" data-i18n="cameraHint">หากใช้มือถือ ควรเปิดผ่าน HTTPS หรือ localhost</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
+  const API_URL = "http://127.0.0.1:8000/predict";
+  const BUCKET = "retina-images";
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const I18N = {
+    th: {
+      navHome:"🏠 หน้าหลัก", navUser:"👤 บัญชีผู้ใช้", navPatients:"👥 ข้อมูลผู้ป่วย", navScreeningGroup:"การตรวจ", navCreate:"➕ สร้างคนไข้ใหม่",
+      navAnalysis:"🔬 วิเคราะห์จอประสาทตา", navReport:"📄 รายงานผล", navAppointment:"📅 การนัดหมาย", navTransfer:"🔁 โอนย้ายผู้ป่วย", navKnowledge:"💡 เกร็ดความรู้", navHistory:"🕘 ประวัติการตรวจ", navSettings:"⚙️ ตั้งค่า",
+      orgName:"มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ", orgSub:"ระบบตรวจคัดกรองจอประสาทตาเบาหวาน", logout:"ออกจากระบบ",
+      breadcrumb:"การตรวจ / วิเคราะห์จอประสาทตา", pageTitle:"วิเคราะห์ระดับเบาหวานขึ้นจอประสาทตา", pageSubtitle:"เลือกผู้ป่วย อัปโหลดหรือถ่ายภาพจอประสาทตา แล้ววิเคราะห์ด้วย AI",
+      backHome:"🏠 หน้าหลัก", viewReport:"📄 รายงานผล", heroTitle:"ศูนย์วิเคราะห์ภาพจอประสาทตา", heroText:"แยกตาซ้าย/ขวา → ตรวจพบ DR หรือไม่ → ประเมินระดับความรุนแรง → แสดง Grad-CAM",
+      statPatient:"ผู้ป่วยที่เลือก", statImages:"รูปที่อัปโหลด", statAnalysis:"ผลวิเคราะห์", statReport:"สถานะรายงาน", notSaved:"ยังไม่บันทึก",
+      patientTitle:"ค้นหาและเลือกผู้ป่วย", patientDesc:"ค้นหาจากชื่อ, HN, รหัสผู้ป่วย หรือเบอร์โทร", patientPlaceholder:"ค้นหา เช่น ชื่อ / HN / เบอร์โทร",
+      loadingPatients:"กำลังโหลดรายชื่อผู้ป่วย...", noPatients:"ไม่พบรายชื่อผู้ป่วย", patientInfo:"ข้อมูลผู้ป่วย", patientInfoDesc:"ข้อมูลนี้จะถูกใช้ประกอบรายงานผลการตรวจ",
+      name:"ชื่อผู้ป่วย", patientCode:"รหัสผู้ป่วย", age:"อายุ", sex:"เพศ", phone:"เบอร์โทร", disease:"โรคประจำตัว", birthDate:"วันเกิด", weight:"น้ำหนัก", height:"ส่วนสูง",
+      historyTitle:"ประวัติการตรวจของผู้ป่วยรายนี้", noHistory:"ยังไม่มีประวัติการตรวจ", latestResult:"ผลตรวจล่าสุด",
+      uploadTitle:"อัปโหลดภาพจอประสาทตา", uploadDesc:"เลือกภาพจากเครื่อง หรือถ่ายภาพใหม่จากกล้องได้", pickImage:"＋ เพิ่มรูปภาพ", takePhoto:"📷 ถ่ายภาพ",
+      emptyPreview:"ยังไม่มีรูปภาพ กรุณาเพิ่มรูปหรือถ่ายภาพก่อน", imageCaptionEmpty:"ยังไม่ได้เลือกรูปหลัก", imageCaption:"รูปหลักที่ใช้วิเคราะห์", deleteCurrent:"ลบรูปหลัก", clearImages:"ล้างรูปภาพทั้งหมด", analyzeBtn:"วิเคราะห์ด้วย AI", saveReport:"บันทึกและดูรายงาน", saveHint:"หลังวิเคราะห์แล้วต้องกด “บันทึกและดูรายงาน” เพื่อส่งผลตรวจไป Supabase และเก็บรูปใน Storage",
+      resultTitle:"ผลการวิเคราะห์", resultEmpty:"ยังไม่มีผลการวิเคราะห์", cameraTitle:"📷 ถ่ายภาพจอประสาทตา", closeCamera:"ปิดกล้อง", capturePhoto:"ถ่ายภาพ", switchCamera:"สลับกล้อง", cameraHint:"หากใช้มือถือ ควรเปิดผ่าน HTTPS หรือ localhost",
+      selectFirst:"กรุณาเลือกผู้ป่วยก่อน", chooseImage:"กรุณาเลือกรูปภาพก่อน", analyzing:"กำลังวิเคราะห์...", apiFail:"เชื่อม API โมเดลไม่สำเร็จ", saved:"บันทึกผลตรวจเรียบร้อย", uploadFail:"อัปโหลดรูปไป Storage ไม่สำเร็จ แต่ยังบันทึกรายงานได้",
+      cameraError:"เปิดกล้องไม่ได้ กรุณาอนุญาตกล้องใน Browser หรือใช้ localhost/HTTPS", noDr:"ไม่พบเบาหวานขึ้นจอประสาทตา", drFound:"พบภาวะเบาหวานขึ้นจอประสาทตา"
+    },
+    en: {
+      navHome:"🏠 Home", navUser:"👤 User Account", navPatients:"👥 Patient Information", navScreeningGroup:"Screening", navCreate:"➕ Create New Patient",
+      navAnalysis:"🔬 Retina Analysis", navReport:"📄 Report", navAppointment:"📅 Appointment", navTransfer:"🔁 Patient Transfer", navKnowledge:"💡 Knowledge", navHistory:"🕘 Screening History", navSettings:"⚙️ Settings",
+      orgName:"King Mongkut's University of Technology North Bangkok", orgSub:"Diabetic Retinopathy Screening System", logout:"Logout",
+      breadcrumb:"Screening / Retina Analysis", pageTitle:"Diabetic Retinopathy Retinal Analysis", pageSubtitle:"Select a patient, upload or capture a retinal image, then analyze with AI.",
+      backHome:"🏠 Home", viewReport:"📄 Report", heroTitle:"Retinal Image Analysis Center", heroText:"Eye side detection → DR/No DR screening → severity grading → medical Grad-CAM.",
+      statPatient:"Selected Patient", statImages:"Uploaded Images", statAnalysis:"Analysis Results", statReport:"Report Status", notSaved:"Not saved",
+      patientTitle:"Search and Select Patient", patientDesc:"Search by name, HN, patient code, or phone.", patientPlaceholder:"Search name / HN / phone",
+      loadingPatients:"Loading patient list...", noPatients:"No patients found", patientInfo:"Patient Information", patientInfoDesc:"This information will be used in the screening report.",
+      name:"Patient Name", patientCode:"Patient Code", age:"Age", sex:"Sex", phone:"Phone", disease:"Disease", birthDate:"Birth date", weight:"Weight", height:"Height",
+      historyTitle:"Patient Screening History", noHistory:"No screening history", latestResult:"Latest result",
+      uploadTitle:"Upload Retinal Image", uploadDesc:"Choose an image from device or capture a new photo.", pickImage:"＋ Add Image", takePhoto:"📷 Take Photo",
+      emptyPreview:"No image yet. Please add or capture an image.", imageCaptionEmpty:"No main image selected", imageCaption:"Main image for analysis", deleteCurrent:"Delete Main Image", clearImages:"Clear All Images", analyzeBtn:"Analyze with AI", saveReport:"Save and View Report", saveHint:"After analysis, click “Save and View Report” to store the result in Supabase and upload the image to Storage.",
+      resultTitle:"Analysis Result", resultEmpty:"No analysis yet", cameraTitle:"📷 Capture Retinal Image", closeCamera:"Close Camera", capturePhoto:"Capture", switchCamera:"Switch Camera", cameraHint:"On mobile, camera access may require HTTPS or localhost.",
+      selectFirst:"Please select a patient first", chooseImage:"Please choose an image first", analyzing:"Analyzing...", apiFail:"Cannot connect to model API", saved:"Screening report saved", uploadFail:"Storage upload failed, but report can still be saved",
+      cameraError:"Cannot open camera. Please allow camera permission or use localhost/HTTPS.", noDr:"No diabetic retinopathy detected", drFound:"Diabetic retinopathy detected"
+    }
+  };
+
+  function normalizeLang(v){
+    v = String(v || "th").toLowerCase();
+    return v.startsWith("en") ? "en" : "th";
+  }
+  function getSavedLang(){
+    // อ่านค่าภาษาจาก key กลางหลายรูปแบบ เพื่อให้ลิงก์กับ Settings และหน้าอื่นได้จริง
+    const direct =
+      localStorage.getItem("dr_lang") ||
+      localStorage.getItem("dr_language") ||
+      localStorage.getItem("language") ||
+      localStorage.getItem("app_lang") ||
+      localStorage.getItem("site_lang") ||
+      localStorage.getItem("selectedLanguage") ||
+      localStorage.getItem("currentLanguage") ||
+      localStorage.getItem("appLanguage") ||
+      localStorage.getItem("DR_LANG");
+
+    if (direct) return normalizeLang(direct);
+
+    // เผื่อหน้า Settings เก็บเป็น object เช่น { language: "en", theme: "dark" }
+    const objectKeys = ["dr_settings", "settings", "app_settings", "user_settings"];
+    for (const k of objectKeys) {
+      try {
+        const raw = localStorage.getItem(k);
+        if (!raw) continue;
+        const obj = JSON.parse(raw);
+        const v = obj.lang || obj.language || obj.selectedLanguage || obj.currentLanguage;
+        if (v) return normalizeLang(v);
+      } catch (e) {}
+    }
+
+    return "th";
+  }
+  let lang = getSavedLang();
+  let patients = [], reports = [], selectedPatient = null, images = [], currentImageIndex = 0, aiResult = null, stream = null, facingMode = "environment";
+
+  function t(k){
+    // ใช้คำแปลในหน้านี้เป็นหลัก และรองรับกรณีโปรเจกต์มี language.js กลางด้วย
+    if (I18N[lang] && I18N[lang][k]) return I18N[lang][k];
+    if (window.translations && window.translations[lang] && window.translations[lang][k]) return window.translations[lang][k];
+    if (window.i18n && window.i18n[lang] && window.i18n[lang][k]) return window.i18n[lang][k];
+    return (I18N.th && I18N.th[k]) || k;
+  }
+  function applyLang(){
+    lang = getSavedLang();
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.dataset.i18n;
+      if (key) el.textContent = t(key);
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (key) el.placeholder = t(key);
+    });
+    const select = document.getElementById("langSelect");
+    if (select) select.value = lang;
+    if (typeof renderPatients === "function") renderPatients();
+    if (typeof renderSelectedPatient === "function") renderSelectedPatient();
+  }
+  function setLang(v){
+    lang = normalizeLang(v);
+
+    // บันทึกหลาย key เพื่อให้ทุกหน้าที่ใช้ชื่อ key ต่างกันอ่านภาษาเดียวกันได้
+    localStorage.setItem("dr_lang", lang);
+    localStorage.setItem("dr_language", lang);
+    localStorage.setItem("language", lang);
+    localStorage.setItem("app_lang", lang);
+    localStorage.setItem("site_lang", lang);
+    localStorage.setItem("selectedLanguage", lang);
+    localStorage.setItem("currentLanguage", lang);
+    localStorage.setItem("appLanguage", lang);
+
+    try {
+      const raw = localStorage.getItem("dr_settings");
+      const obj = raw ? JSON.parse(raw) : {};
+      obj.lang = lang;
+      obj.language = lang;
+      localStorage.setItem("dr_settings", JSON.stringify(obj));
+    } catch (e) {}
+
+    applyLang();
+  }
+  function applyTheme(){
+    const theme = localStorage.getItem("dr_theme") || localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+  }
+  function setupSidebarImages(){
+    document.querySelectorAll("img[data-logo-fallbacks]").forEach(img => {
+      const paths = img.dataset.logoFallbacks.split(",").map(s => s.trim()).filter(Boolean);
+      let i = 0;
+      const fallback = img.parentElement ? img.parentElement.querySelector("span") : null;
+      const tryNext = () => {
+        if (i >= paths.length) {
+          img.style.display = "none";
+          if (fallback) fallback.style.display = "grid";
+          return;
+        }
+        img.src = paths[i++];
+      };
+      img.onload = () => {
+        img.style.display = "block";
+        if (fallback) fallback.style.display = "none";
+      };
+      img.onerror = tryNext;
+      tryNext();
+    });
+  }
+  function safe(v){ return v===null||v===undefined||v==="" ? "-" : v; }
+  function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2800); }
+  function parsePercent(v){ if(v===null||v===undefined||v==="") return 0; if(typeof v==="string") return Number(v.replace("%","")) || 0; let n=Number(v); return n<=1 ? n*100 : n; }
+  function calcAge(p){ if(p.age) return p.age; const b=p.birth_date||p.birthdate||p.dob; if(!b)return "-"; const bd=new Date(b); if(isNaN(bd))return "-"; const now=new Date(); let a=now.getFullYear()-bd.getFullYear(); if(now.getMonth()<bd.getMonth()||(now.getMonth()===bd.getMonth()&&now.getDate()<bd.getDate()))a--; return a; }
+  function bmi(p){ const w=Number(p.weight), h=Number(p.height)/100; if(!w||!h)return "-"; return (w/(h*h)).toFixed(2)+" kg/m²"; }
+  function nameOf(p){ return safe(p.full_name || p.patient_name || p.name); }
+  function codeOf(p){ return safe(p.patient_code || p.hn || p.id); }
+  function sexText(v){ const s=String(v||"").toLowerCase(); if(lang==="en"){ if(s.includes("ชาย")||s==="m"||s==="male")return "Male"; if(s.includes("หญิง")||s==="f"||s==="female")return "Female"; } return safe(v); }
+  function severityTH(label){ const s=String(label||"").toLowerCase(); if(s.includes("no"))return "ไม่พบเบาหวานขึ้นจอประสาทตา"; if(s.includes("mild"))return "เบาหวานขึ้นจอประสาทตาระยะเล็กน้อย"; if(s.includes("moderate"))return "เบาหวานขึ้นจอประสาทตาระยะปานกลาง"; if(s.includes("severe"))return "เบาหวานขึ้นจอประสาทตาระยะรุนแรง"; if(s.includes("pdr")||s.includes("proliferative"))return "เบาหวานขึ้นจอประสาทตาระยะรุนแรงมาก / PDR"; return label||"-"; }
+  function severityLevel(label){ const s=String(label||"").toLowerCase(); if(s.includes("no"))return 0; if(s.includes("mild"))return 1; if(s.includes("moderate"))return 2; if(s.includes("severe"))return 3; if(s.includes("pdr")||s.includes("proliferative"))return 4; return null; }
+
+  async function checkSession(){ try{ const {data}=await db.auth.getSession(); if(!data.session && !localStorage.getItem("dr_allow_dev")) location.href="index.html"; }catch(e){ console.warn(e); } }
+
+  async function loadPatients(){
+    const list=document.getElementById("patientList");
+    list.innerHTML=`<div class="empty-preview">${t("loadingPatients")}</div>`;
+    try{
+      const {data,error} = await db.from("patients").select("*").order("id",{ascending:false}).limit(500);
+      if(error) throw error;
+      patients = data || [];
+    }catch(err){ console.warn("patients load error",err); patients = JSON.parse(localStorage.getItem("dr_patients")||"[]"); }
+    renderPatients();
+  }
+
+  async function loadReports(){
+    try{ const {data,error}=await db.from("analysis_reports").select("*").order("id",{ascending:false}).limit(200); if(error) throw error; reports=data||[]; }catch(e){ console.warn("reports load error",e); reports=[]; }
+  }
+
+  function renderPatients(){
+    const q=(document.getElementById("patientSearch").value||"").toLowerCase().trim();
+    const filtered=patients.filter(p=>!q || [p.full_name,p.patient_name,p.name,p.hn,p.patient_code,p.phone,p.gender,p.sex].map(x=>String(x||"").toLowerCase()).join(" ").includes(q));
+    const list=document.getElementById("patientList");
+    if(!filtered.length){ list.innerHTML=`<div class="empty-preview">${t("noPatients")}</div>`; return; }
+    list.innerHTML=filtered.map(p=>{
+      const name=nameOf(p), code=codeOf(p), active=selectedPatient&&String(selectedPatient.id)===String(p.id)?"active":"";
+      return `<div class="patient-item ${active}" onclick="selectPatient('${String(p.id).replaceAll("'","")}')"><div class="avatar">${name.charAt(0).toUpperCase()}</div><div><b>${name}</b><span>HN: ${safe(p.hn)} | ${t("patientCode")}: ${code} | ${safe(p.phone)}</span></div></div>`;
+    }).join("");
+  }
+  window.selectPatient=function(id){ selectedPatient=patients.find(p=>String(p.id)===String(id)); renderPatients(); renderSelectedPatient(); };
+
+  function renderSelectedPatient(){
+    const box=document.getElementById("selectedPatientBox");
+    if(!selectedPatient){
+      document.getElementById("statPatientName").textContent="-";
+      box.innerHTML=[
+        [t("name"),"-"],["HN","-"],[t("patientCode"),"-"],[t("age"),"-"],[t("sex"),"-"],[t("phone"),"-"],["BMI","-"],[t("disease"),"-"]
+      ].map(x=>`<div class="field-box"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("");
+      document.getElementById("historyMini").innerHTML=`<b>${t("historyTitle")}</b><span>${t("noHistory")}</span>`;
+      return;
+    }
+    const p=selectedPatient, name=nameOf(p);
+    document.getElementById("statPatientName").textContent=name.length>12?name.slice(0,12)+"…":name;
+    box.innerHTML=[
+      [t("name"),name],["HN",safe(p.hn)],[t("patientCode"),safe(p.patient_code)],[t("age"),safe(calcAge(p))+" "+(lang==="th"?"ปี":"")],
+      [t("sex"),sexText(p.gender||p.sex)],[t("phone"),safe(p.phone)],[t("weight"),safe(p.weight)],[t("height"),safe(p.height)],["BMI",bmi(p)],[t("disease"),safe(p.disease||p.underlying_disease)]
+    ].map(x=>`<div class="field-box"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("");
+    const code=String(p.patient_code||p.hn||"");
+    const latest=reports.find(r=>String(r.patient_code||r.hn||"")===code || String(r.patient_name||"").toLowerCase()===name.toLowerCase());
+    document.getElementById("historyMini").innerHTML = latest ? `<b>${t("latestResult")}</b><span>${safe(latest.severity_result)} | ${safe(latest.report_id)} | ${safe(latest.created_at||latest.date)}</span>` : `<b>${t("historyTitle")}</b><span>${t("noHistory")}</span>`;
+  }
+
+  function resetAnalysisState(){
+    aiResult = null;
+    document.getElementById("statAnalysis").textContent = "0";
+    document.getElementById("statReport").dataset.i18n = "notSaved";
+    document.getElementById("statReport").textContent = t("notSaved");
+    document.getElementById("saveBtn").disabled = true;
+    document.getElementById("resultBox").innerHTML = `<h3>${t("resultTitle")}</h3><p>${t("resultEmpty")}</p>`;
+  }
+  function addFiles(files){
+    const before = images.length;
+    [...files].forEach(file=>{ if(!file.type.startsWith("image/"))return; images.push({file,url:URL.createObjectURL(file),name:file.name}); });
+    if(images.length > before){ currentImageIndex = images.length - 1; resetAnalysisState(); }
+    renderImages();
+  }
+  function renderImages(){
+    document.getElementById("statImages").textContent=images.length;
+    const preview=document.getElementById("previewWrap"), thumbs=document.getElementById("thumbs"), caption=document.getElementById("imageCaption");
+    if(!images.length){ preview.innerHTML=`<div class="empty-preview">${t("emptyPreview")}</div>`; thumbs.innerHTML=""; caption.textContent=t("imageCaptionEmpty"); return; }
+    if(currentImageIndex < 0) currentImageIndex = 0;
+    if(currentImageIndex >= images.length) currentImageIndex = images.length - 1;
+    const main=images[currentImageIndex];
+    preview.innerHTML=`<img src="${main.url}" alt="retina main image">`;
+    caption.textContent=`${t("imageCaption")}: ${currentImageIndex+1}/${images.length} • ${main.name}`;
+    thumbs.innerHTML=images.map((im,i)=>`<div class="thumb-wrap"><img class="thumb ${i===currentImageIndex?'active':''}" src="${im.url}" onclick="showImage(${i})"><button class="thumb-del" onclick="deleteImage(${i});event.stopPropagation();">×</button></div>`).join("");
+  }
+  window.showImage=function(i){ currentImageIndex=i; resetAnalysisState(); renderImages(); };
+  window.deleteImage=function(i){
+    if(!images[i]) return;
+    URL.revokeObjectURL(images[i].url);
+    images.splice(i,1);
+    if(currentImageIndex >= images.length) currentImageIndex = images.length - 1;
+    if(currentImageIndex < 0) currentImageIndex = 0;
+    resetAnalysisState(); renderImages();
+  };
+
+  async function openCamera(){ try{ if(stream)stream.getTracks().forEach(t=>t.stop()); stream=await navigator.mediaDevices.getUserMedia({video:{facingMode},audio:false}); document.getElementById("cameraVideo").srcObject=stream; document.getElementById("cameraModal").classList.add("show"); }catch(e){ alert(t("cameraError")+"\n"+e.message); } }
+  function closeCamera(){ if(stream)stream.getTracks().forEach(t=>t.stop()); stream=null; document.getElementById("cameraModal").classList.remove("show"); }
+  function capturePhoto(){ const v=document.getElementById("cameraVideo"), c=document.getElementById("cameraCanvas"); c.width=v.videoWidth||1280; c.height=v.videoHeight||720; c.getContext("2d").drawImage(v,0,0,c.width,c.height); c.toBlob(blob=>{ addFiles([new File([blob],`camera_${Date.now()}.jpg`,{type:"image/jpeg"})]); closeCamera(); },"image/jpeg",0.92); }
+
+  async function analyzeReal(){
+    if(!selectedPatient) return toast(t("selectFirst"));
+    if(!images.length) return toast(t("chooseImage"));
+    const file=images[currentImageIndex].file;
+    document.getElementById("resultBox").innerHTML=`<h3>${t("analyzing")}</h3><p>AI Model API: ${API_URL}</p>`;
+    const fd=new FormData(); fd.append("file",file);
+    try{
+      const res=await fetch(API_URL,{method:"POST",body:fd});
+      if(!res.ok) throw new Error("API "+res.status);
+      aiResult=await res.json();
+      renderAIResult();
+      document.getElementById("statAnalysis").textContent="1";
+    }catch(err){ console.error(err); document.getElementById("resultBox").innerHTML=`<h3>${t("apiFail")}</h3><p>${err.message}</p><p style="color:var(--muted)">ให้รัน: uvicorn app:app --host 127.0.0.1 --port 8000 --reload</p>`; }
+  }
+
+  function renderAIResult(){
+    if(!aiResult) return;
+    const binary=aiResult.binary_result||aiResult.binary_label||"";
+    const severity=aiResult.severity_result||aiResult.prediction||aiResult.severity_label||"-";
+    const sevLevel=aiResult.severity_prediction ?? severityLevel(severity);
+    const conf=parsePercent(aiResult.severity_confidence ?? aiResult.confidence);
+    const binConf=parsePercent(aiResult.binary_confidence);
+    const eye=aiResult.eye_side||"-";
+    const eyeConf=parsePercent(aiResult.eye_confidence);
+    const grad=aiResult.gradcam_image||aiResult.heatmap_image||aiResult.gradcam||"";
+    const noDR=String(binary).toLowerCase().includes("no") || String(severity).toLowerCase().includes("no_dr");
+    const diagnosis=noDR?t("noDr"):severityTH(severity);
+    const original=images[currentImageIndex]?.url||"";
+    const p=selectedPatient || {};
+    document.getElementById("saveBtn").disabled = false;
+    document.getElementById("resultBox").innerHTML=`
+      <div class="medical-card">
+        <div class="result-head">
+          <div class="result-title-block">
+            <h3>${t("resultTitle")}</h3>
+            <div class="result-status">
+              <span class="badge ${noDR?'green':'red'}">${noDR?'No DR':'DR'}</span>
+              <span class="badge blue">Level ${safe(sevLevel)}</span>
+              <span class="badge orange">${safe(severity)}</span>
+            </div>
+          </div>
+          <button class="btn primary" onclick="saveReport()">${t("saveReport")}</button>
+        </div>
+        <div class="result-grid">
+          <img class="mini-fundus" src="${original}" alt="fundus">
+          <div>
+            <h3 style="margin:0 0 8px">${diagnosis}</h3>
+            <div class="metric-grid">
+              <div class="metric"><small>Severity</small><b>${conf.toFixed(1)}%</b></div>
+              <div class="metric"><small>Binary</small><b>${binConf.toFixed(1)}%</b></div>
+              <div class="metric"><small>Eye Side</small><b>${eye}</b></div>
+              <div class="metric"><small>Eye Conf.</small><b>${eyeConf.toFixed(1)}%</b></div>
+            </div>
+            <p style="color:var(--muted);margin:8px 0 0">${safe(aiResult.note)}</p>
+          </div>
+        </div>
+        <div class="patient-summary">
+          <div class="summary-item"><small>${t("name")}</small><b>${safe(p.full_name||p.patient_name||p.name)}</b></div>
+          <div class="summary-item"><small>HN</small><b>${safe(p.hn)}</b></div>
+          <div class="summary-item"><small>${t("patientCode")}</small><b>${safe(p.patient_code)}</b></div>
+          <div class="summary-item"><small>${t("age")}</small><b>${safe(calcAge(p))}</b></div>
+        </div>
+        ${grad ? `<div class="grad-grid"><div class="grad-panel"><b>Original Fundus</b><img src="${original}"></div><div class="grad-panel"><b>Grad-CAM Heatmap</b><img src="${grad}"></div></div>` : ""}
+      </div>`;
+  }
+
+  async function uploadOriginalImage(reportId){
+    try{
+      if(!images.length) return {url:"",path:"",filename:""};
+      const p=selectedPatient; const code=String(p.patient_code||p.hn||"unknown");
+      const mainImage = images[currentImageIndex];
+      const ext=(mainImage.file.name.split(".").pop()||"jpg").toLowerCase();
+      const path=`${code}/${reportId}/image_1_${Date.now()}.${ext}`;
+      const {error}=await db.storage.from(BUCKET).upload(path,mainImage.file,{upsert:true,contentType:mainImage.file.type});
+      if(error) throw error;
+      const {data}=db.storage.from(BUCKET).getPublicUrl(path);
+      return {url:data.publicUrl,path,filename:mainImage.file.name};
+    }catch(e){ console.warn(e); toast(t("uploadFail")); return {url:"",path:"",filename:images[currentImageIndex]?.name||""}; }
+  }
+
+  async function saveReport(){
+    if(!selectedPatient) return toast(t("selectFirst"));
+    if(!images.length) return toast(t("chooseImage"));
+    if(!aiResult) return toast(lang === "th" ? "กรุณากดวิเคราะห์ด้วย AI ก่อน แล้วค่อยบันทึก" : "Please analyze with AI before saving.");
+    const p=selectedPatient, reportId="DR"+Date.now()+"-"+Math.random().toString(36).slice(2,7).toUpperCase();
+    const up=await uploadOriginalImage(reportId);
+    const severity=aiResult.severity_result||aiResult.prediction||"-";
+    const row={
+      report_id:reportId,
+      patient_code:p.patient_code||p.hn||String(p.id),
+      patient_name:p.full_name||p.patient_name||p.name||"-",
+      eye_side:aiResult.eye_side||null,
+      severity_level:aiResult.severity_prediction ?? severityLevel(severity),
+      severity_result:severity,
+      confidence:parsePercent(aiResult.severity_confidence ?? aiResult.confidence)/100,
+      image_url:up.url || null,
+      image_path:up.path || null,
+      image_filename:up.filename || null,
+      result_note:aiResult.note || "AI screening support"
+    };
+    let saved=false, errMsg="";
+    try{
+      let {error}=await db.from("analysis_reports").insert(row);
+      if(error) throw error;
+      saved=true;
+    }catch(e1){
+      errMsg=e1.message;
+      try{
+        const minimal={ report_id:row.report_id, patient_code:row.patient_code, patient_name:row.patient_name, eye_side:row.eye_side, severity_level:row.severity_level, severity_result:row.severity_result, confidence:row.confidence };
+        let {error}=await db.from("analysis_reports").insert(minimal);
+        if(error) throw error;
+        saved=true;
+      }catch(e2){ errMsg=e2.message; }
+    }
+    if(!saved){ alert("บันทึก Supabase ไม่สำเร็จ: "+errMsg); return; }
+    document.getElementById("statReport").dataset.i18n=""; document.getElementById("statReport").textContent="Saved";
+    toast(t("saved"));
+    location.href=`retina-report-new.html?report_id=${encodeURIComponent(reportId)}`;
+  }
+
+  document.getElementById("langSelect").onchange=e=>setLang(e.target.value);
+  window.addEventListener("storage", (e) => {
+    if (["dr_lang","dr_language","language","app_lang","site_lang"].includes(e.key)) applyLang();
+    if (["dr_theme","theme"].includes(e.key)) applyTheme();
+  });
+  window.addEventListener("focus", () => { applyTheme(); applyLang(); });
+
+  // กรณีผู้ใช้เปลี่ยนภาษาจากหน้า Settings/หน้าอื่น แล้วกลับมาหน้านี้โดยไม่ reload
+  // ให้ตรวจ key กลางซ้ำอัตโนมัติ เพื่อ sync ภาษาแบบทันที
+  let lastLangValue = getSavedLang();
+  setInterval(() => {
+    const latest = getSavedLang();
+    if (latest !== lastLangValue) {
+      lastLangValue = latest;
+      applyLang();
+    }
+  }, 600);
+  document.getElementById("patientSearch").oninput=renderPatients;
+  document.getElementById("pickBtn").onclick=()=>document.getElementById("fileInput").click();
+  document.getElementById("fileInput").onchange=e=>addFiles(e.target.files);
+  document.getElementById("cameraBtn").onclick=openCamera;
+  document.getElementById("closeCamera").onclick=closeCamera;
+  document.getElementById("captureBtn").onclick=capturePhoto;
+  document.getElementById("switchCamera").onclick=()=>{ facingMode=facingMode==="environment"?"user":"environment"; openCamera(); };
+  document.getElementById("deleteCurrentBtn").onclick=()=>deleteImage(currentImageIndex);
+  document.getElementById("clearBtn").onclick=()=>{ images.forEach(im=>URL.revokeObjectURL(im.url)); images=[]; currentImageIndex=0; resetAnalysisState(); renderImages(); };
+  document.getElementById("analyzeBtn").onclick=analyzeReal;
+  document.getElementById("saveBtn").onclick=saveReport;
+  document.getElementById("logoutBtn").onclick=async()=>{ try{await db.auth.signOut();}catch(e){} location.href="index.html"; };
+
+  (async function init(){
+    applyTheme();
+    setupSidebarImages();
+    applyLang();
+    checkSession();
+    await loadReports();
+    await loadPatients();
+    renderSelectedPatient();
+    renderImages();
+  })();
+</script>
+</body>
+</html>

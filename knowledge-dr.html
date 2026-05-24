@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knowledge | DR Screening Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f3f7ff;--card:#fff;--text:#10213f;--muted:#65758f;--line:#e4ecf8;
+      --blue:#2563eb;--blue2:#1d4ed8;--soft:#eef4ff;--shadow:0 18px 42px rgba(24,44,92,.08);
+      --green:#16a34a;--red:#dc2626;--orange:#f97316;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Noto Sans Thai",Arial,sans-serif;background:var(--bg);color:var(--text)}
+    a{text-decoration:none;color:inherit}button,select{font-family:inherit}
+    .app{min-height:100vh;display:grid;grid-template-columns:280px 1fr}
+    .sidebar{height:100vh;position:sticky;top:0;background:var(--card);border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;justify-content:space-between;gap:18px;box-shadow:8px 0 30px rgba(15,43,76,.04)}
+    .brand{display:flex;align-items:center;gap:12px;padding:4px 6px 20px;border-bottom:1px solid var(--line)}
+    .brand-logo{width:54px;height:54px;border-radius:18px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;box-shadow:0 10px 22px rgba(15,43,76,.06);flex-shrink:0;color:var(--blue);font-weight:950}
+    .brand-logo img{width:50px;height:50px;object-fit:contain}
+    .brand-text h2{font-size:16px;line-height:1.15;color:var(--blue);font-weight:950}.brand-text p{font-size:12px;color:var(--muted);font-weight:700;margin-top:3px}
+    .nav{display:flex;flex-direction:column;gap:8px}.nav-group{font-size:11px;color:#94a3b8;font-weight:950;margin:10px 12px 0;border-top:1px solid var(--line);padding-top:12px}
+    .nav a{min-height:43px;border-radius:15px;padding:0 14px;display:flex;align-items:center;gap:11px;color:#64748b;font-size:14px;font-weight:900;transition:.15s}.nav a:hover{background:var(--soft);color:var(--blue)}.nav a.active{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 12px 26px rgba(37,99,235,.22)}
+    .nav .icon{width:24px;text-align:center;font-size:18px}.footer{display:flex;flex-direction:column;gap:12px}.uni-card{display:flex;gap:10px;align-items:flex-start;padding:14px;border-radius:18px;background:#f8fbff;border:1px solid var(--line)}
+    .uni-logo{width:44px;height:44px;border-radius:14px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;flex-shrink:0;color:var(--blue);font-size:12px;font-weight:950}.uni-logo img{width:40px;height:40px;object-fit:contain}
+    .uni-card strong{display:block;font-size:12px;line-height:1.35;color:#334155;font-weight:950}.uni-card p{font-size:11px;line-height:1.35;color:var(--muted);font-weight:750;margin-top:3px}.logout{width:100%;border:1px solid #fecaca;background:#fff5f5;color:var(--red);border-radius:16px;padding:12px 14px;font-weight:950;cursor:pointer}.logout:hover{background:#fee2e2}
+    .main{padding:28px 34px 42px;max-width:1800px;width:100%;margin:0 auto}.topbar{display:flex;justify-content:flex-end;align-items:center;margin-bottom:14px}.lang{height:42px;border:1px solid var(--line);border-radius:14px;background:#fff;color:#334155;padding:0 14px;font-weight:900;box-shadow:0 8px 20px rgba(15,23,42,.04)}
+    .hero{border-radius:28px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;padding:30px 34px;margin-bottom:22px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:164px;display:flex;align-items:center;justify-content:space-between;gap:20px}.hero:after{content:"";position:absolute;right:-60px;top:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.12)}
+    .hero-copy{position:relative;z-index:2}.tag{display:inline-flex;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);font-size:12px;font-weight:950;margin-bottom:13px}.hero h1{font-size:34px;line-height:1.25;font-weight:950;margin-bottom:9px}.hero p{max-width:870px;line-height:1.75;color:#e8efff;font-weight:800}.hero-art{position:relative;z-index:2;width:170px;height:112px;border-radius:26px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:76px;flex-shrink:0}
+    .quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:20px}.quick-card,.card,.note{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}.quick-card{padding:22px}.quick-icon{width:54px;height:54px;border-radius:18px;background:var(--soft);display:grid;place-items:center;font-size:25px;margin-bottom:14px}.quick-card h3{font-size:17px;font-weight:950;margin-bottom:6px}.quick-card p{font-size:13px;line-height:1.65;color:var(--muted);font-weight:750}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{padding:24px}.card.large{grid-column:1/-1}.badge{display:inline-flex;padding:7px 11px;border-radius:999px;background:var(--soft);color:var(--blue);font-size:12px;font-weight:950;margin-bottom:12px}.card h2{font-size:22px;font-weight:950;margin-bottom:10px}.card p{font-size:14px;line-height:1.85;color:var(--muted);font-weight:750}
+    .info-list{display:grid;gap:12px;margin-top:16px}.info-item{padding:15px;border-radius:18px;background:#f8fbff;border:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}.info-icon{width:40px;height:40px;border-radius:14px;background:var(--soft);display:grid;place-items:center;flex-shrink:0}.info-item strong{display:block;font-size:14px;font-weight:950;margin-bottom:4px}.info-item span{font-size:13px;line-height:1.65;color:var(--muted);font-weight:750}
+    .stage-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:16px}.stage-card{padding:18px;border-radius:20px;border:1px solid var(--line);background:#f8fbff}.stage-card h3{font-size:16px;font-weight:950;margin-bottom:8px}.stage-card p{font-size:13px;line-height:1.7}.stage-card.normal{background:#f8fbff}.stage-card.mild{background:#fffbeb;border-color:#fde68a}.stage-card.moderate{background:#fff7ed;border-color:#fed7aa}.stage-card.severe{background:#fff1f2;border-color:#fecdd3}.stage-card.pdr{background:#f5f3ff;border-color:#c4b5fd}
+    .note{margin-top:20px;padding:20px;display:flex;gap:14px;align-items:flex-start;background:#ecfdf5;border-color:#bbf7d0}.note-icon{width:48px;height:48px;border-radius:18px;background:#dcfce7;color:var(--green);display:grid;place-items:center;font-size:24px;flex-shrink:0}.note h3{color:#14532d;font-size:18px;font-weight:950;margin-bottom:6px}.note p{color:#166534;font-size:14px;line-height:1.8;font-weight:750}
+    body.dark-mode{--bg:#0f172a;--card:#172033;--text:#f8fafc;--muted:#a8b5ca;--line:#26344d;--soft:#1e293b;background:#0f172a;color:#f8fafc}body.dark-mode .sidebar{background:#111827}body.dark-mode .brand-logo,body.dark-mode .uni-logo,body.dark-mode .lang{background:#172033;border-color:#334155;color:#f8fafc}body.dark-mode .uni-card,body.dark-mode .info-item,body.dark-mode .stage-card{background:#111c2e;border-color:#26344d}body.dark-mode .uni-card strong,body.dark-mode .quick-card h3,body.dark-mode .card h2,body.dark-mode .info-item strong,body.dark-mode .stage-card h3{color:#f8fafc}body.dark-mode .logout{background:#172033;border-color:#7f1d1d;color:#fca5a5}body.dark-mode .note{background:#11261d;border-color:#14532d}body.dark-mode .note h3{color:#bbf7d0}body.dark-mode .note p{color:#86efac}
+    @media(max-width:1200px){.quick-grid,.stage-grid{grid-template-columns:repeat(2,1fr)}.content-grid{grid-template-columns:1fr}.hero-art{display:none}}
+    @media(max-width:900px){.app{display:block}.sidebar{position:relative;width:100%;height:auto}.main{padding:18px}.quick-grid,.stage-grid{grid-template-columns:1fr}.hero h1{font-size:26px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo"><img src="logo-new.jpg" alt="DR Logo" onerror="this.style.display='none';this.parentElement.textContent='DR';"></div>
+        <div class="brand-text"><h2>Diabetic<br>Retinopathy</h2><p>DR Screening Portal</p></div>
+      </div>
+      <nav class="nav">
+        <a href="dashboard.html"><span class="icon">🏠</span><span data-i18n="navHome">หน้าหลัก</span></a>
+        <a href="user.html"><span class="icon">👤</span><span data-i18n="navUser">บัญชีผู้ใช้</span></a>
+        <a href="patients.html"><span class="icon">👥</span><span data-i18n="navPatients">ข้อมูลผู้ป่วย</span></a>
+        <div class="nav-group" data-i18n="navGroup">การตรวจ</div>
+        <a href="create-patient.html"><span class="icon">➕</span><span data-i18n="navCreate">สร้างคนไข้ใหม่</span></a>
+        <a href="retina-analysis.html"><span class="icon">🔬</span><span data-i18n="navAnalysis">วิเคราะห์จอประสาทตา</span></a>
+        <a href="retina-report-new.html"><span class="icon">📄</span><span data-i18n="navReport">รายงานผล</span></a>
+        <a href="appointment-followup.html"><span class="icon">📅</span><span data-i18n="navAppointment">การนัดหมาย</span></a>
+        <a href="patient-transfer.html"><span class="icon">🔁</span><span data-i18n="navTransfer">โอนย้ายผู้ป่วย</span></a>
+        <a class="active" href="knowledge-dr.html"><span class="icon">💡</span><span data-i18n="navKnowledge">เกร็ดความรู้</span></a>
+        <a href="screening-history.html"><span class="icon">🕘</span><span data-i18n="navHistory">ประวัติการตรวจ</span></a>
+        <a href="settings.html"><span class="icon">⚙️</span><span data-i18n="navSettings">ตั้งค่า</span></a>
+      </nav>
+    </div>
+    <div class="footer">
+      <div class="uni-card">
+        <div class="uni-logo"><img src="institution-logo.png" alt="KMUTNB Logo" onerror="this.style.display='none';this.parentElement.textContent='มจพ';"></div>
+        <div><strong data-i18n="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</strong><p data-i18n="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</p></div>
+      </div>
+      <button id="logoutBtn" class="logout" type="button" data-i18n="logout">ออกจากระบบ</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><select id="langSelect" class="lang"><option value="th">ไทย</option><option value="en">English</option></select></div>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="tag" data-i18n="tag">Health Education</span>
+        <h1 data-i18n="heroTitle">เกร็ดความรู้โรคเบาหวานขึ้นจอประสาทตา</h1>
+        <p data-i18n="heroDesc">องค์ความรู้เกี่ยวกับโรคเบาหวานขึ้นจอประสาทตา การป้องกัน การตรวจคัดกรอง และการดูแลรักษา เพื่อให้ผู้ดูแลสามารถอธิบายผู้ป่วยได้เข้าใจง่าย</p>
+      </div>
+      <div class="hero-art">👁️</div>
+    </section>
+
+    <section class="quick-grid">
+      <div class="quick-card"><div class="quick-icon">👁️</div><h3 data-i18n="retinalDisease">โรคเกี่ยวกับจอประสาทตา</h3><p data-i18n="retinalDiseaseDesc">เกิดจากหลอดเลือดเล็กบริเวณจอประสาทตาถูกทำลายจากเบาหวาน</p></div>
+      <div class="quick-card"><div class="quick-icon">🩸</div><h3 data-i18n="highSugar">น้ำตาลสูงเรื้อรัง</h3><p data-i18n="highSugarDesc">เป็นปัจจัยสำคัญที่ทำให้หลอดเลือดจอประสาทตาเสื่อม</p></div>
+      <div class="quick-card"><div class="quick-icon">📅</div><h3 data-i18n="annualEye">ควรตรวจตาทุกปี</h3><p data-i18n="annualEyeDesc">ผู้ป่วยเบาหวานควรตรวจจอประสาทตาอย่างสม่ำเสมอ</p></div>
+      <div class="quick-card"><div class="quick-icon">✅</div><h3 data-i18n="preventable">ป้องกันได้</h3><p data-i18n="preventableDesc">ควบคุมน้ำตาล ความดัน ไขมัน และพบแพทย์ตามนัด</p></div>
+    </section>
+
+    <section class="content-grid">
+      <div class="card"><span class="badge" data-i18n="meaning">ความหมาย</span><h2 data-i18n="whatIsDR">เบาหวานขึ้นจอประสาทตาคืออะไร?</h2><p data-i18n="whatIsDRDesc">เบาหวานขึ้นจอประสาทตา คือภาวะแทรกซ้อนของโรคเบาหวานที่ส่งผลต่อหลอดเลือดขนาดเล็กในจอประสาทตา เมื่อระดับน้ำตาลในเลือดสูงเป็นเวลานาน ผนังหลอดเลือดจะเสื่อม เปราะ แตก รั่ว หรือเกิดหลอดเลือดผิดปกติ ทำให้ผู้ป่วยมีอาการตามัว มองเห็นภาพผิดปกติ และอาจรุนแรงจนสูญเสียการมองเห็นได้</p></div>
+
+      <div class="card"><span class="badge" data-i18n="symptomBadge">อาการสำคัญ</span><h2 data-i18n="symptomsWatch">อาการที่ควรสังเกต</h2><div class="info-list">
+        <div class="info-item"><div class="info-icon">🌫️</div><div><strong data-i18n="symptom1">ตามัวหรือมองไม่ชัด</strong><span data-i18n="symptom1Desc">โดยเฉพาะเมื่อระดับน้ำตาลไม่คงที่ หรือมีเลือดออกในจอประสาทตา</span></div></div>
+        <div class="info-item"><div class="info-icon">⚫</div><div><strong data-i18n="symptom2">เห็นจุดดำลอยไปมา</strong><span data-i18n="symptom2Desc">อาจสัมพันธ์กับเลือดออกในวุ้นตาหรือความผิดปกติของจอประสาทตา</span></div></div>
+        <div class="info-item"><div class="info-icon">💡</div><div><strong data-i18n="symptom3">มองเห็นแสงวาบหรือภาพบิดเบี้ยว</strong><span data-i18n="symptom3Desc">ควรรีบพบแพทย์เพื่อประเมินความผิดปกติของจอประสาทตา</span></div></div>
+      </div></div>
+
+      <div class="card large"><span class="badge" data-i18n="levelBadge">ระดับความรุนแรง</span><h2 data-i18n="drLevel">ระดับของเบาหวานขึ้นจอประสาทตา</h2><p data-i18n="drLevelDesc">ระบบคัดกรองสามารถช่วยแบ่งระดับความรุนแรงเบื้องต้น เพื่อให้บุคลากรตัดสินใจเรื่องการติดตามหรือส่งต่อได้เหมาะสม</p><div class="stage-grid">
+        <div class="stage-card normal"><h3>No DR</h3><p data-i18n="noDrDesc">ยังไม่พบความผิดปกติของจอประสาทตาจากเบาหวาน แต่ยังควรตรวจตามรอบ</p></div>
+        <div class="stage-card mild"><h3>Mild DR</h3><p data-i18n="mildDesc">เริ่มพบความผิดปกติเล็กน้อย เช่น จุดเลือดออกเล็ก ๆ หรือ microaneurysm</p></div>
+        <div class="stage-card moderate"><h3>Moderate DR</h3><p data-i18n="moderateDesc">มีความผิดปกติมากขึ้น ควรติดตามใกล้ชิดและพิจารณาส่งต่อ</p></div>
+        <div class="stage-card severe"><h3>Severe DR</h3><p data-i18n="severeDesc">มีความเสี่ยงสูงต่อการสูญเสียการมองเห็น ควรส่งต่อจักษุแพทย์โดยเร็ว</p></div>
+        <div class="stage-card pdr"><h3>PDR</h3><p data-i18n="pdrDesc">พบหลอดเลือดงอกผิดปกติหรือภาวะแทรกซ้อนรุนแรง ต้องส่งต่อจักษุแพทย์เร่งด่วน</p></div>
+      </div></div>
+
+      <div class="card"><span class="badge" data-i18n="riskBadge">ปัจจัยเสี่ยง</span><h2 data-i18n="riskTitle">ใครบ้างที่เสี่ยง?</h2><div class="info-list">
+        <div class="info-item"><div class="info-icon">🩸</div><div><strong data-i18n="risk1">ควบคุมน้ำตาลไม่ดี</strong><span data-i18n="risk1Desc">ระดับน้ำตาลสูงเรื้อรังทำให้หลอดเลือดจอประสาทตาเสียหาย</span></div></div>
+        <div class="info-item"><div class="info-icon">⏳</div><div><strong data-i18n="risk2">เป็นเบาหวานมานาน</strong><span data-i18n="risk2Desc">ยิ่งเป็นนาน ยิ่งมีโอกาสเกิดภาวะแทรกซ้อนทางตาเพิ่มขึ้น</span></div></div>
+        <div class="info-item"><div class="info-icon">❤️</div><div><strong data-i18n="risk3">มีความดันหรือไขมันสูง</strong><span data-i18n="risk3Desc">เพิ่มความเสียหายต่อหลอดเลือดและเพิ่มความเสี่ยงต่อจอประสาทตา</span></div></div>
+      </div></div>
+
+      <div class="card"><span class="badge" data-i18n="preventBadge">การป้องกัน</span><h2 data-i18n="careTitle">ดูแลตนเองอย่างไร?</h2><div class="info-list">
+        <div class="info-item"><div class="info-icon">✅</div><div><strong data-i18n="care1">ควบคุมระดับน้ำตาล</strong><span data-i18n="care1Desc">รับประทานยา/ฉีดยาตามแพทย์สั่ง และติดตามระดับน้ำตาลอย่างสม่ำเสมอ</span></div></div>
+        <div class="info-item"><div class="info-icon">🥗</div><div><strong data-i18n="care2">ปรับพฤติกรรมสุขภาพ</strong><span data-i18n="care2Desc">เลือกอาหารเหมาะสม ออกกำลังกาย และควบคุมน้ำหนัก</span></div></div>
+        <div class="info-item"><div class="info-icon">👁️</div><div><strong data-i18n="care3">ตรวจตาตามนัด</strong><span data-i18n="care3Desc">แม้ไม่มีอาการก็ควรตรวจ เพราะระยะแรกอาจไม่แสดงอาการชัดเจน</span></div></div>
+      </div></div>
+    </section>
+
+    <section class="note"><div class="note-icon">💬</div><div><h3 data-i18n="patientNoteTitle">ข้อความแนะนำสำหรับอธิบายผู้ป่วย</h3><p data-i18n="patientNoteDesc">ผู้ป่วยเบาหวานควรตรวจจอประสาทตาอย่างสม่ำเสมอ เพราะระยะแรกอาจยังไม่มีอาการ หากพบเร็วจะช่วยวางแผนดูแล รักษา และลดความเสี่ยงต่อการสูญเสียการมองเห็นได้</p></div></section>
+  </main>
+</div>
+
+<script>
+(function(){
+  const I18N={
+    th:{navHome:'หน้าหลัก',navUser:'บัญชีผู้ใช้',navPatients:'ข้อมูลผู้ป่วย',navGroup:'การตรวจ',navCreate:'สร้างคนไข้ใหม่',navAnalysis:'วิเคราะห์จอประสาทตา',navReport:'รายงานผล',navAppointment:'การนัดหมาย',navTransfer:'โอนย้ายผู้ป่วย',navKnowledge:'เกร็ดความรู้',navHistory:'ประวัติการตรวจ',navSettings:'ตั้งค่า',orgName:'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ',orgSub:'ระบบตรวจคัดกรองจอประสาทตาเบาหวาน',logout:'ออกจากระบบ',tag:'Health Education',heroTitle:'เกร็ดความรู้โรคเบาหวานขึ้นจอประสาทตา',heroDesc:'องค์ความรู้เกี่ยวกับโรคเบาหวานขึ้นจอประสาทตา การป้องกัน การตรวจคัดกรอง และการดูแลรักษา เพื่อให้ผู้ดูแลสามารถอธิบายผู้ป่วยได้เข้าใจง่าย',retinalDisease:'โรคเกี่ยวกับจอประสาทตา',retinalDiseaseDesc:'เกิดจากหลอดเลือดเล็กบริเวณจอประสาทตาถูกทำลายจากเบาหวาน',highSugar:'น้ำตาลสูงเรื้อรัง',highSugarDesc:'เป็นปัจจัยสำคัญที่ทำให้หลอดเลือดจอประสาทตาเสื่อม',annualEye:'ควรตรวจตาทุกปี',annualEyeDesc:'ผู้ป่วยเบาหวานควรตรวจจอประสาทตาอย่างสม่ำเสมอ',preventable:'ป้องกันได้',preventableDesc:'ควบคุมน้ำตาล ความดัน ไขมัน และพบแพทย์ตามนัด',meaning:'ความหมาย',whatIsDR:'เบาหวานขึ้นจอประสาทตาคืออะไร?',whatIsDRDesc:'เบาหวานขึ้นจอประสาทตา คือภาวะแทรกซ้อนของโรคเบาหวานที่ส่งผลต่อหลอดเลือดขนาดเล็กในจอประสาทตา เมื่อระดับน้ำตาลในเลือดสูงเป็นเวลานาน ผนังหลอดเลือดจะเสื่อม เปราะ แตก รั่ว หรือเกิดหลอดเลือดผิดปกติ ทำให้ผู้ป่วยมีอาการตามัว มองเห็นภาพผิดปกติ และอาจรุนแรงจนสูญเสียการมองเห็นได้',symptomBadge:'อาการสำคัญ',symptomsWatch:'อาการที่ควรสังเกต',symptom1:'ตามัวหรือมองไม่ชัด',symptom1Desc:'โดยเฉพาะเมื่อระดับน้ำตาลไม่คงที่ หรือมีเลือดออกในจอประสาทตา',symptom2:'เห็นจุดดำลอยไปมา',symptom2Desc:'อาจสัมพันธ์กับเลือดออกในวุ้นตาหรือความผิดปกติของจอประสาทตา',symptom3:'มองเห็นแสงวาบหรือภาพบิดเบี้ยว',symptom3Desc:'ควรรีบพบแพทย์เพื่อประเมินความผิดปกติของจอประสาทตา',levelBadge:'ระดับความรุนแรง',drLevel:'ระดับของเบาหวานขึ้นจอประสาทตา',drLevelDesc:'ระบบคัดกรองแบ่งระดับความรุนแรง 5 ระดับ เพื่อให้บุคลากรตัดสินใจเรื่องการติดตามหรือส่งต่อได้เหมาะสม',noDrDesc:'ยังไม่พบความผิดปกติของจอประสาทตาจากเบาหวาน แต่ยังควรตรวจตามรอบ',mildDesc:'เริ่มพบความผิดปกติเล็กน้อย เช่น จุดเลือดออกเล็ก ๆ หรือ microaneurysm',moderateDesc:'มีความผิดปกติมากขึ้น ควรติดตามใกล้ชิดและพิจารณาส่งต่อ',severeDesc:'มีความเสี่ยงสูงต่อการสูญเสียการมองเห็น ควรส่งต่อจักษุแพทย์โดยเร็ว',pdrDesc:'พบหลอดเลือดงอกผิดปกติหรือภาวะแทรกซ้อนรุนแรง ต้องส่งต่อจักษุแพทย์เร่งด่วน',riskBadge:'ปัจจัยเสี่ยง',riskTitle:'ใครบ้างที่เสี่ยง?',risk1:'ควบคุมน้ำตาลไม่ดี',risk1Desc:'ระดับน้ำตาลสูงเรื้อรังทำให้หลอดเลือดจอประสาทตาเสียหาย',risk2:'เป็นเบาหวานมานาน',risk2Desc:'ยิ่งเป็นนาน ยิ่งมีโอกาสเกิดภาวะแทรกซ้อนทางตาเพิ่มขึ้น',risk3:'มีความดันหรือไขมันสูง',risk3Desc:'เพิ่มความเสียหายต่อหลอดเลือดและเพิ่มความเสี่ยงต่อจอประสาทตา',preventBadge:'การป้องกัน',careTitle:'ดูแลตนเองอย่างไร?',care1:'ควบคุมระดับน้ำตาล',care1Desc:'รับประทานยา/ฉีดยาตามแพทย์สั่ง และติดตามระดับน้ำตาลอย่างสม่ำเสมอ',care2:'ปรับพฤติกรรมสุขภาพ',care2Desc:'เลือกอาหารเหมาะสม ออกกำลังกาย และควบคุมน้ำหนัก',care3:'ตรวจตาตามนัด',care3Desc:'แม้ไม่มีอาการก็ควรตรวจ เพราะระยะแรกอาจไม่แสดงอาการชัดเจน',patientNoteTitle:'ข้อความแนะนำสำหรับอธิบายผู้ป่วย',patientNoteDesc:'ผู้ป่วยเบาหวานควรตรวจจอประสาทตาอย่างสม่ำเสมอ เพราะระยะแรกอาจยังไม่มีอาการ หากพบเร็วจะช่วยวางแผนดูแล รักษา และลดความเสี่ยงต่อการสูญเสียการมองเห็นได้'},
+    en:{navHome:'Home',navUser:'User Account',navPatients:'Patient Information',navGroup:'Screening',navCreate:'Create New Patient',navAnalysis:'Retina Analysis',navReport:'Report',navAppointment:'Appointment',navTransfer:'Patient Transfer',navKnowledge:'Knowledge',navHistory:'Screening History',navSettings:'Settings',orgName:"King Mongkut's University of Technology North Bangkok",orgSub:'Diabetic Retinopathy Screening System',logout:'Logout',tag:'Health Education',heroTitle:'Diabetic Retinopathy Knowledge',heroDesc:'Essential knowledge about diabetic retinopathy, prevention, screening, and care so healthcare staff can explain the condition clearly to patients.',retinalDisease:'Retinal disease',retinalDiseaseDesc:'Caused by damage to small blood vessels in the retina from diabetes.',highSugar:'Chronic high blood sugar',highSugarDesc:'A key factor that damages retinal blood vessels over time.',annualEye:'Annual eye screening',annualEyeDesc:'People with diabetes should have regular retinal screening.',preventable:'Preventable',preventableDesc:'Control blood sugar, blood pressure, lipids, and attend follow-up visits.',meaning:'Definition',whatIsDR:'What is diabetic retinopathy?',whatIsDRDesc:'Diabetic retinopathy is a complication of diabetes that affects small blood vessels in the retina. Long-term high blood sugar can weaken, leak, rupture, or create abnormal blood vessels, causing blurred vision, abnormal vision, and severe vision loss.',symptomBadge:'Key symptoms',symptomsWatch:'Symptoms to watch for',symptom1:'Blurred or unclear vision',symptom1Desc:'Especially when blood sugar is unstable or bleeding occurs in the retina.',symptom2:'Floating dark spots',symptom2Desc:'May be related to vitreous bleeding or retinal abnormalities.',symptom3:'Flashes or distorted vision',symptom3Desc:'Patients should see an eye specialist for retinal evaluation.',levelBadge:'Severity levels',drLevel:'Diabetic retinopathy severity levels',drLevelDesc:'Screening classifies diabetic retinopathy into 5 severity levels so staff can decide follow-up or referral appropriately.',noDrDesc:'No diabetic retinal abnormality detected, but routine screening is still recommended.',mildDesc:'Early mild abnormality such as small hemorrhages or microaneurysms.',moderateDesc:'More abnormalities are present. Close follow-up and referral should be considered.',severeDesc:'High risk of vision loss. Refer to an ophthalmologist promptly.',pdrDesc:'Abnormal new blood vessels or severe complications are present. Urgent ophthalmology referral is required.',riskBadge:'Risk factors',riskTitle:'Who is at risk?',risk1:'Poor glucose control',risk1Desc:'Chronic high blood sugar damages retinal blood vessels.',risk2:'Long diabetes duration',risk2Desc:'The longer the duration, the higher the risk of eye complications.',risk3:'High blood pressure or lipids',risk3Desc:'These increase vascular damage and retinal risk.',preventBadge:'Prevention',careTitle:'How to take care of yourself?',care1:'Control blood sugar',care1Desc:'Take medication or insulin as prescribed and monitor blood sugar regularly.',care2:'Improve lifestyle',care2Desc:'Choose appropriate food, exercise, and manage body weight.',care3:'Attend eye appointments',care3Desc:'Screening is important even without symptoms because early stages may be silent.',patientNoteTitle:'Patient explanation message',patientNoteDesc:'People with diabetes should have retinal screening regularly because early disease may have no symptoms. Early detection helps plan care, treatment, and reduce the risk of vision loss.'}
+  };
+  function getLang(){return String(localStorage.getItem('dr_lang')||localStorage.getItem('dr_language')||localStorage.getItem('language')||localStorage.getItem('site_language')||localStorage.getItem('dr_dashboard_language')||'th').toLowerCase().startsWith('en')?'en':'th'}
+  let lang=getLang();
+  function t(k){return (I18N[lang]&&I18N[lang][k])||I18N.th[k]||k}
+  function applyLang(){lang=getLang();document.documentElement.lang=lang;const s=document.getElementById('langSelect');if(s)s.value=lang;document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});}
+  function setLang(v){lang=String(v).startsWith('en')?'en':'th';['dr_lang','dr_language','language','site_language','dr_dashboard_language'].forEach(k=>localStorage.setItem(k,lang));applyLang();}
+  function applyTheme(){const theme=localStorage.getItem('dr_theme')||localStorage.getItem('dr_dashboard_theme')||localStorage.getItem('theme')||'light';document.body.classList.toggle('dark-mode',theme==='dark');}
+  async function logout(){try{if(window.supabaseClient&&window.supabaseClient.auth)await window.supabaseClient.auth.signOut();}catch(e){}['dr_logged_in','dr_current_email','dr_current_name','currentUserEmail','currentUserName','userRole','dr_user','dr_session','rememberedUser'].forEach(k=>localStorage.removeItem(k));Object.keys(localStorage).forEach(k=>{const x=k.toLowerCase();if(x.includes('supabase')||x.includes('sb-')||x.includes('auth-token'))localStorage.removeItem(k)});sessionStorage.clear();location.href='index.html?logout=1';}
+  document.addEventListener('DOMContentLoaded',()=>{applyTheme();applyLang();document.getElementById('langSelect')?.addEventListener('change',e=>setLang(e.target.value));document.getElementById('logoutBtn')?.addEventListener('click',logout);});
+  window.addEventListener('storage',e=>{if(['dr_lang','dr_language','language','site_language','dr_dashboard_language'].includes(e.key))applyLang();if(['dr_theme','dr_dashboard_theme','theme'].includes(e.key))applyTheme();});
+  window.addEventListener('focus',()=>{applyTheme();applyLang();});
+})();
+</script>
+</body>
+</html>

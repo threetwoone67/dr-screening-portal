@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Create Patient | DR Screening Portal</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ctext y=%2750%27 font-size=%2750%27%3E%F0%9F%91%81%EF%B8%8F%3C/text%3E%3C/svg%3E"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f8ff;--card:#fff;--text:#102a43;--muted:#64748b;--line:#e6edf7;--blue:#2f5bea;--blue2:#1e40af;--soft:#eef5ff;--shadow:0 18px 45px rgba(15,43,76,.08);--radius:24px}
+body{font-family:"Noto Sans Thai",Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{display:flex;min-height:100vh}
+.sidebar{width:280px;background:#fff;border-right:1px solid var(--line);padding:22px 16px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;justify-content:space-between;z-index:20;box-shadow:8px 0 30px rgba(15,43,76,.04);overflow:auto}
+.brand{display:flex;gap:12px;align-items:center;padding:8px 8px 18px;border-bottom:1px solid #edf2fb;margin-bottom:16px}
+.brand-logo{width:52px;height:52px;border-radius:16px;background:#f4f8ff;display:grid;place-items:center;color:#2563eb;font-weight:900;border:1px solid #e6edf7;overflow:hidden;flex:0 0 52px}
+.brand-logo img{width:100%;height:100%;object-fit:contain;display:block}
+.brand-logo .fallback-text{display:grid;place-items:center;width:100%;height:100%;font-weight:900;color:#2563eb}
+.brand h2{font-size:16px;line-height:1.1;color:#1d4ed8;font-weight:900}.brand p{font-size:12px;color:#64748b;margin-top:2px}
+.nav{display:flex;flex-direction:column;gap:7px}.nav-label{font-size:11px;color:#94a3b8;font-weight:900;margin:12px 10px 4px}
+.nav a{display:flex;align-items:center;gap:12px;text-decoration:none;color:#475569;font-weight:900;padding:12px 13px;border-radius:16px;transition:.15s}.nav a:hover{background:#eef5ff;color:#1d4ed8}.nav a.active{background:linear-gradient(135deg,#2f5bea,#3158d6);color:#fff;box-shadow:0 12px 25px rgba(47,91,234,.25)}
+.nav-sub{margin-left:14px;border-left:2px solid #e7eefb;padding-left:10px}.nav-sub a{font-size:13px;padding:10px 12px}
+.sidebar-bottom{margin-top:18px}.org-card{display:flex;gap:10px;align-items:flex-start;border:1px solid #e6edf7;background:#f8fbff;border-radius:18px;padding:12px;font-size:12px;color:#475569;margin-bottom:10px}.org-logo{width:42px;height:42px;border-radius:12px;background:#eef5ff;border:1px solid #e6edf7;display:grid;place-items:center;overflow:hidden;flex:0 0 42px;color:#1d4ed8;font-weight:900}.org-logo img{width:100%;height:100%;object-fit:contain;display:block}.org-logo .fallback-text{font-size:11px;font-weight:900}.org-text{min-width:0}.org-card b{display:block;color:#0f2b4c;line-height:1.25}.org-card span{display:block;margin-top:3px;line-height:1.25}.logout{width:100%;border:1px solid #fee2e2;background:#fff7f7;color:#dc2626;border-radius:16px;padding:12px;font-weight:900;cursor:pointer}
+.main{margin-left:280px;width:calc(100% - 280px);padding:28px 34px 48px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.crumb{color:#2563eb;font-weight:900;font-size:13px}.title h1{font-size:31px;font-weight:900;letter-spacing:-.02em}.title p{color:#64748b;font-weight:600;margin-top:6px}.top-actions{display:flex;gap:12px;align-items:center}
+.lang{border:1px solid #dbe7f5;background:#fff;border-radius:14px;padding:10px 14px;font-weight:900;color:#0f2b4c}
+.user-pill{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #e6edf7;border-radius:22px;padding:10px 14px;box-shadow:var(--shadow)}.avatar{width:44px;height:44px;border-radius:16px;background:#2f5bea;color:#fff;display:grid;place-items:center;font-weight:900}.user-pill b{display:block}.user-pill span{display:block;color:#64748b;font-size:12px;font-weight:700}
+.hero{background:linear-gradient(135deg,#2f5bea,#2545c7);border-radius:28px;color:#fff;padding:26px 28px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden;position:relative}.hero:after{content:"";position:absolute;right:-40px;top:-50px;width:220px;height:220px;border-radius:999px;background:rgba(255,255,255,.11)}.hero h2{font-size:26px;font-weight:900}.hero p{font-weight:700;opacity:.95;margin-top:6px}.hero-icon{width:76px;height:76px;border-radius:24px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:36px;z-index:1}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{background:#fff;border:1px solid #e6edf7;border-radius:24px;padding:20px;box-shadow:0 12px 35px rgba(15,43,76,.045)}.stat{display:flex;gap:14px;align-items:center}.icon{width:52px;height:52px;border-radius:18px;background:#eff6ff;display:grid;place-items:center;font-size:24px}.stat small{display:block;color:#64748b;font-weight:800}.num{font-size:34px;font-weight:900;color:#0f2b4c;line-height:1}.panel{background:#fff;border:1px solid #e6edf7;border-radius:26px;padding:22px;box-shadow:0 14px 40px rgba(15,43,76,.05)}.panel h2{font-size:21px;font-weight:900}.panel-desc{color:#64748b;font-weight:700;margin-top:4px;font-size:13px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field label{display:block;font-size:13px;font-weight:900;color:#334155;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid #dbe7f5;background:#fbfdff;border-radius:15px;padding:12px 13px;font-family:inherit;font-weight:700;color:#0f2b4c}.field textarea{min-height:95px;resize:vertical}.btn{border:0;border-radius:15px;padding:12px 18px;font-family:inherit;font-weight:900;cursor:pointer}.btn-primary{background:#2f5bea;color:#fff;box-shadow:0 10px 22px rgba(47,91,234,.2)}.btn-soft{background:#eff6ff;color:#1d4ed8}.btn-outline{background:#fff;border:1px solid #dbe7f5;color:#1d4ed8}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.notice{border:1px solid #dbeafe;background:#f4f8ff;color:#1e40af;border-radius:18px;padding:14px;font-weight:800}.ok{border-color:#bbf7d0;background:#f0fdf4;color:#166534}.err{border-color:#fecaca;background:#fff1f2;color:#b91c1c}
+.searchbar{display:flex;gap:10px;margin:16px 0}.searchbar input{flex:1;border:1px solid #dbe7f5;border-radius:15px;padding:12px 14px;font-family:inherit;font-weight:700}.list{display:flex;flex-direction:column;gap:10px;max-height:620px;overflow:auto}.row{border:1px solid #e6edf7;border-radius:18px;padding:14px;display:flex;justify-content:space-between;gap:12px;cursor:pointer;transition:.15s}.row:hover,.row.active{border-color:#2f5bea;background:#f8fbff}.row b{display:block}.row small{display:block;color:#64748b;font-weight:700}.badge{display:inline-flex;align-items:center;border-radius:999px;background:#eef5ff;color:#1d4ed8;font-weight:900;font-size:12px;padding:5px 10px}.detail-head{display:flex;gap:16px;align-items:center;padding-bottom:16px;border-bottom:1px solid #edf2fb;margin-bottom:16px}.big-avatar{width:68px;height:68px;border-radius:24px;background:linear-gradient(135deg,#2f5bea,#5b8cff);color:#fff;display:grid;place-items:center;font-size:30px;font-weight:900}.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.info{border:1px solid #edf2fb;background:#fbfdff;border-radius:17px;padding:14px}.info span{display:block;color:#64748b;font-size:12px;font-weight:900}.info b{display:block;margin-top:4px}.empty{padding:28px;border:1px dashed #d7e4f5;border-radius:18px;text-align:center;color:#94a3b8;font-weight:900}
+body.dark{--bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#94a3b8;--line:#263244;background:#0f172a;color:#e5e7eb}body.dark .sidebar,body.dark .card,body.dark .panel,body.dark .user-pill{background:#111827;border-color:#263244}body.dark .main,body.dark .app{background:#0f172a}body.dark .title p,body.dark .panel-desc,body.dark .row small,body.dark .info span{color:#94a3b8}body.dark .field input,body.dark .field select,body.dark .field textarea,body.dark .searchbar input,body.dark .info{background:#0b1220;border-color:#263244;color:#e5e7eb}body.dark .nav a{color:#cbd5e1}body.dark .nav a:hover{background:#1e293b}body.dark .org-card,body.dark .org-logo,body.dark .brand-logo{background:#0b1220;border-color:#263244}body.dark .org-card b{color:#e5e7eb}body.dark .num,body.dark .panel h2,body.dark .title h1{color:#e5e7eb}
+@media(max-width:1100px){.sidebar{position:static;width:100%;height:auto}.app{display:block}.main{margin:0;width:100%;padding:20px}.grid4,.grid3,.grid2,.form-grid,.info-grid{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:stretch}.user-pill{width:max-content}}
+</style></head><body><div class="app"><div id="sidebarMount"></div><main class="main"><div class="topbar"><div class="title"><div class="crumb" id="crumb">การตรวจ / สร้างคนไข้ใหม่</div><h1 id="title">สร้างข้อมูลผู้ป่วยรายใหม่</h1><p id="sub">บันทึกข้อมูลเข้าตาราง patients ใน Supabase โปรเจกต์ปัจจุบัน</p></div><div class="top-actions"><select class="lang" data-lang-select></select></div></div><section class="hero"><div><h2 id="hero">แบบฟอร์มสร้างคนไข้ใหม่</h2><p id="heroSub">กรอกข้อมูลพื้นฐานสำหรับการคัดกรองและติดตามผล</p></div><div class="hero-icon">➕</div></section><section class="panel"><div id="msg" style="margin-bottom:14px"></div><form id="f" class="form-grid"><div class="field"><label>ชื่อ-นามสกุล *</label><input id="full_name" required placeholder="เช่น นายสมชาย ใจดี"></div><div class="field"><label>HN</label><input id="hn" placeholder="เช่น HN680001"></div><div class="field"><label>เพศ</label><select id="gender"><option value="">เลือกเพศ</option><option value="ชาย">ชาย</option><option value="หญิง">หญิง</option></select></div><div class="field"><label>วันเกิด</label><input id="birth_date" type="date"></div><div class="field"><label>อายุ</label><input id="age" type="number" min="0" placeholder="ระบบคำนวณอัตโนมัติได้"></div><div class="field"><label>เบอร์โทร</label><input id="phone" placeholder="เช่น 0812345678"></div><div class="field"><label>น้ำหนัก (kg)</label><input id="weight" type="number" step="0.1"></div><div class="field"><label>ส่วนสูง (cm)</label><input id="height" type="number" step="0.1"></div><div class="field"><label>โรคประจำตัว</label><input id="disease" placeholder="เช่น เบาหวาน, ความดัน"></div><div class="field"><label>แพ้ยา / ภูมิแพ้</label><input id="allergy" placeholder="เช่น Penicillin"></div></form><div class="actions"><button class="btn btn-outline" onclick="location.href='patients.html'">ยกเลิก</button><button class="btn btn-primary" id="saveBtn">บันทึกข้อมูลผู้ป่วย</button></div></section></main></div><script>
+const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = (id)=>document.getElementById(id);
+const LANG_KEY = "dr_lang";
+const THEME_KEY = "dr_theme";
+const LANG_KEYS = ["dr_lang", "dr_language", "app_lang", "app_language", "language"];
+const PAGE_I18N = {
+  th: {
+    crumb:"การตรวจ / สร้างคนไข้ใหม่", title:"สร้างข้อมูลผู้ป่วยรายใหม่", sub:"บันทึกข้อมูลเข้าตาราง patients ใน Supabase โปรเจกต์ปัจจุบัน",
+    hero:"แบบฟอร์มสร้างคนไข้ใหม่", heroSub:"กรอกข้อมูลพื้นฐานสำหรับการคัดกรองและติดตามผล",
+    fullName:"ชื่อ-นามสกุล *", fullNamePh:"เช่น นายสมชาย ใจดี", hn:"HN", hnPh:"เช่น HN680001", gender:"เพศ", genderEmpty:"เลือกเพศ", male:"ชาย", female:"หญิง",
+    birthDate:"วันเกิด", age:"อายุ", agePh:"ระบบคำนวณอัตโนมัติได้", phone:"เบอร์โทร", phonePh:"เช่น 0812345678",
+    weight:"น้ำหนัก (kg)", height:"ส่วนสูง (cm)", disease:"โรคประจำตัว", diseasePh:"เช่น เบาหวาน, ความดัน", allergy:"แพ้ยา / ภูมิแพ้", allergyPh:"เช่น Penicillin",
+    cancel:"ยกเลิก", save:"บันทึกข้อมูลผู้ป่วย", needName:"กรุณากรอกชื่อผู้ป่วย", saved:"บันทึกข้อมูลผู้ป่วยเรียบร้อย", saveError:"บันทึกไม่สำเร็จ: "
+  },
+  en: {
+    crumb:"Screening / Create New Patient", title:"Create New Patient", sub:"Save patient information to the patients table in the current Supabase project",
+    hero:"New Patient Form", heroSub:"Enter basic information for screening and follow-up",
+    fullName:"Full name *", fullNamePh:"e.g. John Smith", hn:"HN", hnPh:"e.g. HN680001", gender:"Gender", genderEmpty:"Select gender", male:"Male", female:"Female",
+    birthDate:"Date of birth", age:"Age", agePh:"Can be calculated automatically", phone:"Phone number", phonePh:"e.g. 0812345678",
+    weight:"Weight (kg)", height:"Height (cm)", disease:"Underlying disease", diseasePh:"e.g. Diabetes, Hypertension", allergy:"Drug allergy / Allergy", allergyPh:"e.g. Penicillin",
+    cancel:"Cancel", save:"Save Patient", needName:"Please enter patient name", saved:"Patient information saved successfully", saveError:"Save failed: "
+  }
+};
+function getLang(){
+  for (const k of LANG_KEYS) {
+    const v = localStorage.getItem(k);
+    if (v === "th" || v === "en") return v;
+  }
+  return "th";
+}
+function setLang(lang){
+  lang = (lang === "en") ? "en" : "th";
+  LANG_KEYS.forEach(k => localStorage.setItem(k, lang));
+  document.documentElement.lang = lang;
+  applyPageLanguage();
+  mountSidebar("create");
+  applyLangSelect();
+}
+function applyPageLanguage(){
+  const lang=getLang();
+  const t=PAGE_I18N[lang]||PAGE_I18N.th;
+  const set=(id,txt)=>{ const el=$(id); if(el) el.textContent=txt; };
+  const ph=(id,txt)=>{ const el=$(id); if(el) el.placeholder=txt; };
+  set("crumb",t.crumb); set("title",t.title); set("sub",t.sub); set("hero",t.hero); set("heroSub",t.heroSub);
+  document.querySelector('label[for="full_name"], label[data-label="full_name"]')?.removeAttribute('for');
+  const labels=document.querySelectorAll('.field label');
+  const texts=[t.fullName,t.hn,t.gender,t.birthDate,t.age,t.phone,t.weight,t.height,t.disease,t.allergy];
+  labels.forEach((l,i)=>{ if(texts[i]) l.textContent=texts[i]; });
+  ph("full_name",t.fullNamePh); ph("hn",t.hnPh); ph("age",t.agePh); ph("phone",t.phonePh); ph("disease",t.diseasePh); ph("allergy",t.allergyPh);
+  const g=$("gender"); if(g){
+    g.options[0].textContent=t.genderEmpty;
+    g.options[1].textContent=t.male;
+    g.options[2].textContent=t.female;
+  }
+  const cancel=document.querySelector('.btn-outline'); if(cancel) cancel.textContent=t.cancel;
+  set("saveBtn",t.save);
+}
+function applyLangSelect(){ document.querySelectorAll("[data-lang-select]").forEach(s=>{s.innerHTML='<option value="th">ไทย</option><option value="en">English</option>'; s.value=getLang(); s.onchange=()=>setLang(s.value);}); }
+function applyTheme(){
+  const theme = localStorage.getItem(THEME_KEY) || localStorage.getItem("theme") || "light";
+  document.body.classList.toggle("dark", theme === "dark");
+  document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+}
+function safe(v,f="-"){ return (v===null||v===undefined||v==="")?f:v; }
+function esc(v){ return String(safe(v,"")).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"); }
+function initials(name,email){ const s=(name||email||"U").trim(); return (s[0]||"U").toUpperCase(); }
+async function getSessionUser(){
+  const {data} = await sb.auth.getSession();
+  if(!data.session) { location.href="index.html"; return null; }
+  return data.session.user;
+}
+async function signOut(){ try{ await sb.auth.signOut(); }catch(e){} location.href="index.html"; }
+function wireLogout(){ const b=$("logoutBtn"); if(b) b.onclick=signOut; }
+async function loadCurrentProfile(){
+  const user = await getSessionUser();
+  if(!user) return null;
+  let profile = null;
+  try {
+    let r = await sb.from("profiles").select("*").eq("id", user.id).maybeSingle();
+    if(!r.error && r.data) profile = r.data;
+  } catch(e){}
+  if(!profile) {
+    try {
+      let r = await sb.from("profiles").select("*").eq("email", user.email).maybeSingle();
+      if(!r.error && r.data) profile = r.data;
+    } catch(e){}
+  }
+  return {
+    user,
+    profile: profile || {},
+    displayName: (profile && (profile.full_name||profile.name||profile.display_name)) || user.user_metadata?.full_name || user.email || "ผู้ใช้งาน",
+    role: (profile && (profile.role||profile.position||profile.user_role)) || "แพทย์",
+    email: user.email
+  };
+}
+function sidebar(active){
+  const lang=getLang();
+  const th={
+    home:"หน้าหลัก", user:"บัญชีผู้ใช้", patients:"ข้อมูลผู้ป่วย", screening:"การตรวจ", create:"สร้างคนไข้ใหม่", analysis:"วิเคราะห์จอประสาทตา", report:"รายงานผล", appointment:"การนัดหมาย", transfer:"โอนย้ายผู้ป่วย", knowledge:"เกร็ดความรู้", history:"ประวัติการตรวจ", settings:"ตั้งค่า", logout:"ออกจากระบบ", org:"มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ", sub:"ระบบตรวจคัดกรองจอประสาทตาเบาหวาน"
+  };
+  const en={
+    home:"Home", user:"User Account", patients:"Patient Information", screening:"Screening", create:"Create New Patient", analysis:"Retina Analysis", report:"Report", appointment:"Appointment", transfer:"Patient Transfer", knowledge:"Knowledge", history:"Screening History", settings:"Settings", logout:"Logout", org:"King Mongkut's University of Technology North Bangkok", sub:"Diabetic Retinopathy Screening System"
+  };
+  const t = lang==="en"?en:th;
+  const a = (key,href,icon,cls="") => `<a class="${active===key?'active':''} ${cls}" href="${href}">${icon} <span>${t[key]}</span></a>`;
+  return `<aside class="sidebar">
+    <div>
+      <div class="brand"><div class="brand-logo" data-logo-box="brand"><span class="fallback-text">DR</span></div><div><h2>Diabetic<br>Retinopathy</h2><p>DR Screening Portal</p></div></div>
+      <nav class="nav">
+        ${a("home","dashboard.html","🏠")}
+        ${a("user","user.html","👤")}
+        ${a("patients","patients.html","👥")}
+        <div class="nav-label">${t.screening}</div>
+        <div class="nav-sub">
+          ${a("create","create-patient.html","➕")}
+          ${a("analysis","retina-analysis.html","🔬")}
+          ${a("report","retina-report-new.html","📄")}
+          ${a("appointment","appointment-followup.html","📅")}
+        </div>
+        ${a("transfer","patient-transfer.html","🔁")}
+        ${a("knowledge","knowledge-dr.html","💡")}
+        ${a("history","screening-history.html","🕘")}
+        ${a("settings","settings.html","⚙️")}
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="org-card"><div class="org-logo" data-logo-box="uni"><span class="fallback-text">มจพ</span></div><div class="org-text"><b>${t.org}</b><span>${t.sub}</span></div></div>
+      <button class="logout" id="logoutBtn">${t.logout}</button>
+    </div>
+  </aside>`;
+}
+function loadImageFallback(box, paths, fallbackText){
+  const el = typeof box === "string" ? document.querySelector(box) : box;
+  if(!el) return;
+  let i = 0;
+  function tryNext(){
+    if(i >= paths.length){ el.innerHTML = `<span class="fallback-text">${fallbackText}</span>`; return; }
+    const img = new Image();
+    img.onload = () => { el.innerHTML = ""; el.appendChild(img); };
+    img.onerror = () => { i++; tryNext(); };
+    img.src = paths[i];
+    img.alt = fallbackText;
+  }
+  tryNext();
+}
+function applySidebarLogos(){
+
+  loadImageFallback(
+    '[data-logo-box="brand"]',
+    [
+      'logo-new.jpg',
+      './logo-new.jpg',
+      'logo-new.png',
+      './logo-new.png',
+      'images/logo-new.jpg',
+      'images/logo-new.png',
+      'assets/logo-new.jpg',
+      'assets/logo-new.png'
+    ],
+    'DR'
+  );
+
+  loadImageFallback(
+    '[data-logo-box="uni"]',
+    [
+      'institution-logo.png',
+      './institution-logo.png',
+      'logo-kmutnb.png',
+      './logo-kmutnb.png',
+      'images/institution-logo.png',
+      'assets/institution-logo.png'
+    ],
+    'มจพ'
+  );
+}
+function mountSidebar(active){ document.getElementById("sidebarMount").innerHTML = sidebar(active); applySidebarLogos(); wireLogout(); }
+
+function setMsg(m,c="notice"){$("msg").innerHTML=m?`<div class="${c}">${esc(m)}</div>`:""}
+$("birth_date").onchange=()=>{const d=new Date($("birth_date").value); if(!isNaN(d)){const n=new Date();let a=n.getFullYear()-d.getFullYear();const mm=n.getMonth()-d.getMonth();if(mm<0||(mm===0&&n.getDate()<d.getDate()))a--;$("age").value=a;}}
+async function savePatient(){
+  await getSessionUser();
+  const hn = $("hn").value.trim() || ("PT" + Date.now().toString().slice(-10));
+  const h = Number($("height").value || 0);
+  const w = Number($("weight").value || 0);
+  const bmi = (h && w) ? (w / ((h / 100) * (h / 100))).toFixed(2) : null;
+  const langText = PAGE_I18N[getLang()] || PAGE_I18N.th;
+
+  const baseRow = {
+    patient_code: hn,
+    hn: hn,
+    full_name: $("full_name").value.trim(),
+    gender: $("gender").value,
+    sex: $("gender").value,
+    birth_date: $("birth_date").value || null,
+    age: Number($("age").value || 0) || null,
+    phone: $("phone").value.trim(),
+    phone_number: $("phone").value.trim(),
+    weight: w || null,
+    height: h || null,
+    bmi: bmi,
+    disease: $("disease").value.trim(),
+    underlying_disease: $("disease").value.trim(),
+    allergy: $("allergy").value.trim(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+
+  if (!baseRow.full_name) {
+    setMsg(langText.needName, "notice err");
+    return;
+  }
+
+  const payloads = [
+    baseRow,
+    (() => { const r = {...baseRow}; delete r.allergy; return r; })(),
+    (() => { const r = {...baseRow}; ["allergy","disease","underlying_disease","phone_number","sex","bmi","updated_at"].forEach(k => delete r[k]); return r; })()
+  ];
+
+  let lastError = null;
+  for (const row of payloads) {
+    try {
+      const { error } = await sb.from("patients").insert(row);
+      if (!error) {
+        setMsg(langText.saved, "notice ok");
+        setTimeout(() => location.href = "patients.html", 700);
+        return;
+      }
+      lastError = error;
+      const msg = (error.message || "").toLowerCase();
+      const retryable = msg.includes("schema cache") || msg.includes("column") || msg.includes("could not find");
+      if (!retryable) break;
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  setMsg(langText.saveError + ((lastError && lastError.message) || lastError || "Unknown error"), "notice err");
+}
+$("saveBtn").onclick=savePatient;
+function initCreatePatientPage(){
+  const lang = getLang();
+  LANG_KEYS.forEach(k => localStorage.setItem(k, lang));
+  document.documentElement.lang = lang;
+  applyTheme();
+  mountSidebar("create");
+  applyLangSelect();
+  applyPageLanguage();
+}
+window.addEventListener("storage", (e) => {
+  if (LANG_KEYS.includes(e.key)) initCreatePatientPage();
+  if (e.key === THEME_KEY || e.key === "theme") applyTheme();
+});
+initCreatePatientPage();
+</script>
+</body></html>

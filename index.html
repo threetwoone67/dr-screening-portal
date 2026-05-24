@@ -1,0 +1,67 @@
+<!doctype html><html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Login - Diabetic Retinopathy Detection Program</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="language.js"></script>
+<script src="auth.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,Arial,sans-serif;background:linear-gradient(rgba(15,38,63,.35),rgba(15,38,63,.35)),url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;color:white}.topbar{height:68px;background:linear-gradient(90deg,#0f4c81,#1f78b4);display:flex;align-items:center;justify-content:space-between;padding:0 22px}.brand{display:flex;align-items:center;gap:12px;font-weight:900}.logo{width:38px;height:38px;background:#fff;color:#0f4c81;border-radius:10px;display:grid;place-items:center}.brand small{display:block;font-size:12px;opacity:.9}.nav{display:flex;align-items:center;gap:18px;font-weight:800}select{border:0;border-radius:20px;padding:8px 14px;font-weight:800}.wrap{min-height:calc(100vh - 68px);display:grid;place-items:center}.card{width:min(380px,92vw);padding:34px 28px;border-radius:22px;background:rgba(255,255,255,.24);backdrop-filter:blur(12px);box-shadow:0 20px 60px rgba(0,0,0,.28);text-align:center}h1{margin:0 0 8px;font-size:34px}p{margin:0 0 20px}input{width:100%;border:0;border-radius:10px;padding:14px 15px;margin:7px 0;background:#eef4ff;font-weight:700}button{width:100%;border:0;border-radius:10px;padding:14px;margin-top:8px;background:#58b7e9;color:white;font-weight:900;font-size:15px;cursor:pointer}.links{display:flex;justify-content:space-between;margin-top:14px}a{color:white;text-decoration:none;font-weight:800}.message{display:none;margin:10px 0;padding:10px;border-radius:10px;font-weight:800}.message.error{display:block;background:rgba(239,68,68,.35)}.message.success{display:block;background:rgba(34,197,94,.35)}</style></head><body>
+<header class="topbar"><div class="brand"><div class="logo">DR</div><div><span data-i18n="appTitle">Diabetic Retinopathy Detection Program</span><small data-i18n="appSubtitle">โปรแกรมตรวจวัดระดับเบาหวานขึ้นจอประสาทตา</small></div></div><nav class="nav"><select data-language-select></select><a href="#" data-i18n="home">หน้าหลัก</a><a href="#login" data-i18n="login">เข้าสู่ระบบ</a></nav></header>
+<main class="wrap"><section class="card"><h1 data-i18n="loginTitle">เข้าสู่ระบบ</h1><p data-i18n="loginSubtitle">เข้าสู่ระบบเพื่อใช้งานระบบตรวจคัดกรอง</p><div id="message" class="message"></div><input id="email" type="email" data-i18n-placeholder="email" placeholder="อีเมล" autocomplete="email"><input id="password" type="password" data-i18n-placeholder="password" placeholder="รหัสผ่าน" autocomplete="current-password"><button id="loginBtn" data-i18n="loginBtn">เข้าสู่ระบบ</button><div class="links"><a href="forgot-password.html" data-i18n="forgotPassword">ลืมรหัสผ่าน?</a><a href="register.html" data-i18n="register">สมัครสมาชิก</a></div></section></main>
+<script>
+function msg(text,type){
+  const el=document.getElementById('message');
+  el.textContent=text;
+  el.className='message '+type;
+  el.style.display='block';
+}
+function normalizeRole(role){
+  return String(role || '').toLowerCase().trim().replace(/\s+/g,'_');
+}
+async function getFreshProfile(user){
+  let profile = null;
+  try { profile = await DR_AUTH.getProfile(user); } catch(e) {}
+  if (profile && profile.role) return profile;
+
+  // retry สั้น ๆ เผื่อ profiles เพิ่งถูกสร้าง/อัปเดตใน Supabase
+  await new Promise(r => setTimeout(r, 350));
+  try { profile = await DR_AUTH.getProfile(user); } catch(e) {}
+  return profile || {};
+}
+function goByRole(profile){
+  const role = normalizeRole(profile?.role);
+  if (role === 'admin' || role === 'super_admin' || role === 'superadmin') {
+    window.location.replace('admin-dashboard.html');
+  } else {
+    window.location.replace('dashboard.html');
+  }
+}
+document.addEventListener('DOMContentLoaded', ()=>{
+  const loginBtn = document.getElementById('loginBtn');
+  loginBtn.onclick = async()=>{
+    const email=document.getElementById('email').value.trim();
+    const password=document.getElementById('password').value;
+    if(!email||!password){
+      const emailText = window.t ? window.t('email') : 'Email';
+      const passText = window.t ? window.t('password') : 'Password';
+      return msg(emailText+' / '+passText,'error');
+    }
+
+    loginBtn.disabled = true;
+    const oldText = loginBtn.textContent;
+    loginBtn.textContent = 'กำลังเข้าสู่ระบบ...';
+
+    try{
+      const result = await DR_AUTH.login(email,password);
+      const profile = result?.profile || await getFreshProfile(result?.user);
+      goByRole(profile);
+    }catch(e){
+      console.error('Login error:', e);
+      msg((e && e.message) ? e.message : 'เข้าสู่ระบบไม่สำเร็จ / Login failed','error');
+      loginBtn.disabled = false;
+      loginBtn.textContent = oldText;
+    }
+  };
+
+  // ไม่ auto redirect ตอนเปิดหน้า login แล้ว เพื่อหยุดอาการกระพริบ/วนหน้า
+  // ผู้ใช้กด Login แล้วระบบจะพาไปหน้าตาม role ทันที
+});
+</script></body></html>

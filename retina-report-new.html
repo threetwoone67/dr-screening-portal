@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Report | DR Screening Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="report-style.css?v=14">
+
+  <style>
+    .logo-img-box{
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      background:#fff;
+      border:1px solid rgba(37,99,235,.12);
+    }
+    .logo-img-box img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:none;
+      border-radius:inherit;
+    }
+    .logo-img-box span{
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      color:#2563eb;
+    }
+    .org-with-logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-align:left;
+    }
+    .org-logo-box{
+      width:42px;
+      height:42px;
+      min-width:42px;
+      border-radius:50%;
+      background:#fff;
+      border:1px solid #e5eaf2;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      color:#b91c1c;
+      font-size:11px;
+      font-weight:900;
+    }
+    .org-logo-box img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:none;
+    }
+    .org-logo-box span{
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+    }
+  </style>
+
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo logo-img-box">
+        <img data-logo-fallbacks="logo-new.jpg,./logo-new.jpg,images/logo-new.jpg,assets/logo-new.jpg,logo-new.png,./logo-new.png" alt="DR Logo">
+        <span>DR</span>
+      </div>
+      <div><b>Diabetic<br>Retinopathy</b><small>DR Screening Portal</small></div>
+    </div>
+    <nav class="nav">
+      <a href="dashboard.html" data-i="navHome">🏠 หน้าหลัก</a>
+      <a href="user.html" data-i="navUser">👤 บัญชีผู้ใช้</a>
+      <a href="patients.html" data-i="navPatients">👥 ข้อมูลผู้ป่วย</a>
+      <div class="group" data-i="navScreeningGroup">การตรวจ</div>
+      <a href="create-patient.html" data-i="navCreate">➕ สร้างคนไข้ใหม่</a>
+      <a href="retina-analysis.html" data-i="navAnalysis">🔬 วิเคราะห์จอประสาทตา</a>
+      <a class="active" href="retina-report-new.html" data-i="navReport">📄 รายงานผล</a>
+      <a href="appointment-followup.html" data-i="navAppointment">📅 การนัดหมาย</a>
+      <a href="patient-transfer.html" data-i="navTransfer">🔁 โอนย้ายผู้ป่วย</a>
+      <a href="knowledge-dr.html" data-i="navKnowledge">💡 เกร็ดความรู้</a>
+      <a href="screening-history.html" data-i="navHistory">🕘 ประวัติการตรวจ</a>
+      <a href="settings.html" data-i="navSettings">⚙️ ตั้งค่า</a>
+    </nav>
+    <div class="org org-with-logo">
+      <div class="org-logo-box">
+        <img data-logo-fallbacks="institution-logo.png,./institution-logo.png,logo-kmutnb.png,./logo-kmutnb.png,images/institution-logo.png,assets/institution-logo.png" alt="KMUTNB Logo">
+        <span>มจพ</span>
+      </div>
+      <div>
+        <b data-i="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</b><br>
+        <span data-i="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</span>
+      </div>
+    </div>
+    <button id="logoutBtn" class="logout" data-i="logout">ออกจากระบบ</button>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div>
+        <div class="crumb" data-i="breadcrumb">รายงานผล / เอกสารผลตรวจ</div>
+        <div class="title" data-i="pageTitle">รายงานผลการตรวจจอประสาทตา</div>
+        <div class="sub" data-i="pageSubtitle">พิมพ์ชื่อหรือ HN เพื่อค้นหารายงาน แล้วเลือกเอกสารเพื่อดูและส่งออก</div>
+      </div>
+      <div class="actions">
+        <select class="lang" id="langSelect"><option value="th">ไทย</option><option value="en">English</option></select>
+        <a class="btn ghost" href="dashboard.html" data-i="home">หน้าหลัก</a>
+        <a class="btn ghost" href="retina-analysis.html" data-i="newAnalysis">วิเคราะห์ใหม่</a>
+        <button class="btn ghost" id="docBtn" data-i="saveDoc">บันทึกเป็น DOC</button>
+        <button class="btn primary" id="pdfBtn" data-i="printPdf">พิมพ์ / บันทึก PDF</button>
+      </div>
+    </div>
+
+    <section class="stats">
+      <div class="stat"><div class="ico">📄</div><div><small data-i="totalReports">รายงานทั้งหมด</small><strong id="totalReports">0</strong></div></div>
+      <div class="stat"><div class="ico">✅</div><div><small>No DR / Normal</small><strong id="normalReports">0</strong></div></div>
+      <div class="stat"><div class="ico">⚠️</div><div><small data-i="abnormalReports">พบความผิดปกติ</small><strong id="abnormalReports">0</strong></div></div>
+      <div class="stat"><div class="ico">🖨️</div><div><small data-i="readyPrint">พร้อมพิมพ์</small><strong>PDF</strong></div></div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h3 data-i="reportList">รายการรายงานผล</h3>
+        <p data-i="reportSearchDesc">พิมพ์ชื่อผู้ป่วย / HN / รหัสผู้ป่วย / ผลตรวจ ก่อนเลือกเอกสาร</p>
+        <input id="searchInput" placeholder="พิมพ์เพื่อค้นหา เช่น test1 / HN / PDR">
+        <div class="list" id="reportList"><div class="empty" data-i="typeToSearch">พิมพ์คำค้นหาเพื่อแสดงรายงาน</div></div>
+        <div class="debug" id="debugText"></div>
+      </div>
+      <div class="paperbox">
+        <div id="paperContainer"><div class="empty" data-i="selectReport">เลือกรายงานจากรายการด้านซ้าย</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="retina-report-new.js?v=14" defer></script>
+<script src="language.js"></script>
+<script src="settings-global.js"></script>
+</body>
+</html>

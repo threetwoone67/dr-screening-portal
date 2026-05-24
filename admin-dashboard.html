@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<link rel="stylesheet" href="admin.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<aside class="sidebar" id="adminSidebar"></aside>
+
+<main class="main">
+
+<section class="top">
+<div>
+<h1>หน้าหลักผู้ดูแลระบบ</h1>
+<p>ภาพรวมข้อมูลการใช้งาน ระบบตรวจคัดกรอง และปฏิทินตรวจเช็กระบบ</p>
+</div>
+
+<div class="admin-badge">
+<strong>Admin</strong><br>
+<small id="adminEmail">กำลังโหลด...</small>
+</div>
+</section>
+
+<section class="cards">
+<div class="card">
+<h3>บัญชีแอดมิน</h3>
+<h2 id="totalAdmins">0</h2>
+</div>
+
+<div class="card">
+<h3>บัญชีผู้ใช้งาน</h3>
+<h2 id="totalUsers">0</h2>
+</div>
+
+<div class="card">
+<h3>ผู้ป่วยทั้งหมด</h3>
+<h2 id="totalPatients">0</h2>
+</div>
+
+<div class="card">
+<h3>สถานะระบบ</h3>
+<h2 style="color:#16a34a;">ONLINE</h2>
+</div>
+</section>
+
+<section class="grid">
+
+<div class="panel">
+<h2>กราฟการใช้งานในระบบ</h2>
+<p>แสดงจำนวนแอดมิน ผู้ใช้งาน และผู้ป่วยในระบบ</p>
+<canvas id="usageChart" height="140"></canvas>
+</div>
+
+<div class="panel">
+<h2 id="calendarTitle">ปฏิทินตรวจเช็กระบบ</h2>
+<p>จุดสีเขียว = ตรวจระบบปกติ / จุดสีเหลือง = ควรตรวจสอบ</p>
+
+<div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+<button onclick="prevMonth()">‹ เดือนก่อน</button>
+<button onclick="nextMonth()">เดือนถัดไป ›</button>
+</div>
+
+<div id="calendar" class="calendar-box"></div>
+</div>
+
+</section>
+
+<section class="grid" style="margin-top:22px;">
+
+<div class="panel">
+<h2>กิจกรรมล่าสุด</h2>
+
+<table>
+<thead>
+<tr>
+<th>เวลา</th>
+<th>รายการ</th>
+<th>สถานะ</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>วันนี้</td>
+<td>ตรวจสอบ Supabase Auth</td>
+<td style="color:#16a34a;">ปกติ</td>
+</tr>
+
+<tr>
+<td>วันนี้</td>
+<td>โหลดข้อมูลผู้ป่วย</td>
+<td style="color:#16a34a;">สำเร็จ</td>
+</tr>
+
+<tr>
+<td>สัปดาห์นี้</td>
+<td>สำรองข้อมูลระบบ</td>
+<td style="color:#d97706;">รอตรวจสอบ</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="panel">
+<h2>สรุปการตรวจเช็กระบบ</h2>
+
+<table>
+<tbody>
+<tr>
+<td>Supabase Auth</td>
+<td style="color:#16a34a;">พร้อมใช้งาน</td>
+</tr>
+
+<tr>
+<td>Patient Data</td>
+<td style="color:#16a34a;">พร้อมใช้งาน</td>
+</tr>
+
+<tr>
+<td>AI Model API</td>
+<td style="color:#d97706;">รอเชื่อมต่อ</td>
+</tr>
+
+<tr>
+<td>Backup / Recovery</td>
+<td style="color:#d97706;">ควรสำรองข้อมูล</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</section>
+
+</main>
+
+<script src="admin-core.js"></script>
+
+<script>
+renderSidebar("dashboard");
+applySavedTheme();
+checkAdmin();
+
+const totalAdmins = admins.length;
+const totalUsers = users.length;
+const totalPatients = patients.length;
+
+document.getElementById("totalAdmins").textContent = totalAdmins;
+document.getElementById("totalUsers").textContent = totalUsers;
+document.getElementById("totalPatients").textContent = totalPatients;
+
+new Chart(document.getElementById("usageChart"), {
+type: "line",
+data: {
+labels: ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย."],
+datasets: [
+{
+label: "แอดมิน",
+data: [1, 1, 1, 2, 2, totalAdmins || 1],
+borderWidth: 3,
+tension: 0.4
+},
+{
+label: "ผู้ใช้งาน",
+data: [1, 2, 3, 4, 5, totalUsers || 3],
+borderWidth: 3,
+tension: 0.4
+},
+{
+label: "ผู้ป่วย",
+data: [2, 3, 4, 5, 6, totalPatients || 7],
+borderWidth: 3,
+tension: 0.4
+}
+]
+},
+options: {
+responsive: true,
+plugins: {
+legend: {
+position: "bottom"
+}
+},
+scales: {
+y: {
+beginAtZero: true
+}
+}
+}
+});
+
+let currentDate = new Date();
+
+const monthNames = [
+"มกราคม",
+"กุมภาพันธ์",
+"มีนาคม",
+"เมษายน",
+"พฤษภาคม",
+"มิถุนายน",
+"กรกฎาคม",
+"สิงหาคม",
+"กันยายน",
+"ตุลาคม",
+"พฤศจิกายน",
+"ธันวาคม"
+];
+
+function renderCalendar() {
+const calendar = document.getElementById("calendar");
+const title = document.getElementById("calendarTitle");
+
+calendar.innerHTML = "";
+
+const year = currentDate.getFullYear();
+const month = currentDate.getMonth();
+
+title.textContent = monthNames[month] + " " + (year + 543);
+
+const dayNames = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
+
+dayNames.forEach(day => {
+const box = document.createElement("div");
+box.className = "calendar-day-name";
+box.textContent = day;
+calendar.appendChild(box);
+});
+
+const firstDay = new Date(year, month, 1).getDay();
+const lastDate = new Date(year, month + 1, 0).getDate();
+const today = new Date();
+
+for (let i = 0; i < firstDay; i++) {
+calendar.appendChild(document.createElement("div"));
+}
+
+for (let day = 1; day <= lastDate; day++) {
+const box = document.createElement("div");
+box.className = "calendar-day";
+box.textContent = day;
+
+if (
+day === today.getDate() &&
+month === today.getMonth() &&
+year === today.getFullYear()
+) {
+box.classList.add("today");
+}
+
+if ([5, 12, 19, 26].includes(day)) {
+box.innerHTML += `<span class="dot green"></span>`;
+}
+
+if ([15, 28].includes(day)) {
+box.innerHTML += `<span class="dot yellow"></span>`;
+}
+
+calendar.appendChild(box);
+}
+}
+
+function prevMonth() {
+currentDate.setMonth(currentDate.getMonth() - 1);
+renderCalendar();
+}
+
+function nextMonth() {
+currentDate.setMonth(currentDate.getMonth() + 1);
+renderCalendar();
+}
+
+renderCalendar();
+</script>
+
+</body>
+</html>

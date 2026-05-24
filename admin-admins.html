@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Accounts</title>
+
+<link rel="stylesheet" href="admin.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<aside class="sidebar" id="adminSidebar"></aside>
+
+<main class="main">
+
+<section class="top">
+<div>
+<h1>บัญชีผู้ใช้แอดมิน</h1>
+<p>จัดการข้อมูลส่วนตัวแอดมิน และเพิ่มบัญชีผู้ดูแลระบบ</p>
+</div>
+
+<div class="admin-badge">
+<strong>Admin</strong><br>
+<small id="adminEmail">กำลังโหลด...</small>
+</div>
+</section>
+
+<section class="grid">
+
+<div class="form-box">
+<h2>เพิ่ม / แก้ไข แอดมิน</h2>
+
+<input type="hidden" id="adminEditIndex">
+
+<label>ชื่อแอดมิน</label>
+<input type="text" id="adminName" placeholder="เช่น Chalima Kerdwan">
+
+<label>อีเมล</label>
+<input type="email" id="adminEmailInput" placeholder="admin@email.com">
+
+<label>เบอร์โทร</label>
+<input type="text" id="adminPhone" placeholder="เบอร์โทร">
+
+<label>ตำแหน่ง</label>
+<select id="adminRole">
+<option value="Super Admin">Super Admin</option>
+<option value="Admin">Admin</option>
+<option value="Staff">Staff</option>
+</select>
+
+<button onclick="saveAdminAccount()">บันทึกข้อมูล</button>
+<button class="btn-danger" onclick="clearAdminForm()">ล้างฟอร์ม</button>
+</div>
+
+<div class="panel">
+<h2>ข้อมูลแอดมินหลัก</h2>
+<p>บัญชีหลักที่ใช้เข้าสู่ระบบแอดมิน</p>
+
+<table>
+<tbody>
+<tr>
+<td>อีเมลหลัก</td>
+<td><strong>kchalima0@gmail.com</strong></td>
+</tr>
+
+<tr>
+<td>สถานะ</td>
+<td style="color:#16a34a;">Active</td>
+</tr>
+
+<tr>
+<td>สิทธิ์</td>
+<td>Super Admin</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</section>
+
+<section class="panel" style="margin-top:22px;">
+<h2>รายการบัญชีแอดมินทั้งหมด</h2>
+<p>สามารถเพิ่ม แก้ไข หรือลบบัญชีแอดมินได้</p>
+
+<table>
+<thead>
+<tr>
+<th>ชื่อ</th>
+<th>อีเมล</th>
+<th>เบอร์โทร</th>
+<th>ตำแหน่ง</th>
+<th>จัดการ</th>
+</tr>
+</thead>
+
+<tbody id="adminsTable"></tbody>
+</table>
+</section>
+
+</main>
+
+<script src="admin-core.js"></script>
+
+<script>
+renderSidebar("admins");
+applySavedTheme();
+checkAdmin();
+renderAdmins();
+
+function saveAdminAccount() {
+const editIndex = document.getElementById("adminEditIndex").value;
+const name = document.getElementById("adminName").value.trim();
+const email = document.getElementById("adminEmailInput").value.trim().toLowerCase();
+const phone = document.getElementById("adminPhone").value.trim();
+const role = document.getElementById("adminRole").value;
+
+if (!name || !email) {
+alert("กรุณากรอกชื่อและอีเมลแอดมิน");
+return;
+}
+
+const data = {
+id: Date.now(),
+name: name,
+email: email,
+phone: phone || "-",
+role: role
+};
+
+if (editIndex !== "") {
+admins[editIndex] = {
+...admins[editIndex],
+name: name,
+email: email,
+phone: phone || "-",
+role: role
+};
+} else {
+admins.push(data);
+}
+
+saveAll();
+clearAdminForm();
+renderAdmins();
+}
+
+function renderAdmins() {
+const table = document.getElementById("adminsTable");
+table.innerHTML = "";
+
+if (admins.length === 0) {
+table.innerHTML = `
+<tr>
+<td colspan="5" style="text-align:center;color:#64748b;">
+ยังไม่มีข้อมูลแอดมิน
+</td>
+</tr>
+`;
+return;
+}
+
+admins.forEach((admin, index) => {
+table.innerHTML += `
+<tr>
+<td>${admin.name}</td>
+<td>${admin.email}</td>
+<td>${admin.phone}</td>
+<td>${admin.role}</td>
+<td>
+<button onclick="editAdmin(${index})">แก้ไข</button>
+<button class="btn-danger" onclick="deleteAdmin(${index})">ลบ</button>
+</td>
+</tr>
+`;
+});
+}
+
+function editAdmin(index) {
+const admin = admins[index];
+
+document.getElementById("adminEditIndex").value = index;
+document.getElementById("adminName").value = admin.name;
+document.getElementById("adminEmailInput").value = admin.email;
+document.getElementById("adminPhone").value = admin.phone;
+document.getElementById("adminRole").value = admin.role;
+}
+
+function deleteAdmin(index) {
+if (!confirm("ต้องการลบแอดมินนี้หรือไม่?")) return;
+
+deleteToRecovery("admin", admins[index], index);
+renderAdmins();
+}
+
+function clearAdminForm() {
+document.getElementById("adminEditIndex").value = "";
+document.getElementById("adminName").value = "";
+document.getElementById("adminEmailInput").value = "";
+document.getElementById("adminPhone").value = "";
+document.getElementById("adminRole").value = "Admin";
+}
+</script>
+
+</body>
+</html>

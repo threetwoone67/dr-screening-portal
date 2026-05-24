@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Settings</title>
+
+<link rel="stylesheet" href="admin.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<aside class="sidebar" id="adminSidebar"></aside>
+
+<main class="main">
+
+<section class="top">
+<div>
+<h1 id="pageTitle">การตั้งค่า</h1>
+<p id="pageSubtitle">ปรับแต่งโหมดสว่าง / มืด และภาษาในส่วนแอดมิน</p>
+</div>
+
+<div class="admin-badge">
+<strong>Admin</strong><br>
+<small id="adminEmail">กำลังโหลด...</small>
+</div>
+</section>
+
+<section class="grid">
+
+<div class="form-box">
+<h2 id="themeTitle">โหมดการแสดงผล</h2>
+<p id="themeDesc">เลือกโหมดสว่างหรือโหมดมืดสำหรับหน้าแอดมิน</p>
+
+<select id="themeSelect" onchange="changeTheme()">
+<option value="light" id="lightOption">โหมดสว่าง</option>
+<option value="dark" id="darkOption">โหมดมืด</option>
+</select>
+
+<button onclick="changeTheme()" id="themeBtn">บันทึกโหมด</button>
+</div>
+
+<div class="form-box">
+<h2 id="langTitle">ภาษา</h2>
+<p id="langDesc">เลือกภาษาสำหรับเมนูและข้อความในหน้าแอดมิน</p>
+
+<select id="languageSelect">
+<option value="th">ไทย</option>
+<option value="en">English</option>
+</select>
+
+<button onclick="changeLanguage()" id="langBtn">บันทึกภาษา</button>
+</div>
+
+</section>
+
+<section class="panel" style="margin-top:22px;">
+<h2 id="systemTitle">ข้อมูลระบบ</h2>
+
+<table>
+<tbody>
+<tr>
+<td id="projectLabel">Project</td>
+<td>Diabetic Retinopathy Detection Program</td>
+</tr>
+
+<tr>
+<td id="authLabel">Admin Auth</td>
+<td>Supabase</td>
+</tr>
+
+<tr>
+<td id="localLabel">Local Data</td>
+<td>localStorage</td>
+</tr>
+
+<tr>
+<td id="themeLabel">Theme</td>
+<td id="currentTheme">Light</td>
+</tr>
+
+<tr>
+<td id="languageLabel">Language</td>
+<td id="currentLanguage">ไทย</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+</main>
+
+<script src="admin-core.js"></script>
+
+<script>
+renderSidebar("settings");
+applySavedTheme();
+startSettingsPage();
+
+async function startSettingsPage(){
+const ok = await checkAdmin();
+if(!ok) return;
+loadSettings();
+applyLanguage();
+applyAdminLanguage("settings");
+}
+
+function loadSettings() {
+const theme = localStorage.getItem("admin_theme") || "light";
+const lang = localStorage.getItem("admin_language") || "th";
+
+document.getElementById("themeSelect").value = theme;
+document.getElementById("languageSelect").value = lang;
+
+document.getElementById("currentTheme").textContent =
+theme === "dark" ? "Dark" : "Light";
+
+document.getElementById("currentLanguage").textContent =
+lang === "en" ? "English" : "ไทย";
+}
+
+function changeTheme() {
+const theme = document.getElementById("themeSelect").value;
+localStorage.setItem("admin_theme", theme);
+document.body.classList.toggle("dark", theme === "dark");
+
+loadSettings();
+
+const lang = localStorage.getItem("admin_language") || "th";
+alert(lang === "en" ? "Theme saved successfully" : "บันทึกโหมดสำเร็จ");
+}
+
+function changeLanguage() {
+const lang = document.getElementById("languageSelect").value;
+
+localStorage.setItem("admin_language", lang);
+localStorage.setItem("dr_lang", lang);
+
+renderSidebar("settings");
+loadSettings();
+applyLanguage();
+applyAdminLanguage("settings");
+}
+
+function applyLanguage() {
+const lang = localStorage.getItem("admin_language") || "th";
+
+if (lang === "en") {
+document.documentElement.lang = "en";
+
+document.getElementById("pageTitle").textContent = "Settings";
+document.getElementById("pageSubtitle").textContent =
+"Customize light/dark mode and language for the admin section";
+
+document.getElementById("themeTitle").textContent = "Display Mode";
+document.getElementById("themeDesc").textContent =
+"Choose light mode or dark mode for admin pages";
+document.getElementById("lightOption").textContent = "Light Mode";
+document.getElementById("darkOption").textContent = "Dark Mode";
+document.getElementById("themeBtn").textContent = "Save Mode";
+
+document.getElementById("langTitle").textContent = "Language";
+document.getElementById("langDesc").textContent =
+"Choose language for admin menu and text";
+document.getElementById("langBtn").textContent = "Save Language";
+
+document.getElementById("systemTitle").textContent = "System Information";
+document.getElementById("projectLabel").textContent = "Project";
+document.getElementById("authLabel").textContent = "Admin Auth";
+document.getElementById("localLabel").textContent = "Local Data";
+document.getElementById("themeLabel").textContent = "Theme";
+document.getElementById("languageLabel").textContent = "Language";
+
+} else {
+document.documentElement.lang = "th";
+
+document.getElementById("pageTitle").textContent = "การตั้งค่า";
+document.getElementById("pageSubtitle").textContent =
+"ปรับแต่งโหมดสว่าง / มืด และภาษาในส่วนแอดมิน";
+
+document.getElementById("themeTitle").textContent = "โหมดการแสดงผล";
+document.getElementById("themeDesc").textContent =
+"เลือกโหมดสว่างหรือโหมดมืดสำหรับหน้าแอดมิน";
+document.getElementById("lightOption").textContent = "โหมดสว่าง";
+document.getElementById("darkOption").textContent = "โหมดมืด";
+document.getElementById("themeBtn").textContent = "บันทึกโหมด";
+
+document.getElementById("langTitle").textContent = "ภาษา";
+document.getElementById("langDesc").textContent =
+"เลือกภาษาสำหรับเมนูและข้อความในหน้าแอดมิน";
+document.getElementById("langBtn").textContent = "บันทึกภาษา";
+
+document.getElementById("systemTitle").textContent = "ข้อมูลระบบ";
+document.getElementById("projectLabel").textContent = "Project";
+document.getElementById("authLabel").textContent = "Admin Auth";
+document.getElementById("localLabel").textContent = "Local Data";
+document.getElementById("themeLabel").textContent = "Theme";
+document.getElementById("languageLabel").textContent = "Language";
+}
+
+loadSettings();
+}
+</script>
+
+</body>
+</html>
