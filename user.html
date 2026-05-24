@@ -24,6 +24,73 @@
     @media(max-width:1200px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.main-content{padding:26px}.sidebar{width:250px}.main-content{margin-left:250px;width:calc(100% - 250px)}}
     @media(max-width:800px){.app-layout{display:block}.sidebar{position:relative;width:100%;height:auto}.main-content{margin-left:0;width:100%;padding:18px}.stats{grid-template-columns:1fr}.page-head{display:block}.top-tools{margin-top:16px;flex-wrap:wrap}.hero .hero-icon{display:none}form,.info-grid{grid-template-columns:1fr}}
   </style>
+  <style>
+body.dark-mode {
+    background: #121212 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .card,
+body.dark-mode .sidebar,
+body.dark-mode .topbar,
+body.dark-mode .content {
+    background: #1e1e1e !important;
+    color: #ffffff !important;
+}
+</style>
+
+<!-- DR THEME SYNC PATCH START -->
+<style id="dr-theme-sync-style">
+html[data-theme="dark"], body.dark-mode, body.dark {
+  color-scheme: dark;
+}
+html[data-theme="dark"] body,
+body.dark-mode,
+body.dark {
+  background: var(--bg, #0f172a) !important;
+  color: var(--text, #e5eefb) !important;
+}
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .main,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .content,
+html[data-theme="dark"] .userbox,
+html[data-theme="dark"] .user-pill,
+html[data-theme="dark"] .hospital-card,
+body.dark-mode .sidebar,
+body.dark-mode .card,
+body.dark-mode .topbar,
+body.dark-mode .main,
+body.dark-mode .main-content,
+body.dark-mode .content,
+body.dark-mode .userbox,
+body.dark-mode .user-pill,
+body.dark-mode .hospital-card {
+  background: var(--card, #172033) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: var(--soft, #111a2c) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .desc,
+body.dark-mode .muted,
+body.dark-mode .desc {
+  color: var(--muted, #9fb0c7) !important;
+}
+</style>
+<!-- DR THEME SYNC PATCH END -->
+
 </head>
 <body>
 <div class="app-layout">
@@ -178,5 +245,82 @@
   window.addEventListener("dr:language-changed",()=>applyLang());
   document.addEventListener("dr:language-applied",()=>applyLang());
 </script>
+<script>
+function applyTheme() {
+    const theme =
+        localStorage.getItem("dr_theme") ||
+        localStorage.getItem("theme") ||
+        localStorage.getItem("dr_dashboard_theme") ||
+        localStorage.getItem("site_theme") ||
+        "light";
+
+    document.documentElement.setAttribute("data-theme", theme);
+
+    if (theme === "dark") {
+        document.body.classList.add("dark-mode");
+    } else {
+        document.body.classList.remove("dark-mode");
+    }
+}
+
+applyTheme();
+
+window.addEventListener("storage", applyTheme);
+window.addEventListener("focus", applyTheme);
+</script>
+
+<!-- DR THEME SYNC PATCH START -->
+<script id="dr-theme-sync-script">
+(function(){
+  const THEME_KEYS = ["dr_theme", "theme", "dr_dashboard_theme", "site_theme", "app_theme"];
+  function normalizeTheme(value){
+    return String(value || "light").toLowerCase() === "dark" ? "dark" : "light";
+  }
+  function getSavedTheme(){
+    for(const key of THEME_KEYS){
+      const value = localStorage.getItem(key);
+      if(value) return normalizeTheme(value);
+    }
+    return "light";
+  }
+  function saveTheme(theme){
+    theme = normalizeTheme(theme);
+    THEME_KEYS.forEach(key => localStorage.setItem(key, theme));
+    return theme;
+  }
+  function applyDoctorTheme(theme){
+    theme = normalizeTheme(theme || getSavedTheme());
+    document.documentElement.setAttribute("data-theme", theme);
+    document.body.classList.toggle("dark", theme === "dark");
+    document.body.classList.toggle("dark-mode", theme === "dark");
+    document.body.classList.toggle("light-mode", theme !== "dark");
+    return theme;
+  }
+  window.getDoctorTheme = getSavedTheme;
+  window.setDoctorTheme = function(theme){
+    theme = saveTheme(theme);
+    applyDoctorTheme(theme);
+    window.dispatchEvent(new CustomEvent("dr:theme-changed", {detail:{theme}}));
+    document.dispatchEvent(new CustomEvent("dr:theme-applied", {detail:{theme}}));
+    return theme;
+  };
+  window.toggleDoctorTheme = function(){
+    return window.setDoctorTheme(getSavedTheme() === "dark" ? "light" : "dark");
+  };
+  window.applyTheme = function(){ return applyDoctorTheme(getSavedTheme()); };
+  window.applyDoctorTheme = window.applyTheme;
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", window.applyTheme);
+  }else{
+    window.applyTheme();
+  }
+  window.addEventListener("storage", function(e){
+    if(!e.key || THEME_KEYS.includes(e.key)) window.applyTheme();
+  });
+  window.addEventListener("focus", window.applyTheme);
+})();
+</script>
+<!-- DR THEME SYNC PATCH END -->
+
 </body>
 </html>

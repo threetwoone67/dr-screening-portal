@@ -8,43 +8,70 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f3f7ff;--card:#fff;--text:#10213f;--muted:#667894;--line:#e4ecf8;--blue:#315be8;--blue2:#2449cf;--soft:#eef4ff;--green:#16a34a;--red:#dc2626;--yellow:#d97706;--shadow:0 18px 42px rgba(24,44,92,.08)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans Thai",Inter,system-ui,sans-serif}a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.side{background:#fff;border-right:1px solid var(--line);height:100vh;position:sticky;top:0;padding:22px 16px;display:flex;flex-direction:column;gap:16px}.brand{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:16px}.logo{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);display:grid;place-items:center;color:var(--blue);font-weight:950;background:white}.brand b{color:#0f4cdb;line-height:1.2}.brand small{display:block;color:var(--muted);font-size:11px}.nav{display:flex;flex-direction:column;gap:7px}.nav a{padding:11px 13px;border-radius:14px;color:#64748b;font-weight:850;font-size:14px;display:flex;align-items:center;gap:8px}.nav a.active,.nav a:hover{background:var(--blue);color:#fff}.group{font-size:11px;color:#9aa8bd;font-weight:900;margin:8px 10px 0}.org{margin-top:auto;background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:13px;color:var(--muted);font-size:12px}.logout{border:1px solid #fecaca;background:#fff;color:#dc2626;border-radius:14px;padding:12px;font-weight:900;cursor:pointer}.main{padding:26px 32px 42px;max-width:1720px;width:100%;margin:0 auto}.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.crumb{font-size:13px;color:var(--blue);font-weight:900}.title{font-size:30px;font-weight:950;margin:6px 0}.sub{color:var(--muted);font-weight:750}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.lang{height:42px;border:1px solid var(--line);border-radius:13px;background:#fff;padding:0 12px;font-weight:900}.btn{min-height:42px;border:0;border-radius:13px;padding:0 16px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1.15;white-space:nowrap}.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 10px 24px rgba(49,91,232,.22)}.ghost{background:#fff;border:1px solid var(--line);color:var(--blue)}.danger{background:#fee2e2;color:var(--red)}.green{background:#dcfce7;color:var(--green)}.hero{margin:20px 0;border-radius:24px;background:linear-gradient(135deg,#315be8,#2449cf);color:white;padding:24px 28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}.hero:after{content:"";position:absolute;right:-50px;top:-70px;width:250px;height:250px;background:rgba(255,255,255,.12);border-radius:50%}.hero h2{font-size:24px;margin:0 0 6px}.hero p{margin:0;color:#e7eeff;font-weight:800}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:18px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px;display:flex;gap:14px;align-items:center}.ico{width:46px;height:46px;border-radius:15px;background:var(--soft);display:grid;place-items:center}.stat small{color:var(--muted);font-weight:900}.stat strong{display:block;font-size:28px}.grid{display:grid;grid-template-columns:430px 1fr;gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px}.card h3{font-size:21px;margin:0 0 5px}.card p{margin:0 0 15px;color:var(--muted);font-weight:750}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.full{grid-column:1/-1}.field label{display:block;font-size:13px;font-weight:900;color:#334155;margin-bottom:6px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--text);font-size:14px}input,select{height:43px;padding:0 12px}textarea{min-height:86px;padding:12px;resize:vertical}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(49,91,232,.12)}.search-result,.appointment-list{display:flex;flex-direction:column;gap:10px;margin:12px 0}.search-result{max-height:210px;overflow:auto}.patient-item,.appt{border:1px solid var(--line);background:#f8fbff;border-radius:16px;padding:13px;cursor:pointer}.patient-item:hover,.patient-item.active{border-color:var(--blue);background:var(--soft)}.patient-item b,.appt b{display:block}.patient-item span,.appt span{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-top:3px}.selected{border:1px solid #bfdbfe;background:#eff6ff;border-radius:16px;padding:14px;margin:12px 0;font-weight:800}.filters{display:grid;grid-template-columns:1fr 170px 170px;gap:10px;margin-bottom:12px}.empty{border:1px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:#92a0b6;font-weight:900;background:#fbfdff}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.badge{border-radius:999px;padding:5px 10px;font-size:12px;font-weight:950}.b-blue{background:#dbeafe;color:#1d4ed8}.b-green{background:#dcfce7;color:#15803d}.b-red{background:#fee2e2;color:#b91c1c}.b-yellow{background:#fef3c7;color:#a16207}.b-gray{background:#e5e7eb;color:#4b5563}.appt-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.appt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.small{min-height:34px;border-radius:11px;padding:0 10px;font-size:12px}.debug{margin-top:10px;color:#64748b;font-size:12px;font-weight:700}.toast{position:fixed;right:20px;bottom:20px;background:#10213f;color:#fff;padding:14px 18px;border-radius:14px;box-shadow:var(--shadow);font-weight:900;display:none;z-index:50}.toast.show{display:block}body.dark-mode{--bg:#0f172a;--card:#172033;--text:#f8fafc;--muted:#a8b5ca;--line:#26344d;--soft:#1e293b;background:#0f172a}.dark-mode .side,.dark-mode .card,.dark-mode .stat{background:#172033}.dark-mode input,.dark-mode select,.dark-mode textarea{background:#0f172a;color:#fff;border-color:#334155}.dark-mode .patient-item,.dark-mode .appt,.dark-mode .empty{background:#111c2e}.dark-mode .org{background:#111c2e}
-/* ===== Standard Sidebar Branding (DR + KMUTNB) ===== */
-.logo{position:relative;overflow:hidden;background:#fff}
-.logo img{width:100%;height:100%;object-fit:cover;border-radius:14px;display:none}
-.logo .logo-fallback{position:absolute;inset:0;display:grid;place-items:center;font-weight:950;color:var(--blue)}
-.org{display:flex;align-items:center;gap:10px;line-height:1.35}
-.org-logo{width:42px;height:42px;min-width:42px;border-radius:12px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;color:var(--blue);font-weight:950}
-.org-logo img{width:100%;height:100%;object-fit:contain;display:none}
-.org-logo .org-fallback{display:grid;place-items:center;width:100%;height:100%}
-.org-text{display:flex;flex-direction:column;gap:3px}
-.dark-mode .logo,.dark-mode .org-logo{background:#182235}
-@media(max-width:1200px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:820px){.app{display:block}.side{position:relative;width:100%;height:auto}.main{padding:18px}.stats,.form-grid,.filters{grid-template-columns:1fr}.top{display:block}.actions{margin-top:12px}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans Thai",Inter,system-ui,sans-serif}a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.side{background:#fff;border-right:1px solid var(--line);height:100vh;position:sticky;top:0;padding:22px 16px;display:flex;flex-direction:column;gap:16px}.brand{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:16px}.logo{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);display:grid;place-items:center;color:var(--blue);font-weight:950;background:white}.brand b{color:#0f4cdb;line-height:1.2}.brand small{display:block;color:var(--muted);font-size:11px}.nav{display:flex;flex-direction:column;gap:7px}.nav a{padding:11px 13px;border-radius:14px;color:#64748b;font-weight:850;font-size:14px;display:flex;align-items:center;gap:8px}.nav a.active,.nav a:hover{background:var(--blue);color:#fff}.group{font-size:11px;color:#9aa8bd;font-weight:900;margin:8px 10px 0}.org{margin-top:auto;background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:13px;color:var(--muted);font-size:12px}.logout{border:1px solid #fecaca;background:#fff;color:#dc2626;border-radius:14px;padding:12px;font-weight:900;cursor:pointer}.main{padding:26px 32px 42px;max-width:1720px;width:100%;margin:0 auto}.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.crumb{font-size:13px;color:var(--blue);font-weight:900}.title{font-size:30px;font-weight:950;margin:6px 0}.sub{color:var(--muted);font-weight:750}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.lang{height:42px;border:1px solid var(--line);border-radius:13px;background:#fff;padding:0 12px;font-weight:900}.btn{min-height:42px;border:0;border-radius:13px;padding:0 16px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1.15;white-space:nowrap}.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 10px 24px rgba(49,91,232,.22)}.ghost{background:#fff;border:1px solid var(--line);color:var(--blue)}.danger{background:#fee2e2;color:var(--red)}.green{background:#dcfce7;color:var(--green)}.hero{margin:20px 0;border-radius:24px;background:linear-gradient(135deg,#315be8,#2449cf);color:white;padding:24px 28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}.hero:after{content:"";position:absolute;right:-50px;top:-70px;width:250px;height:250px;background:rgba(255,255,255,.12);border-radius:50%}.hero h2{font-size:24px;margin:0 0 6px}.hero p{margin:0;color:#e7eeff;font-weight:800}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:18px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px;display:flex;gap:14px;align-items:center}.ico{width:46px;height:46px;border-radius:15px;background:var(--soft);display:grid;place-items:center}.stat small{color:var(--muted);font-weight:900}.stat strong{display:block;font-size:28px}.grid{display:grid;grid-template-columns:430px 1fr;gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px}.card h3{font-size:21px;margin:0 0 5px}.card p{margin:0 0 15px;color:var(--muted);font-weight:750}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.full{grid-column:1/-1}.field label{display:block;font-size:13px;font-weight:900;color:#334155;margin-bottom:6px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--text);font-size:14px}input,select{height:43px;padding:0 12px}textarea{min-height:86px;padding:12px;resize:vertical}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(49,91,232,.12)}.search-result,.appointment-list{display:flex;flex-direction:column;gap:10px;margin:12px 0}.search-result{max-height:210px;overflow:auto}.patient-item,.appt{border:1px solid var(--line);background:#f8fbff;border-radius:16px;padding:13px;cursor:pointer}.patient-item:hover,.patient-item.active{border-color:var(--blue);background:var(--soft)}.patient-item b,.appt b{display:block}.patient-item span,.appt span{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-top:3px}.selected{border:1px solid #bfdbfe;background:#eff6ff;border-radius:16px;padding:14px;margin:12px 0;font-weight:800}.filters{display:grid;grid-template-columns:1fr 170px 170px;gap:10px;margin-bottom:12px}.empty{border:1px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:#92a0b6;font-weight:900;background:#fbfdff}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.badge{border-radius:999px;padding:5px 10px;font-size:12px;font-weight:950}.b-blue{background:#dbeafe;color:#1d4ed8}.b-green{background:#dcfce7;color:#15803d}.b-red{background:#fee2e2;color:#b91c1c}.b-yellow{background:#fef3c7;color:#a16207}.b-gray{background:#e5e7eb;color:#4b5563}.appt-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.appt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.small{min-height:34px;border-radius:11px;padding:0 10px;font-size:12px}.debug{margin-top:10px;color:#64748b;font-size:12px;font-weight:700}.toast{position:fixed;right:20px;bottom:20px;background:#10213f;color:#fff;padding:14px 18px;border-radius:14px;box-shadow:var(--shadow);font-weight:900;display:none;z-index:50}.toast.show{display:block}body.dark-mode{--bg:#0f172a;--card:#172033;--text:#f8fafc;--muted:#a8b5ca;--line:#26344d;--soft:#1e293b;background:#0f172a}.dark-mode .side,.dark-mode .card,.dark-mode .stat{background:#172033}.dark-mode input,.dark-mode select,.dark-mode textarea{background:#0f172a;color:#fff;border-color:#334155}.dark-mode .patient-item,.dark-mode .appt,.dark-mode .empty{background:#111c2e}.dark-mode .org{background:#111c2e}@media(max-width:1200px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:820px){.app{display:block}.side{position:relative;width:100%;height:auto}.main{padding:18px}.stats,.form-grid,.filters{grid-template-columns:1fr}.top{display:block}.actions{margin-top:12px}}
 </style>
+
+<!-- DR THEME SYNC PATCH START -->
+<style id="dr-theme-sync-style">
+html[data-theme="dark"], body.dark-mode, body.dark {
+  color-scheme: dark;
+}
+html[data-theme="dark"] body,
+body.dark-mode,
+body.dark {
+  background: var(--bg, #0f172a) !important;
+  color: var(--text, #e5eefb) !important;
+}
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .main,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .content,
+html[data-theme="dark"] .userbox,
+html[data-theme="dark"] .user-pill,
+html[data-theme="dark"] .hospital-card,
+body.dark-mode .sidebar,
+body.dark-mode .card,
+body.dark-mode .topbar,
+body.dark-mode .main,
+body.dark-mode .main-content,
+body.dark-mode .content,
+body.dark-mode .userbox,
+body.dark-mode .user-pill,
+body.dark-mode .hospital-card {
+  background: var(--card, #172033) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: var(--soft, #111a2c) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .desc,
+body.dark-mode .muted,
+body.dark-mode .desc {
+  color: var(--muted, #9fb0c7) !important;
+}
+</style>
+<!-- DR THEME SYNC PATCH END -->
+
 </head>
 <body>
 <div class="app">
 <aside class="side">
-<div class="brand">
-  <div class="logo">
-    <img alt="DR Logo" data-logo-fallbacks="logo-new.jpg,./logo-new.jpg,images/logo-new.jpg,assets/logo-new.jpg">
-    <span class="logo-fallback">DR</span>
-  </div>
-  <div><b>Diabetic<br>Retinopathy</b><small>DR Screening Portal</small></div>
-</div>
+<div class="brand"><div class="logo">DR</div><div><b>Diabetic<br>Retinopathy</b><small>DR Screening Portal</small></div></div>
 <nav class="nav">
 <a href="dashboard.html" data-i="navHome">🏠 หน้าหลัก</a><a href="user.html" data-i="navUser">👤 บัญชีผู้ใช้</a><a href="patients.html" data-i="navPatients">👥 ข้อมูลผู้ป่วย</a><div class="group" data-i="navScreeningGroup">การตรวจ</div><a href="create-patient.html" data-i="navCreate">➕ สร้างคนไข้ใหม่</a><a href="retina-analysis.html" data-i="navAnalysis">🔬 วิเคราะห์จอประสาทตา</a><a href="retina-report-new.html" data-i="navReport">📄 รายงานผล</a><a class="active" href="appointment-followup.html" data-i="navAppointment">📅 การนัดหมาย</a><a href="patient-transfer.html" data-i="navTransfer">🔁 โอนย้ายผู้ป่วย</a><a href="knowledge-dr.html" data-i="navKnowledge">💡 เกร็ดความรู้</a><a href="screening-history.html" data-i="navHistory">🕘 ประวัติการตรวจ</a><a href="settings.html" data-i="navSettings">⚙️ ตั้งค่า</a>
 </nav>
-<div class="org">
-  <div class="org-logo">
-    <img alt="KMUTNB Logo" data-logo-fallbacks="logo-kmutnb.png,institution-logo.png,./logo-kmutnb.png,./institution-logo.png,images/logo-kmutnb.png,assets/logo-kmutnb.png">
-    <span class="org-fallback">มจพ</span>
-  </div>
-  <div class="org-text">
-    <b data-i="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</b>
-    <span data-i="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</span>
-  </div>
-</div>
+<div class="org"><b data-i="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</b><br><span data-i="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</span></div>
 <button id="logoutBtn" class="logout" data-i="logout">ออกจากระบบ</button>
 </aside>
 <main class="main">
@@ -64,33 +91,18 @@ const dict={th:{navHome:"🏠 หน้าหลัก",navUser:"👤 บัญ�
 const typeMap={screening:["ตรวจติดตามจอประสาทตา","Retinal follow-up"],ai_followup:["ติดตามผล AI","AI follow-up"],ophthalmologist:["พบแพทย์จักษุ","Ophthalmologist visit"],post_treatment:["ติดตามอาการหลังรักษา","Post-treatment follow-up"],referral:["ส่งต่อโรงพยาบาล","Hospital referral"],other:["อื่น ๆ","Other"]};
 const urgentMap={normal:["ปกติ","Normal"],followup:["ควรติดตาม","Follow-up"],urgent:["เร่งด่วน","Urgent"]};
 const statusMap={pending:["รอนัดหมาย","Pending"],confirmed:["ยืนยันแล้ว","Confirmed"],visited:["มาตรวจแล้ว","Visited"],rescheduled:["เลื่อนนัด","Rescheduled"],cancelled:["ยกเลิก","Cancelled"],completed:["ติดตามเสร็จแล้ว","Completed"]};
-let lang=getSavedLang();let currentUser=null,currentProfile={},patients=[],appointments=[],filtered=[],selectedPatient=null,editingId=null;
-function normalizeLang(v){v=String(v||"th").toLowerCase();return v.startsWith("en")?"en":"th"}
-function getSavedLang(){return normalizeLang(localStorage.getItem("dr_lang")||localStorage.getItem("dr_language")||localStorage.getItem("language")||localStorage.getItem("app_lang")||localStorage.getItem("site_lang")||"th")}
-function saveLang(v){v=normalizeLang(v);localStorage.setItem("dr_lang",v);localStorage.setItem("dr_language",v);localStorage.setItem("language",v);localStorage.setItem("app_lang",v);localStorage.setItem("site_lang",v);return v}
-function setupSidebarImages(){document.querySelectorAll("img[data-logo-fallbacks]").forEach(img=>{const paths=img.dataset.logoFallbacks.split(",").map(s=>s.trim()).filter(Boolean);let i=0;const fallback=img.parentElement?img.parentElement.querySelector("span"):null;const tryNext=()=>{if(i>=paths.length){img.style.display="none";if(fallback)fallback.style.display="grid";return}img.src=paths[i++]};img.onload=()=>{img.style.display="block";if(fallback)fallback.style.display="none"};img.onerror=tryNext;tryNext()})}
+let lang=localStorage.getItem("dr_lang")||localStorage.getItem("language")||"th";let currentUser=null,currentProfile={},patients=[],appointments=[],filtered=[],selectedPatient=null,editingId=null;
 function tr(k){return(dict[lang]&&dict[lang][k])||dict.th[k]||k}function label(map,k){return(map[k]||[k,k])[lang==="th"?0:1]}function esc(v){return String(v??"").replace(/[&<>"']/g,c=>c==="&"?"&amp;":c==="<"?"&lt;":c===">"?"&gt;":c==='"'?"&quot;":"&#039;")}function today(){return new Date().toISOString().slice(0,10)}function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}function fmtDate(d){if(!d)return"-";return new Date(d+"T00:00").toLocaleDateString(lang==="th"?"th-TH":"en-US",{year:"numeric",month:"short",day:"numeric"})}function fmtTime(t){return t?String(t).slice(0,5):"-"}
-function updateStaticSelectOptions(){
-  const type=document.getElementById("appointmentType");if(type)Array.from(type.options).forEach(o=>{o.textContent=label(typeMap,o.value)});
-  const urg=document.getElementById("urgencyLevel");if(urg)Array.from(urg.options).forEach(o=>{o.textContent=label(urgentMap,o.value)});
-  const st=document.getElementById("appointmentStatus");if(st)Array.from(st.options).forEach(o=>{o.textContent=label(statusMap,o.value)});
-  const sf=document.getElementById("statusFilter");if(sf)Array.from(sf.options).forEach(o=>{if(o.value)o.textContent=label(statusMap,o.value)});
-  const pf=document.getElementById("priorityFilter");if(pf)Array.from(pf.options).forEach(o=>{if(o.value)o.textContent=label(urgentMap,o.value)});
-  const fp=document.getElementById("followupPeriod");if(fp&&lang==="en"){const m={"1 เดือน":"1 month","3 เดือน":"3 months","6 เดือน":"6 months","1 ปี":"1 year","ตามแพทย์พิจารณา":"As clinically indicated"};Array.from(fp.options).forEach(o=>{o.textContent=m[o.value]||o.value})}else if(fp){Array.from(fp.options).forEach(o=>{o.textContent=o.value})}
-}
-function applyLang(){lang=getSavedLang();document.documentElement.lang=lang;document.querySelectorAll("[data-i]").forEach(e=>e.textContent=tr(e.dataset.i));document.querySelectorAll("[data-ph]").forEach(e=>e.placeholder=tr(e.dataset.ph));const sel=document.getElementById("langSelect");if(sel)sel.value=lang;updateStaticSelectOptions();if(typeof renderAppointments==="function")renderAppointments();if(typeof renderSelectedPatient==="function")renderSelectedPatient()}
-function setLang(v){lang=saveLang(v);applyLang()}
-function applyTheme(){const theme=localStorage.getItem("dr_theme")||localStorage.getItem("dr_dashboard_theme")||localStorage.getItem("theme")||"light";document.body.classList.toggle("dark-mode",theme==="dark")}
-window.addEventListener("storage",(e)=>{if(["dr_lang","dr_language","language","app_lang","site_lang"].includes(e.key))applyLang();if(["dr_theme","dr_dashboard_theme","theme"].includes(e.key))applyTheme()});
-window.addEventListener("focus",()=>{applyTheme();applyLang()});
-async function init(){applyTheme();setupSidebarImages();applyLang();setDefaultTime();await loadSession();await Promise.all([loadPatients(),loadAppointments()]);bind();}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll("[data-i]").forEach(e=>e.textContent=tr(e.dataset.i));document.querySelectorAll("[data-ph]").forEach(e=>e.placeholder=tr(e.dataset.ph));document.getElementById("langSelect").value=lang;renderAppointments();renderSelectedPatient()}function setLang(v){lang=v;localStorage.setItem("dr_lang",v);localStorage.setItem("language",v);applyLang()}
+function applyTheme(){const theme=localStorage.getItem("dr_dashboard_theme")||localStorage.getItem("dr_theme")||"light";document.body.classList.toggle("dark-mode",theme==="dark")}window.addEventListener("storage",applyTheme);
+async function init(){applyTheme();applyLang();setDefaultTime();await loadSession();await Promise.all([loadPatients(),loadAppointments()]);bind();}
 async function loadSession(){const s=await db.auth.getSession();currentUser=s.data.session?s.data.session.user:null;if(currentUser){const p=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();if(!p.error&&p.data)currentProfile=p.data;}}
 async function loadPatients(){const r=await db.from("patients").select("*").order("id",{ascending:false}).limit(500);if(!r.error)patients=r.data||[];else patients=JSON.parse(localStorage.getItem("dr_patients")||"[]");}
 async function loadAppointments(){const r=await db.from("appointments").select("*").order("appointment_date",{ascending:false}).order("appointment_time",{ascending:false}).limit(500);if(!r.error)appointments=(r.data||[]).map(normAppt);else appointments=JSON.parse(localStorage.getItem("dr_appointments")||"[]").map(normAppt);filtered=appointments.slice();renderAppointments();updateStats();document.getElementById("saveInfo").textContent=r.error?"Supabase error: "+r.error.message:"Supabase connected: appointments "+appointments.length;}
 function bind(){document.getElementById("langSelect").onchange=e=>setLang(e.target.value);document.getElementById("logoutBtn").onclick=logout;document.getElementById("patientSearchInput").oninput=searchPatients;document.getElementById("appointmentSearchInput").oninput=filterAppointments;document.getElementById("statusFilter").onchange=filterAppointments;document.getElementById("priorityFilter").onchange=filterAppointments;document.getElementById("resetBtn").onclick=resetForm;document.getElementById("appointmentForm").onsubmit=saveAppointment;}
 function setDefaultTime(){document.getElementById("appointmentDate").value=today();document.getElementById("appointmentTime").value="09:00";}
 function pName(p){return p.full_name||p.name||p.patient_name||"-"}function pCode(p){return p.patient_code||p.code||p.hn||"-"}
-function searchPatients(){const q=document.getElementById("patientSearchInput").value.trim().toLowerCase();const box=document.getElementById("patientSearchResult");if(!q){box.innerHTML='<div class="empty">'+tr("typePatient")+'</div>';return}const rows=patients.filter(p=>[pName(p),p.hn,pCode(p),p.phone].join(" ").toLowerCase().includes(q)).slice(0,8);if(!rows.length){box.innerHTML='<div class="empty">'+(lang==='th'?'ไม่พบผู้ป่วย':'No patient found')+'</div>';return}box.innerHTML=rows.map((p,i)=>'<div class="patient-item" data-i="'+i+'"><b>'+esc(pName(p))+'</b><span>HN: '+esc(p.hn||"-")+' | Code: '+esc(pCode(p))+' | '+esc(p.phone||"-")+'</span></div>').join("");box.querySelectorAll(".patient-item").forEach((el,i)=>el.onclick=()=>{selectedPatient=rows[i];renderSelectedPatient();box.innerHTML="";document.getElementById("patientSearchInput").value=pName(selectedPatient);});}
+function searchPatients(){const q=document.getElementById("patientSearchInput").value.trim().toLowerCase();const box=document.getElementById("patientSearchResult");if(!q){box.innerHTML='<div class="empty">'+tr("typePatient")+'</div>';return}const rows=patients.filter(p=>[pName(p),p.hn,pCode(p),p.phone].join(" ").toLowerCase().includes(q)).slice(0,8);if(!rows.length){box.innerHTML='<div class="empty">ไม่พบผู้ป่วย / No patient found</div>';return}box.innerHTML=rows.map((p,i)=>'<div class="patient-item" data-i="'+i+'"><b>'+esc(pName(p))+'</b><span>HN: '+esc(p.hn||"-")+' | Code: '+esc(pCode(p))+' | '+esc(p.phone||"-")+'</span></div>').join("");box.querySelectorAll(".patient-item").forEach((el,i)=>el.onclick=()=>{selectedPatient=rows[i];renderSelectedPatient();box.innerHTML="";document.getElementById("patientSearchInput").value=pName(selectedPatient);});}
 function renderSelectedPatient(){const box=document.getElementById("selectedPatientBox");if(!selectedPatient){box.innerHTML="";return}box.innerHTML='<div class="selected">👤 '+esc(pName(selectedPatient))+'<br><span>HN: '+esc(selectedPatient.hn||"-")+' | Code: '+esc(pCode(selectedPatient))+' | '+esc(selectedPatient.phone||"-")+'</span></div>';}
 async function saveAppointment(e){e.preventDefault();if(!selectedPatient){toast(tr("noPatient"));return}const payload={patient_id:selectedPatient.id||null,patient_code:pCode(selectedPatient),patient_name:pName(selectedPatient),hn:selectedPatient.hn||pCode(selectedPatient),appointment_date:document.getElementById("appointmentDate").value,appointment_time:document.getElementById("appointmentTime").value,appointment_type:document.getElementById("appointmentType").value,urgency_level:document.getElementById("urgencyLevel").value,status:document.getElementById("appointmentStatus").value,followup_period:document.getElementById("followupPeriod").value,reason:document.getElementById("appointmentReason").value.trim(),doctor_note:document.getElementById("doctorNote").value.trim(),treatment_plan:document.getElementById("treatmentPlan").value.trim(),created_by:currentUser?currentUser.id:null,created_by_name:currentProfile.full_name||currentProfile.name||(currentUser?currentUser.email:"-"),role:currentProfile.role||"แพทย์"};let r;if(editingId){r=await db.from("appointments").update(payload).eq("id",editingId).select().single()}else{r=await db.from("appointments").insert([payload]).select().single()}if(r.error){console.warn(r.error);toast("Supabase error: "+r.error.message);return}toast(editingId?tr("updated"):tr("saved"));resetForm();await loadAppointments();}
 function normAppt(a){return{...a,patient_name:a.patient_name||"-",patient_code:a.patient_code||a.hn||"-",hn:a.hn||a.patient_code||"-",appointment_type:a.appointment_type||"screening",urgency_level:a.urgency_level||a.priority||"normal",status:a.status||"pending",followup_period:a.followup_period||a.follow_up_period||"",reason:a.reason||"",doctor_note:a.doctor_note||"",treatment_plan:a.treatment_plan||""}}
@@ -99,10 +111,64 @@ function renderAppointments(){const box=document.getElementById("appointmentList
 function updateStats(){const t=today();document.getElementById("totalAppointmentStat").textContent=appointments.length;document.getElementById("todayAppointmentStat").textContent=appointments.filter(a=>a.appointment_date===t).length;document.getElementById("urgentAppointmentStat").textContent=appointments.filter(a=>a.urgency_level==="urgent").length;document.getElementById("doneAppointmentStat").textContent=appointments.filter(a=>a.status==="completed"||a.status==="visited").length;}
 function editAppointment(id){const a=appointments.find(x=>String(x.id)===String(id));if(!a)return;editingId=id;selectedPatient=patients.find(p=>String(p.id)===String(a.patient_id)||pCode(p)===a.patient_code)||{id:a.patient_id,full_name:a.patient_name,hn:a.hn,patient_code:a.patient_code};renderSelectedPatient();document.getElementById("formTitle").textContent=lang==="th"?"แก้ไขนัดหมาย":"Edit Appointment";document.getElementById("appointmentDate").value=a.appointment_date;document.getElementById("appointmentTime").value=fmtTime(a.appointment_time).replace(" น.","");document.getElementById("appointmentType").value=a.appointment_type;document.getElementById("urgencyLevel").value=a.urgency_level;document.getElementById("appointmentStatus").value=a.status;document.getElementById("followupPeriod").value=a.followup_period;document.getElementById("appointmentReason").value=a.reason;document.getElementById("doctorNote").value=a.doctor_note;document.getElementById("treatmentPlan").value=a.treatment_plan;window.scrollTo({top:0,behavior:"smooth"});}
 async function quickStatus(id,status){const r=await db.from("appointments").update({status}).eq("id",id);if(r.error){toast(r.error.message);return}toast(tr("updated"));await loadAppointments();}
-async function deleteAppointment(id){if(!confirm(lang==="th"?"ต้องการลบนัดหมายนี้ใช่ไหม?":"Delete this appointment?"))return;const r=await db.from("appointments").delete().eq("id",id);if(r.error){toast(r.error.message);return}toast(tr("deleted"));await loadAppointments();}
+async function deleteAppointment(id){if(!confirm("Delete appointment?"))return;const r=await db.from("appointments").delete().eq("id",id);if(r.error){toast(r.error.message);return}toast(tr("deleted"));await loadAppointments();}
 function resetForm(){editingId=null;selectedPatient=null;document.getElementById("appointmentForm").reset();document.getElementById("patientSearchInput").value="";document.getElementById("patientSearchResult").innerHTML='<div class="empty">'+tr("typePatient")+'</div>';document.getElementById("selectedPatientBox").innerHTML="";document.getElementById("formTitle").textContent=tr("formTitle");setDefaultTime();}
 async function logout(){try{await db.auth.signOut()}catch(e){}location.href="index.html"}
 document.addEventListener("DOMContentLoaded",init);
 </script>
+
+<!-- DR THEME SYNC PATCH START -->
+<script id="dr-theme-sync-script">
+(function(){
+  const THEME_KEYS = ["dr_theme", "theme", "dr_dashboard_theme", "site_theme", "app_theme"];
+  function normalizeTheme(value){
+    return String(value || "light").toLowerCase() === "dark" ? "dark" : "light";
+  }
+  function getSavedTheme(){
+    for(const key of THEME_KEYS){
+      const value = localStorage.getItem(key);
+      if(value) return normalizeTheme(value);
+    }
+    return "light";
+  }
+  function saveTheme(theme){
+    theme = normalizeTheme(theme);
+    THEME_KEYS.forEach(key => localStorage.setItem(key, theme));
+    return theme;
+  }
+  function applyDoctorTheme(theme){
+    theme = normalizeTheme(theme || getSavedTheme());
+    document.documentElement.setAttribute("data-theme", theme);
+    document.body.classList.toggle("dark", theme === "dark");
+    document.body.classList.toggle("dark-mode", theme === "dark");
+    document.body.classList.toggle("light-mode", theme !== "dark");
+    return theme;
+  }
+  window.getDoctorTheme = getSavedTheme;
+  window.setDoctorTheme = function(theme){
+    theme = saveTheme(theme);
+    applyDoctorTheme(theme);
+    window.dispatchEvent(new CustomEvent("dr:theme-changed", {detail:{theme}}));
+    document.dispatchEvent(new CustomEvent("dr:theme-applied", {detail:{theme}}));
+    return theme;
+  };
+  window.toggleDoctorTheme = function(){
+    return window.setDoctorTheme(getSavedTheme() === "dark" ? "light" : "dark");
+  };
+  window.applyTheme = function(){ return applyDoctorTheme(getSavedTheme()); };
+  window.applyDoctorTheme = window.applyTheme;
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", window.applyTheme);
+  }else{
+    window.applyTheme();
+  }
+  window.addEventListener("storage", function(e){
+    if(!e.key || THEME_KEYS.includes(e.key)) window.applyTheme();
+  });
+  window.addEventListener("focus", window.applyTheme);
+})();
+</script>
+<!-- DR THEME SYNC PATCH END -->
+
 </body>
 </html>

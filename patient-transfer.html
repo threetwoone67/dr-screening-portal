@@ -762,20 +762,61 @@
     .logout-btn{margin-top:12px;width:100%;border:1px solid #fecaca;background:#fff5f5;color:#dc2626;border-radius:14px;padding:12px 14px;font-weight:900;cursor:pointer;}
     .logout-btn:hover{background:#fee2e2;}
 
-
-
-    /* === DR global sidebar + language sync patch === */
-    .logo-icon{position:relative;overflow:hidden;}
-    .logo-icon img,.hospital-icon img{display:block;}
-    .transfer-top-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-bottom:12px;}
-    .transfer-lang-select{padding:10px 14px;border:1px solid #dbe6f4;border-radius:14px;background:#fff;color:#10213f;font-weight:800;box-shadow:0 8px 24px rgba(15,23,42,.06);}
-    body.dark-mode .transfer-lang-select{background:#172033;color:#f8fafc;border-color:#334155;}
-    .logout-btn{margin-top:12px;width:100%;border:1px solid #fecaca;background:#fff5f5;color:#dc2626;border-radius:14px;padding:12px 14px;font-weight:900;cursor:pointer;}
-    .logout-btn:hover{background:#fee2e2;}
-    body.dark-mode .logout-btn{background:#172033;border-color:#7f1d1d;color:#fca5a5;}
-
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- DR THEME SYNC PATCH START -->
+<style id="dr-theme-sync-style">
+html[data-theme="dark"], body.dark-mode, body.dark {
+  color-scheme: dark;
+}
+html[data-theme="dark"] body,
+body.dark-mode,
+body.dark {
+  background: var(--bg, #0f172a) !important;
+  color: var(--text, #e5eefb) !important;
+}
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .main,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .content,
+html[data-theme="dark"] .userbox,
+html[data-theme="dark"] .user-pill,
+html[data-theme="dark"] .hospital-card,
+body.dark-mode .sidebar,
+body.dark-mode .card,
+body.dark-mode .topbar,
+body.dark-mode .main,
+body.dark-mode .main-content,
+body.dark-mode .content,
+body.dark-mode .userbox,
+body.dark-mode .user-pill,
+body.dark-mode .hospital-card {
+  background: var(--card, #172033) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: var(--soft, #111a2c) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .desc,
+body.dark-mode .muted,
+body.dark-mode .desc {
+  color: var(--muted, #9fb0c7) !important;
+}
+</style>
+<!-- DR THEME SYNC PATCH END -->
+
 </head>
 
 <body>
@@ -1546,77 +1587,199 @@
     document.addEventListener("DOMContentLoaded", initPage);
   </script>
 
-
 <script>
 (function(){
   const I18N = {
     th: {
-      langName:'ไทย', pageTitle:'ระบบโอนย้ายและส่งต่อผู้ป่วย', pageSubtitle:'บันทึกข้อมูลการส่งต่อผู้ป่วยจากผลคัดกรองจอประสาทตา เพื่อให้ทีมรักษาติดตามต่อได้อย่างเป็นระบบ', breadcrumb:'โอนย้ายผู้ป่วย / Patient Transfer', headerBadgeTitle:'Transfer Management', headerBadgeSub:'จัดการการส่งต่อผู้ป่วย',
-      navHome:'หน้าหลัก', navUser:'บัญชีผู้ใช้', navPatients:'ข้อมูลผู้ป่วย', navScreen:'การตรวจ', navCreate:'สร้างคนไข้ใหม่', navAnalysis:'วิเคราะห์จอประสาทตา', navReport:'รายงานผล', navAppointment:'การนัดหมาย', navTransfer:'โอนย้ายผู้ป่วย', navKnowledge:'เกร็ดความรู้', navHistory:'ประวัติการตรวจ', navSettings:'ตั้งค่า',
-      statTotal:'รายการส่งต่อทั้งหมด', statUrgent:'เร่งด่วน', statPending:'รอดำเนินการ', statDone:'ส่งต่อสำเร็จ', formTitle:'แบบฟอร์มโอนย้ายผู้ป่วย', formDesc:'ใช้สำหรับบันทึกข้อมูลการส่งต่อผู้ป่วยไปยังแพทย์เฉพาะทาง แผนกจักษุ หรือหน่วยงานปลายทาง โดยควรระบุเหตุผลและระดับความเร่งด่วนให้ชัดเจน',
+      pageTitle: 'ระบบโอนย้ายและส่งต่อผู้ป่วย',
+      pageSubtitle: 'บันทึกข้อมูลการส่งต่อผู้ป่วยจากผลคัดกรองจอประสาทตา เพื่อให้ทีมรักษาติดตามต่อได้อย่างเป็นระบบ',
+      breadcrumb: 'โอนย้ายผู้ป่วย / Patient Transfer',
+      headerBadgeTitle: 'Transfer Management',
+      headerBadgeSub: 'จัดการการส่งต่อผู้ป่วย',
+      navHome:'หน้าหลัก', navUser:'บัญชีผู้ใช้', navPatient:'ข้อมูลผู้ป่วย', navScreen:'การตรวจ', navNew:'สร้างคนไข้ใหม่', navAnalysis:'วิเคราะห์จอประสาทตา', navReport:'รายงานผล', navAppointment:'การนัดหมาย', navTransfer:'โอนย้ายผู้ป่วย', navKnowledge:'เกร็ดความรู้', navSettings:'ตั้งค่า',
+      statTotal:'รายการส่งต่อทั้งหมด', statUrgent:'เร่งด่วน', statPending:'รอดำเนินการ', statDone:'ส่งต่อสำเร็จ',
+      formTitle:'แบบฟอร์มโอนย้ายผู้ป่วย', formDesc:'ใช้สำหรับบันทึกข้อมูลการส่งต่อผู้ป่วยไปยังแพทย์เฉพาะทาง แผนกจักษุ หรือหน่วยงานปลายทาง โดยควรระบุเหตุผลและระดับความเร่งด่วนให้ชัดเจน',
       patientSearch:'ค้นหาผู้ป่วย', screening:'ผลการคัดกรองล่าสุด', transferType:'ประเภทการโอนย้าย', priority:'ระดับความเร่งด่วน', destination:'หน่วยงานปลายทาง', receiver:'แพทย์ / ผู้รับผิดชอบปลายทาง', transferDate:'วันที่ต้องการส่งต่อ', phone:'เบอร์ติดต่อปลายทาง', reason:'เหตุผลในการโอนย้าย', doctorNote:'หมายเหตุจากแพทย์ / ผู้ตรวจ',
       phPatient:'ชื่อ / HN / รหัสผู้ป่วย', phDestination:'เช่น แผนกจักษุ / โรงพยาบาลปลายทาง', phReceiver:'เช่น นพ. / พญ. / เจ้าหน้าที่', phPhone:'เช่น 02-xxx-xxxx', phReason:'เช่น พบผล Moderate DR จากระบบ AI ต้องส่งต่อเพื่อประเมินโดยจักษุแพทย์', phNote:'บันทึกเพิ่มเติม เช่น อาการร่วม ประวัติโรคประจำตัว หรือข้อควรติดตาม',
-      clear:'ล้างข้อมูล', print:'พิมพ์ใบส่งตัว PDF', save:'บันทึกการโอนย้าย', guideTitle:'แนวทางการส่งต่อ', guideDesc:'คำแนะนำสำหรับการใช้งานในระบบจริง', latestTitle:'รายการส่งต่อล่าสุด', latestDesc:'ตัวอย่างสถานะการส่งต่อที่ควรมีในระบบ',
+      clear:'ล้างข้อมูล', print:'พิมพ์ใบส่งตัว PDF', save:'บันทึกการโอนย้าย',
+      guideTitle:'แนวทางการส่งต่อ', guideDesc:'คำแนะนำสำหรับการใช้งานในระบบจริง', latestTitle:'รายการส่งต่อล่าสุด', latestDesc:'ตัวอย่างสถานะการส่งต่อที่ควรมีในระบบ',
       guide1:'1. ตรวจสอบตัวตนผู้ป่วย', guide1p:'ตรวจสอบชื่อ HN รหัสผู้ป่วย และเบอร์ติดต่อก่อนบันทึกการส่งต่อ', guide2:'2. ระบุผลคัดกรองล่าสุด', guide2p:'ควรเลือกผล AI หรือผลตรวจล่าสุด เพื่อให้ปลายทางทราบเหตุผลในการส่งต่อ', guide3:'3. เลือกระดับความเร่งด่วน', guide3p:'กรณี Severe DR หรือมีอาการตามัวเฉียบพลัน ควรเลือกเร่งด่วน', guide4:'4. บันทึกหมายเหตุแพทย์', guide4p:'ช่วยให้การดูแลต่อเนื่อง ลดการตกหล่นของข้อมูลสำคัญ',
-      orgName:'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ', orgSub:'ระบบตรวจคัดกรองจอประสาทตาเบาหวาน', logout:'ออกจากระบบ', loadingTransfers:'กำลังโหลดรายการส่งต่อ...', noTransfer:'ยังไม่มีข้อมูลการส่งต่อจาก Supabase', noPatient:'ไม่พบผู้ป่วย', choose:'เลือก', selectedPatient:'ผู้ป่วยที่เลือก', selectedTransfer:'รายการส่งต่อที่เลือก', patientCode:'รหัสผู้ป่วย', phoneShort:'โทร', transferDateList:'วันที่ส่งต่อ', status:'สถานะ', complete:'สำเร็จ', delete:'ลบ', alertDelete:'ต้องการลบรายการส่งต่อนี้ใช่ไหม?', updateFail:'อัปเดตสถานะไม่สำเร็จ: ', deleteFail:'ลบรายการไม่สำเร็จ: ', saveFail:'บันทึกการโอนย้ายไม่สำเร็จ: ', saveSuccess:'บันทึกการโอนย้ายผู้ป่วยสำเร็จ', alertRequired:'กรุณาเลือก/กรอกผู้ป่วย หน่วยงานปลายทาง และเหตุผลในการโอนย้าย', pending:'รอดำเนินการ', completed:'ส่งต่อสำเร็จ', cancelled:'ยกเลิก', follow:'ติดตามเร็ว', normal:'ปกติ', urgent:'เร่งด่วน',
-      optChooseScreening:'เลือกผลการคัดกรอง', optInternal:'ส่งต่อภายในหน่วยงาน', optEye:'ส่งต่อแผนกจักษุ', optHospital:'ส่งต่อโรงพยาบาลอื่น', optSpecialFollow:'นัดติดตามเฉพาะทาง', optFastFollow:'ควรติดตามเร็ว'
+      hospitalName:'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ', hospitalSub:'ระบบตรวจคัดกรองจอประสาทตาเบาหวาน', logout:'ออกจากระบบ',
+      alertRequired:'กรุณาเลือก/กรอกผู้ป่วย หน่วยงานปลายทาง และเหตุผลในการโอนย้าย'
     },
     en: {
-      langName:'English', pageTitle:'Patient Transfer and Referral System', pageSubtitle:'Record referral information from diabetic retinopathy screening results for continuous clinical follow-up.', breadcrumb:'Patient Transfer / Referral', headerBadgeTitle:'Transfer Management', headerBadgeSub:'Manage patient referrals',
-      navHome:'Home', navUser:'User Account', navPatients:'Patient Information', navScreen:'Screening', navCreate:'Create New Patient', navAnalysis:'Retina Analysis', navReport:'Report', navAppointment:'Appointment', navTransfer:'Patient Transfer', navKnowledge:'Knowledge', navHistory:'Screening History', navSettings:'Settings',
-      statTotal:'Total transfers', statUrgent:'Urgent', statPending:'Pending', statDone:'Completed', formTitle:'Patient Transfer Form', formDesc:'Use this form to refer patients to an ophthalmology department, specialist physician, or destination unit. Clearly specify the reason and urgency level.',
+      pageTitle: 'Patient Transfer and Referral System',
+      pageSubtitle: 'Record referral information from diabetic retinopathy screening results for continuous clinical follow-up.',
+      breadcrumb: 'Patient Transfer / Referral',
+      headerBadgeTitle: 'Transfer Management',
+      headerBadgeSub: 'Manage patient referrals',
+      navHome:'Home', navUser:'User Account', navPatient:'Patient Information', navScreen:'Screening', navNew:'Create New Patient', navAnalysis:'Retina Analysis', navReport:'Report', navAppointment:'Appointment', navTransfer:'Patient Transfer', navKnowledge:'Knowledge', navSettings:'Settings',
+      statTotal:'Total transfers', statUrgent:'Urgent', statPending:'Pending', statDone:'Completed',
+      formTitle:'Patient Transfer Form', formDesc:'Use this form to refer patients to an ophthalmology department, specialist physician, or destination unit. Clearly specify the reason and urgency level.',
       patientSearch:'Search patient', screening:'Latest screening result', transferType:'Transfer type', priority:'Urgency level', destination:'Destination unit', receiver:'Destination doctor / responsible person', transferDate:'Preferred transfer date', phone:'Destination contact number', reason:'Reason for transfer', doctorNote:'Doctor / examiner note',
       phPatient:'Name / HN / Patient code', phDestination:'e.g. Ophthalmology department / destination hospital', phReceiver:'e.g. doctor / nurse / staff', phPhone:'e.g. 02-xxx-xxxx', phReason:'e.g. Moderate DR detected by AI; refer for ophthalmologist evaluation', phNote:'Additional notes such as symptoms, underlying disease, or follow-up concerns',
-      clear:'Clear', print:'Print Transfer PDF', save:'Save Transfer', guideTitle:'Referral Guide', guideDesc:'Guidance for practical clinical use', latestTitle:'Latest Transfers', latestDesc:'Recent referral records in the system',
+      clear:'Clear', print:'Print Transfer PDF', save:'Save Transfer',
+      guideTitle:'Referral Guide', guideDesc:'Guidance for practical clinical use', latestTitle:'Latest Transfers', latestDesc:'Recent referral records in the system',
       guide1:'1. Verify patient identity', guide1p:'Check name, HN, patient code, and contact number before saving the referral.', guide2:'2. Select latest screening result', guide2p:'Use the latest AI or clinical result so the destination unit understands the referral reason.', guide3:'3. Choose urgency level', guide3p:'Select urgent for Severe DR or sudden blurred vision.', guide4:'4. Record clinical notes', guide4p:'Supports continuity of care and reduces missed information.',
-      orgName:"King Mongkut's University of Technology North Bangkok", orgSub:'Diabetic Retinopathy Screening System', logout:'Logout', loadingTransfers:'Loading transfer records...', noTransfer:'No transfer records found in Supabase', noPatient:'No patient found', choose:'Select', selectedPatient:'Selected patient', selectedTransfer:'Selected transfer record', patientCode:'Patient code', phoneShort:'Tel', transferDateList:'Transfer date', status:'Status', complete:'Complete', delete:'Delete', alertDelete:'Delete this transfer record?', updateFail:'Failed to update status: ', deleteFail:'Failed to delete record: ', saveFail:'Failed to save transfer: ', saveSuccess:'Patient transfer saved successfully', alertRequired:'Please select/fill patient, destination unit, and transfer reason.', pending:'Pending', completed:'Completed', cancelled:'Cancelled', follow:'Follow soon', normal:'Normal', urgent:'Urgent',
-      optChooseScreening:'Select screening result', optInternal:'Internal transfer', optEye:'Ophthalmology department referral', optHospital:'Transfer to another hospital', optSpecialFollow:'Specialist follow-up appointment', optFastFollow:'Follow soon'
+      hospitalName:"King Mongkut's University of Technology North Bangkok", hospitalSub:'Diabetic Retinopathy Screening System', logout:'Logout',
+      alertRequired:'Please select/fill patient, destination unit, and transfer reason.'
     }
   };
-  const LANG_KEYS=['dr_lang','dr_language','language','app_lang','site_lang'];
-  const getLang=()=>{ const raw=LANG_KEYS.map(k=>localStorage.getItem(k)).find(Boolean)||'th'; return String(raw).toLowerCase().startsWith('en')?'en':'th'; };
-  const saveLang=(v)=>{ const l=String(v).toLowerCase().startsWith('en')?'en':'th'; LANG_KEYS.forEach(k=>localStorage.setItem(k,l)); return l; };
-  const d=()=>I18N[getLang()]||I18N.th;
-  const setText=(el,v)=>{ if(el && v!==undefined) el.textContent=v; };
-  const setPH=(id,v)=>{ const el=document.getElementById(id); if(el) el.placeholder=v; };
-  const icon=(a)=>a?.querySelector('span')?.outerHTML||'';
-  const setNav=(selector,key)=>{ const el=document.querySelector(selector); if(el) el.innerHTML=icon(el)+' '+d()[key]; };
-  function setOptions(id, opts){
-    const el=document.getElementById(id); if(!el) return;
-    const old=el.value;
-    el.innerHTML=opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('');
-    if([...el.options].some(o=>o.value===old)) el.value=old;
-  }
-  window.statusText=function(status){ const s=String(status||'').toLowerCase(); if(s.includes('complete')||s.includes('done')||s.includes('สำเร็จ')) return d().completed; if(s.includes('cancel')||s.includes('ยกเลิก')) return d().cancelled; return d().pending; };
-  window.priorityLabel=function(priority){ const p=String(priority||'').toLowerCase(); if(p.includes('urgent')||p.includes('เร่ง')) return d().urgent; if(p.includes('follow')||p.includes('เร็ว')) return d().follow; return d().normal; };
-  window.applyTransferLanguage=function(){
-    const lang=getLang(), T=d(); document.documentElement.lang=lang;
-    setText(document.querySelector('.welcome-label'),T.breadcrumb); setText(document.querySelector('.page-header h1'),T.pageTitle); setText(document.querySelector('.page-header > div:first-child p:not(.welcome-label)'),T.pageSubtitle); setText(document.querySelector('.header-badge strong'),T.headerBadgeTitle); setText(document.querySelector('.header-badge span'),T.headerBadgeSub);
-    setNav('.nav-menu a[href="dashboard.html"]','navHome'); setNav('.nav-menu a[href="dashboard.html#account"]','navUser'); setNav('.nav-menu a[href="dashboard.html#patients"]','navPatients'); setNav('.nav-menu a[href="dashboard.html#newPatient"]','navScreen');
-    const sub=document.querySelectorAll('.nav-sub-item'); if(sub[0]) sub[0].innerHTML=icon(sub[0])+' '+T.navCreate; if(sub[1]) sub[1].innerHTML=icon(sub[1])+' '+T.navAnalysis; if(sub[2]) sub[2].innerHTML=icon(sub[2])+' '+T.navReport; if(sub[3]) sub[3].innerHTML=icon(sub[3])+' '+T.navAppointment;
-    setNav('.nav-menu a[href="patient-transfer.html"]','navTransfer'); setNav('.nav-menu a[href="knowledge-dr.html"]','navKnowledge'); setNav('.nav-menu a[href="dashboard.html#settings"]','navSettings');
-    setText(document.querySelector('.hospital-card strong'),T.orgName); setText(document.querySelector('.hospital-card p'),T.orgSub);
-    document.querySelectorAll('.summary-card p').forEach((el,i)=>setText(el,[T.statTotal,T.statUrgent,T.statPending,T.statDone][i]));
-    const cards=document.querySelectorAll('.card'); if(cards[0]){setText(cards[0].querySelector('h2'),T.formTitle);setText(cards[0].querySelector('.card-desc'),T.formDesc);} if(cards[1]){setText(cards[1].querySelector('h2'),T.guideTitle);setText(cards[1].querySelector('.card-desc'),T.guideDesc);} if(cards[2]){setText(cards[2].querySelector('h2'),T.latestTitle);setText(cards[2].querySelector('.card-desc'),T.latestDesc);}
-    document.querySelectorAll('#transferForm label').forEach((el,i)=>setText(el,[T.patientSearch,T.screening,T.transferType,T.priority,T.destination,T.receiver,T.transferDate,T.phone,T.reason,T.doctorNote][i]));
-    setPH('patientSearch',T.phPatient); setPH('destination',T.phDestination); setPH('receiver',T.phReceiver); setPH('contactPhone',T.phPhone); setPH('reason',T.phReason); setPH('doctorNote',T.phNote);
-    document.querySelectorAll('.action-row button').forEach((el,i)=>setText(el,[T.clear,T.print,T.save][i]));
-    const guide=cards[1]?.querySelectorAll('.guide-item'); if(guide){[T.guide1,T.guide2,T.guide3,T.guide4].forEach((v,i)=>setText(guide[i]?.querySelector('strong'),v));[T.guide1p,T.guide2p,T.guide3p,T.guide4p].forEach((v,i)=>setText(guide[i]?.querySelector('p'),v));}
-    setOptions('screeningResult', [['',T.optChooseScreening],['No DR','No DR'],['Mild DR','Mild DR'],['Moderate DR','Moderate DR'],['Severe DR','Severe DR'],['Referable DR','Referable DR']]);
-    setOptions('transferType', [['internal',T.optInternal],['ophthalmology',T.optEye],['external_hospital',T.optHospital],['special_followup',T.optSpecialFollow]]);
-    setOptions('priority', [['normal',T.normal],['follow',T.optFastFollow],['urgent',T.urgent]]);
-    const sel=document.getElementById('transferLangSelect'); if(sel) sel.value=lang; const logout=document.getElementById('transferLogoutBtn'); if(logout) logout.textContent=T.logout;
-    if(typeof renderTransfers==='function') renderTransfers();
+
+  function lang(){ return localStorage.getItem('dr_lang') || 'th'; }
+  function dict(){ return I18N[lang()] || I18N.th; }
+  function setText(el, value){ if(el && value) el.textContent = value; }
+  function setPlaceholder(id, value){ const el=document.getElementById(id); if(el) el.placeholder=value; }
+  function setButtonById(id, value){ const el=document.getElementById(id); if(el) el.textContent=value; }
+  function navTextByHref(href, value){ document.querySelectorAll('.nav-item').forEach(a=>{ if(a.getAttribute('href')===href){ const sp=a.querySelector('span'); a.innerHTML=(sp?sp.outerHTML:'')+' '+value; }}); }
+
+  window.applyTransferLang = function(){
+    const d=dict();
+    document.documentElement.lang = lang();
+    setText(document.querySelector('.welcome-label'), d.breadcrumb);
+    setText(document.querySelector('.page-header h1'), d.pageTitle);
+    setText(document.querySelector('.page-header > div:first-child p:not(.welcome-label)'), d.pageSubtitle);
+    setText(document.querySelector('.header-badge strong'), d.headerBadgeTitle);
+    setText(document.querySelector('.header-badge span'), d.headerBadgeSub);
+    navTextByHref('dashboard.html', d.navHome);
+    navTextByHref('dashboard.html#account', d.navUser);
+    navTextByHref('dashboard.html#patients', d.navPatient);
+    navTextByHref('dashboard.html#newPatient', d.navScreen);
+    const sub=document.querySelectorAll('.nav-sub-item');
+    if(sub[0]) sub[0].innerHTML='<span>➕</span> '+d.navNew;
+    if(sub[1]) sub[1].innerHTML='<span>🔬</span> '+d.navAnalysis;
+    if(sub[2]) sub[2].innerHTML='<span>📄</span> '+d.navReport;
+    if(sub[3]) sub[3].innerHTML='<span>📅</span> '+d.navAppointment;
+    navTextByHref('patient-transfer.html', d.navTransfer);
+    navTextByHref('knowledge-dr.html', d.navKnowledge);
+    navTextByHref('dashboard.html#settings', d.navSettings);
+    const hospital=document.querySelector('.hospital-card strong'); if(hospital) hospital.textContent=d.hospitalName;
+    const hospitalSub=document.querySelector('.hospital-card p'); if(hospitalSub) hospitalSub.textContent=d.hospitalSub;
+    const statP=document.querySelectorAll('.summary-card p');
+    [d.statTotal,d.statUrgent,d.statPending,d.statDone].forEach((v,i)=>{ if(statP[i]) statP[i].textContent=v; });
+    const cards=document.querySelectorAll('.card');
+    if(cards[0]){ setText(cards[0].querySelector('h2'), d.formTitle); setText(cards[0].querySelector('.card-desc'), d.formDesc); }
+    const labels=document.querySelectorAll('#transferForm label');
+    [d.patientSearch,d.screening,d.transferType,d.priority,d.destination,d.receiver,d.transferDate,d.phone,d.reason,d.doctorNote].forEach((v,i)=>{ if(labels[i]) labels[i].textContent=v; });
+    setPlaceholder('patientSearch', d.phPatient); setPlaceholder('destination', d.phDestination); setPlaceholder('receiver', d.phReceiver); setPlaceholder('contactPhone', d.phPhone); setPlaceholder('reason', d.phReason); setPlaceholder('doctorNote', d.phNote);
+    const actionBtns=document.querySelectorAll('.action-row button');
+    if(actionBtns[0]) actionBtns[0].textContent=d.clear;
+    if(actionBtns[1]) actionBtns[1].textContent=d.print;
+    if(actionBtns[2]) actionBtns[2].textContent=d.save;
+    if(cards[1]){ setText(cards[1].querySelector('h2'), d.guideTitle); setText(cards[1].querySelector('.card-desc'), d.guideDesc); }
+    const guide=cards[1]?.querySelectorAll('.guide-item');
+    if(guide){ [d.guide1,d.guide2,d.guide3,d.guide4].forEach((v,i)=>setText(guide[i]?.querySelector('strong'),v)); [d.guide1p,d.guide2p,d.guide3p,d.guide4p].forEach((v,i)=>setText(guide[i]?.querySelector('p'),v)); }
+    if(cards[2]){ setText(cards[2].querySelector('h2'), d.latestTitle); setText(cards[2].querySelector('.card-desc'), d.latestDesc); }
+    const logout=document.getElementById('transferLogoutBtn'); if(logout) logout.textContent=d.logout;
+    const select=document.getElementById('transferLangSelect'); if(select) select.value=lang();
   };
-  function ensureLangSelect(){ if(document.getElementById('transferLangSelect')) return; const select=document.createElement('select'); select.id='transferLangSelect'; select.className='transfer-lang-select'; select.innerHTML='<option value="th">ไทย</option><option value="en">English</option>'; select.value=getLang(); select.addEventListener('change',()=>{saveLang(select.value);window.applyTransferLanguage();}); const header=document.querySelector('.page-header'), badge=document.querySelector('.header-badge'); const wrap=document.createElement('div'); wrap.className='transfer-top-actions'; wrap.appendChild(select); if(header&&badge) header.insertBefore(wrap,badge); else document.body.prepend(wrap); }
-  function ensureLogout(){ if(document.getElementById('transferLogoutBtn')) return; const btn=document.createElement('button'); btn.type='button'; btn.id='transferLogoutBtn'; btn.className='logout-btn'; btn.textContent=d().logout; btn.onclick=async()=>{try{await db.auth.signOut();}catch(e){} location.href='index.html';}; const bottom=document.querySelector('.sidebar-bottom')||document.querySelector('.sidebar'); if(bottom) bottom.appendChild(btn); }
-  function ensurePrint(){ const btn=document.getElementById('printTransferBtn')||document.querySelector('.action-row button:nth-child(2)'); if(btn) btn.onclick=(e)=>{e.preventDefault();window.print();}; }
-  // Patch existing dynamic renderers so strings follow current language.
-  window.addEventListener('storage',e=>{ if(LANG_KEYS.includes(e.key)) window.applyTransferLanguage(); if(['dr_theme','dr_dashboard_theme','theme'].includes(e.key)&&typeof applySavedTheme==='function') applySavedTheme(); });
-  window.addEventListener('focus',()=>window.applyTransferLanguage());
-  document.addEventListener('DOMContentLoaded',()=>{ ensureLangSelect(); ensureLogout(); ensurePrint(); window.applyTransferLanguage(); setTimeout(window.applyTransferLanguage,700); });
+
+  function ensureLangSelect(){
+    if(document.getElementById('transferLangSelect')) return;
+    const select=document.createElement('select');
+    select.id='transferLangSelect'; select.className='transfer-lang-select';
+    select.innerHTML='<option value="th">ไทย</option><option value="en">English</option>';
+    select.value=lang();
+    select.addEventListener('change',()=>{ localStorage.setItem('dr_lang', select.value); window.applyTransferLang(); });
+    const header=document.querySelector('.page-header');
+    const badge=document.querySelector('.header-badge');
+    if(header && badge){ const wrap=document.createElement('div'); wrap.className='transfer-top-actions'; wrap.appendChild(select); header.insertBefore(wrap,badge); }
+    else document.body.prepend(select);
+  }
+
+  function ensureLogout(){
+    if(document.getElementById('transferLogoutBtn')) return;
+    const btn=document.createElement('button');
+    btn.type='button'; btn.id='transferLogoutBtn'; btn.className='logout-btn'; btn.textContent=dict().logout;
+    btn.addEventListener('click', async()=>{
+      try{ if(window.db && window.db.auth) await window.db.auth.signOut(); }catch(e){}
+      try{ if(typeof db !== 'undefined' && db.auth) await db.auth.signOut(); }catch(e){}
+      localStorage.removeItem('dr_user_name'); localStorage.removeItem('dr_user_email'); localStorage.removeItem('dr_profile');
+      location.href='index.html';
+    });
+    const bottom=document.querySelector('.sidebar-bottom') || document.querySelector('.sidebar');
+    if(bottom) bottom.appendChild(btn);
+  }
+
+  function val(id){ const el=document.getElementById(id); return el ? (el.value || '').trim() : ''; }
+  function pick(t, keys, fallback=''){
+    for(const k of keys){ if(t && t[k]!==undefined && t[k]!==null && String(t[k]).trim()!=='') return String(t[k]).trim(); }
+    return fallback;
+  }
+  function currentTransfer(){ try{ if(window.selectedTransfer) return window.selectedTransfer; if(typeof selectedTransfer!=='undefined' && selectedTransfer) return selectedTransfer; }catch(e){} return null; }
+  window.openTransferPdfPage = function(){
+    const t=currentTransfer(); const d=dict();
+    const patientName=pick(t,['patient_name'],'') || val('patientSearch');
+    const patientCode=pick(t,['patient_code','hn'],'');
+    const patient=patientCode && !patientName.includes(patientCode) ? patientName+' | '+patientCode : patientName;
+    const destination=pick(t,['destination_unit','destination'],'') || val('destination');
+    const reason=pick(t,['reason'],'') || val('reason');
+    if(!patient || !destination || !reason){ alert(d.alertRequired); return; }
+    const params=new URLSearchParams({
+      lang: lang(), patient: patient || '-', screening: pick(t,['screening_result'],'') || val('screeningResult') || '-', transferType: pick(t,['transfer_type'],'') || val('transferType') || '-', priority: pick(t,['priority'],'') || val('priority') || '-', destination: destination || '-', receiver: pick(t,['destination_doctor'],'') || val('receiver') || '-', phone: pick(t,['destination_phone'],'') || val('contactPhone') || '-', transferDate: pick(t,['transfer_date'],'') || val('transferDate') || '-', reason: reason || '-', note: pick(t,['doctor_note'],'') || val('doctorNote') || '-', sender: pick(t,['created_by_name'],'') || localStorage.getItem('dr_user_name') || '-'
+    });
+    window.open('transfer-pdf.html?'+params.toString(), '_blank');
+  };
+  window.printTransferPDF = window.openTransferPdfPage;
+
+  function wirePrint(){ const btn=document.getElementById('printTransferBtn') || document.querySelector('.action-row button:nth-child(2)'); if(btn){ btn.type='button'; btn.onclick=(e)=>{ e.preventDefault(); e.stopPropagation(); window.openTransferPdfPage(); return false; }; } }
+
+  document.addEventListener('DOMContentLoaded', ()=>{ ensureLangSelect(); ensureLogout(); wirePrint(); window.applyTransferLang(); setTimeout(()=>{wirePrint(); window.applyTransferLang();},700); });
 })();
 </script>
+
+<!-- DR THEME SYNC PATCH START -->
+<script id="dr-theme-sync-script">
+(function(){
+  const THEME_KEYS = ["dr_theme", "theme", "dr_dashboard_theme", "site_theme", "app_theme"];
+  function normalizeTheme(value){
+    return String(value || "light").toLowerCase() === "dark" ? "dark" : "light";
+  }
+  function getSavedTheme(){
+    for(const key of THEME_KEYS){
+      const value = localStorage.getItem(key);
+      if(value) return normalizeTheme(value);
+    }
+    return "light";
+  }
+  function saveTheme(theme){
+    theme = normalizeTheme(theme);
+    THEME_KEYS.forEach(key => localStorage.setItem(key, theme));
+    return theme;
+  }
+  function applyDoctorTheme(theme){
+    theme = normalizeTheme(theme || getSavedTheme());
+    document.documentElement.setAttribute("data-theme", theme);
+    document.body.classList.toggle("dark", theme === "dark");
+    document.body.classList.toggle("dark-mode", theme === "dark");
+    document.body.classList.toggle("light-mode", theme !== "dark");
+    return theme;
+  }
+  window.getDoctorTheme = getSavedTheme;
+  window.setDoctorTheme = function(theme){
+    theme = saveTheme(theme);
+    applyDoctorTheme(theme);
+    window.dispatchEvent(new CustomEvent("dr:theme-changed", {detail:{theme}}));
+    document.dispatchEvent(new CustomEvent("dr:theme-applied", {detail:{theme}}));
+    return theme;
+  };
+  window.toggleDoctorTheme = function(){
+    return window.setDoctorTheme(getSavedTheme() === "dark" ? "light" : "dark");
+  };
+  window.applyTheme = function(){ return applyDoctorTheme(getSavedTheme()); };
+  window.applyDoctorTheme = window.applyTheme;
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", window.applyTheme);
+  }else{
+    window.applyTheme();
+  }
+  window.addEventListener("storage", function(e){
+    if(!e.key || THEME_KEYS.includes(e.key)) window.applyTheme();
+  });
+  window.addEventListener("focus", window.applyTheme);
+})();
+</script>
+<!-- DR THEME SYNC PATCH END -->
 
 </body>
 </html>

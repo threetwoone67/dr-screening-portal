@@ -36,6 +36,59 @@ body.dark .kmutnb-logo{background:#1f2937;border-color:#7f1d1d;color:#fecaca}
 
 .patient-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}.mini-link{text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 </style>
+
+<!-- DR THEME SYNC PATCH START -->
+<style id="dr-theme-sync-style">
+html[data-theme="dark"], body.dark-mode, body.dark {
+  color-scheme: dark;
+}
+html[data-theme="dark"] body,
+body.dark-mode,
+body.dark {
+  background: var(--bg, #0f172a) !important;
+  color: var(--text, #e5eefb) !important;
+}
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .main,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .content,
+html[data-theme="dark"] .userbox,
+html[data-theme="dark"] .user-pill,
+html[data-theme="dark"] .hospital-card,
+body.dark-mode .sidebar,
+body.dark-mode .card,
+body.dark-mode .topbar,
+body.dark-mode .main,
+body.dark-mode .main-content,
+body.dark-mode .content,
+body.dark-mode .userbox,
+body.dark-mode .user-pill,
+body.dark-mode .hospital-card {
+  background: var(--card, #172033) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: var(--soft, #111a2c) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .desc,
+body.dark-mode .muted,
+body.dark-mode .desc {
+  color: var(--muted, #9fb0c7) !important;
+}
+</style>
+<!-- DR THEME SYNC PATCH END -->
+
 </head>
 <body><div class="app"><div id="sidebarMount"></div><main class="main">
 <div class="topbar"><div class="title"><div class="crumb" id="crumb">ข้อมูลผู้ป่วย / รายชื่อผู้ป่วย</div><h1 id="pageTitle">ผู้ป่วยทั้งหมดที่อยู่ในการดูแล</h1><p id="pageSub">ค้นหา ดูข้อมูล และเปิดประวัติการตรวจของผู้ป่วยได้จากหน้านี้</p></div><div class="top-actions"><select class="lang" data-lang-select></select><a class="btn btn-primary mini-link" href="create-patient.html" id="createBtn">➕ สร้างคนไข้ใหม่</a></div></div>
@@ -195,4 +248,58 @@ async function loadHistory(p){const box=$("historyBox");try{const code=p.patient
 function search(){const q=$("searchInput").value.trim().toLowerCase();filtered=patients.filter(p=>[getName(p),p.hn,p.patient_code,getPhone(p)].join(" ").toLowerCase().includes(q));updateStats();renderList()}
 $("searchBtn").onclick=search;$("searchInput").addEventListener("input",search);
 applyTheme();applyAllLanguage();loadPatients();
-</script></body></html>
+</script>
+<!-- DR THEME SYNC PATCH START -->
+<script id="dr-theme-sync-script">
+(function(){
+  const THEME_KEYS = ["dr_theme", "theme", "dr_dashboard_theme", "site_theme", "app_theme"];
+  function normalizeTheme(value){
+    return String(value || "light").toLowerCase() === "dark" ? "dark" : "light";
+  }
+  function getSavedTheme(){
+    for(const key of THEME_KEYS){
+      const value = localStorage.getItem(key);
+      if(value) return normalizeTheme(value);
+    }
+    return "light";
+  }
+  function saveTheme(theme){
+    theme = normalizeTheme(theme);
+    THEME_KEYS.forEach(key => localStorage.setItem(key, theme));
+    return theme;
+  }
+  function applyDoctorTheme(theme){
+    theme = normalizeTheme(theme || getSavedTheme());
+    document.documentElement.setAttribute("data-theme", theme);
+    document.body.classList.toggle("dark", theme === "dark");
+    document.body.classList.toggle("dark-mode", theme === "dark");
+    document.body.classList.toggle("light-mode", theme !== "dark");
+    return theme;
+  }
+  window.getDoctorTheme = getSavedTheme;
+  window.setDoctorTheme = function(theme){
+    theme = saveTheme(theme);
+    applyDoctorTheme(theme);
+    window.dispatchEvent(new CustomEvent("dr:theme-changed", {detail:{theme}}));
+    document.dispatchEvent(new CustomEvent("dr:theme-applied", {detail:{theme}}));
+    return theme;
+  };
+  window.toggleDoctorTheme = function(){
+    return window.setDoctorTheme(getSavedTheme() === "dark" ? "light" : "dark");
+  };
+  window.applyTheme = function(){ return applyDoctorTheme(getSavedTheme()); };
+  window.applyDoctorTheme = window.applyTheme;
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", window.applyTheme);
+  }else{
+    window.applyTheme();
+  }
+  window.addEventListener("storage", function(e){
+    if(!e.key || THEME_KEYS.includes(e.key)) window.applyTheme();
+  });
+  window.addEventListener("focus", window.applyTheme);
+})();
+</script>
+<!-- DR THEME SYNC PATCH END -->
+
+</body></html>

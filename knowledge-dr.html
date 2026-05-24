@@ -31,12 +31,65 @@
     .quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:20px}.quick-card,.card,.note{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}.quick-card{padding:22px}.quick-icon{width:54px;height:54px;border-radius:18px;background:var(--soft);display:grid;place-items:center;font-size:25px;margin-bottom:14px}.quick-card h3{font-size:17px;font-weight:950;margin-bottom:6px}.quick-card p{font-size:13px;line-height:1.65;color:var(--muted);font-weight:750}
     .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{padding:24px}.card.large{grid-column:1/-1}.badge{display:inline-flex;padding:7px 11px;border-radius:999px;background:var(--soft);color:var(--blue);font-size:12px;font-weight:950;margin-bottom:12px}.card h2{font-size:22px;font-weight:950;margin-bottom:10px}.card p{font-size:14px;line-height:1.85;color:var(--muted);font-weight:750}
     .info-list{display:grid;gap:12px;margin-top:16px}.info-item{padding:15px;border-radius:18px;background:#f8fbff;border:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}.info-icon{width:40px;height:40px;border-radius:14px;background:var(--soft);display:grid;place-items:center;flex-shrink:0}.info-item strong{display:block;font-size:14px;font-weight:950;margin-bottom:4px}.info-item span{font-size:13px;line-height:1.65;color:var(--muted);font-weight:750}
-    .stage-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:16px}.stage-card{padding:18px;border-radius:20px;border:1px solid var(--line);background:#f8fbff}.stage-card h3{font-size:16px;font-weight:950;margin-bottom:8px}.stage-card p{font-size:13px;line-height:1.7}.stage-card.normal{background:#f8fbff}.stage-card.mild{background:#fffbeb;border-color:#fde68a}.stage-card.moderate{background:#fff7ed;border-color:#fed7aa}.stage-card.severe{background:#fff1f2;border-color:#fecdd3}.stage-card.pdr{background:#f5f3ff;border-color:#c4b5fd}
+    .stage-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}.stage-card{padding:18px;border-radius:20px;border:1px solid var(--line);background:#f8fbff}.stage-card h3{font-size:16px;font-weight:950;margin-bottom:8px}.stage-card p{font-size:13px;line-height:1.7}.stage-card.normal{background:#f8fbff}.stage-card.mild{background:#fffbeb;border-color:#fde68a}.stage-card.moderate{background:#fff7ed;border-color:#fed7aa}.stage-card.severe{background:#fff1f2;border-color:#fecdd3}
     .note{margin-top:20px;padding:20px;display:flex;gap:14px;align-items:flex-start;background:#ecfdf5;border-color:#bbf7d0}.note-icon{width:48px;height:48px;border-radius:18px;background:#dcfce7;color:var(--green);display:grid;place-items:center;font-size:24px;flex-shrink:0}.note h3{color:#14532d;font-size:18px;font-weight:950;margin-bottom:6px}.note p{color:#166534;font-size:14px;line-height:1.8;font-weight:750}
     body.dark-mode{--bg:#0f172a;--card:#172033;--text:#f8fafc;--muted:#a8b5ca;--line:#26344d;--soft:#1e293b;background:#0f172a;color:#f8fafc}body.dark-mode .sidebar{background:#111827}body.dark-mode .brand-logo,body.dark-mode .uni-logo,body.dark-mode .lang{background:#172033;border-color:#334155;color:#f8fafc}body.dark-mode .uni-card,body.dark-mode .info-item,body.dark-mode .stage-card{background:#111c2e;border-color:#26344d}body.dark-mode .uni-card strong,body.dark-mode .quick-card h3,body.dark-mode .card h2,body.dark-mode .info-item strong,body.dark-mode .stage-card h3{color:#f8fafc}body.dark-mode .logout{background:#172033;border-color:#7f1d1d;color:#fca5a5}body.dark-mode .note{background:#11261d;border-color:#14532d}body.dark-mode .note h3{color:#bbf7d0}body.dark-mode .note p{color:#86efac}
     @media(max-width:1200px){.quick-grid,.stage-grid{grid-template-columns:repeat(2,1fr)}.content-grid{grid-template-columns:1fr}.hero-art{display:none}}
     @media(max-width:900px){.app{display:block}.sidebar{position:relative;width:100%;height:auto}.main{padding:18px}.quick-grid,.stage-grid{grid-template-columns:1fr}.hero h1{font-size:26px}}
   </style>
+
+<!-- DR THEME SYNC PATCH START -->
+<style id="dr-theme-sync-style">
+html[data-theme="dark"], body.dark-mode, body.dark {
+  color-scheme: dark;
+}
+html[data-theme="dark"] body,
+body.dark-mode,
+body.dark {
+  background: var(--bg, #0f172a) !important;
+  color: var(--text, #e5eefb) !important;
+}
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .main,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .content,
+html[data-theme="dark"] .userbox,
+html[data-theme="dark"] .user-pill,
+html[data-theme="dark"] .hospital-card,
+body.dark-mode .sidebar,
+body.dark-mode .card,
+body.dark-mode .topbar,
+body.dark-mode .main,
+body.dark-mode .main-content,
+body.dark-mode .content,
+body.dark-mode .userbox,
+body.dark-mode .user-pill,
+body.dark-mode .hospital-card {
+  background: var(--card, #172033) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: var(--soft, #111a2c) !important;
+  color: var(--text, #e5eefb) !important;
+  border-color: var(--line, #27364f) !important;
+}
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .desc,
+body.dark-mode .muted,
+body.dark-mode .desc {
+  color: var(--muted, #9fb0c7) !important;
+}
+</style>
+<!-- DR THEME SYNC PATCH END -->
+
 </head>
 <body>
 <div class="app">
@@ -103,7 +156,6 @@
         <div class="stage-card mild"><h3>Mild DR</h3><p data-i18n="mildDesc">เริ่มพบความผิดปกติเล็กน้อย เช่น จุดเลือดออกเล็ก ๆ หรือ microaneurysm</p></div>
         <div class="stage-card moderate"><h3>Moderate DR</h3><p data-i18n="moderateDesc">มีความผิดปกติมากขึ้น ควรติดตามใกล้ชิดและพิจารณาส่งต่อ</p></div>
         <div class="stage-card severe"><h3>Severe DR</h3><p data-i18n="severeDesc">มีความเสี่ยงสูงต่อการสูญเสียการมองเห็น ควรส่งต่อจักษุแพทย์โดยเร็ว</p></div>
-        <div class="stage-card pdr"><h3>PDR</h3><p data-i18n="pdrDesc">พบหลอดเลือดงอกผิดปกติหรือภาวะแทรกซ้อนรุนแรง ต้องส่งต่อจักษุแพทย์เร่งด่วน</p></div>
       </div></div>
 
       <div class="card"><span class="badge" data-i18n="riskBadge">ปัจจัยเสี่ยง</span><h2 data-i18n="riskTitle">ใครบ้างที่เสี่ยง?</h2><div class="info-list">
@@ -126,8 +178,8 @@
 <script>
 (function(){
   const I18N={
-    th:{navHome:'หน้าหลัก',navUser:'บัญชีผู้ใช้',navPatients:'ข้อมูลผู้ป่วย',navGroup:'การตรวจ',navCreate:'สร้างคนไข้ใหม่',navAnalysis:'วิเคราะห์จอประสาทตา',navReport:'รายงานผล',navAppointment:'การนัดหมาย',navTransfer:'โอนย้ายผู้ป่วย',navKnowledge:'เกร็ดความรู้',navHistory:'ประวัติการตรวจ',navSettings:'ตั้งค่า',orgName:'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ',orgSub:'ระบบตรวจคัดกรองจอประสาทตาเบาหวาน',logout:'ออกจากระบบ',tag:'Health Education',heroTitle:'เกร็ดความรู้โรคเบาหวานขึ้นจอประสาทตา',heroDesc:'องค์ความรู้เกี่ยวกับโรคเบาหวานขึ้นจอประสาทตา การป้องกัน การตรวจคัดกรอง และการดูแลรักษา เพื่อให้ผู้ดูแลสามารถอธิบายผู้ป่วยได้เข้าใจง่าย',retinalDisease:'โรคเกี่ยวกับจอประสาทตา',retinalDiseaseDesc:'เกิดจากหลอดเลือดเล็กบริเวณจอประสาทตาถูกทำลายจากเบาหวาน',highSugar:'น้ำตาลสูงเรื้อรัง',highSugarDesc:'เป็นปัจจัยสำคัญที่ทำให้หลอดเลือดจอประสาทตาเสื่อม',annualEye:'ควรตรวจตาทุกปี',annualEyeDesc:'ผู้ป่วยเบาหวานควรตรวจจอประสาทตาอย่างสม่ำเสมอ',preventable:'ป้องกันได้',preventableDesc:'ควบคุมน้ำตาล ความดัน ไขมัน และพบแพทย์ตามนัด',meaning:'ความหมาย',whatIsDR:'เบาหวานขึ้นจอประสาทตาคืออะไร?',whatIsDRDesc:'เบาหวานขึ้นจอประสาทตา คือภาวะแทรกซ้อนของโรคเบาหวานที่ส่งผลต่อหลอดเลือดขนาดเล็กในจอประสาทตา เมื่อระดับน้ำตาลในเลือดสูงเป็นเวลานาน ผนังหลอดเลือดจะเสื่อม เปราะ แตก รั่ว หรือเกิดหลอดเลือดผิดปกติ ทำให้ผู้ป่วยมีอาการตามัว มองเห็นภาพผิดปกติ และอาจรุนแรงจนสูญเสียการมองเห็นได้',symptomBadge:'อาการสำคัญ',symptomsWatch:'อาการที่ควรสังเกต',symptom1:'ตามัวหรือมองไม่ชัด',symptom1Desc:'โดยเฉพาะเมื่อระดับน้ำตาลไม่คงที่ หรือมีเลือดออกในจอประสาทตา',symptom2:'เห็นจุดดำลอยไปมา',symptom2Desc:'อาจสัมพันธ์กับเลือดออกในวุ้นตาหรือความผิดปกติของจอประสาทตา',symptom3:'มองเห็นแสงวาบหรือภาพบิดเบี้ยว',symptom3Desc:'ควรรีบพบแพทย์เพื่อประเมินความผิดปกติของจอประสาทตา',levelBadge:'ระดับความรุนแรง',drLevel:'ระดับของเบาหวานขึ้นจอประสาทตา',drLevelDesc:'ระบบคัดกรองแบ่งระดับความรุนแรง 5 ระดับ เพื่อให้บุคลากรตัดสินใจเรื่องการติดตามหรือส่งต่อได้เหมาะสม',noDrDesc:'ยังไม่พบความผิดปกติของจอประสาทตาจากเบาหวาน แต่ยังควรตรวจตามรอบ',mildDesc:'เริ่มพบความผิดปกติเล็กน้อย เช่น จุดเลือดออกเล็ก ๆ หรือ microaneurysm',moderateDesc:'มีความผิดปกติมากขึ้น ควรติดตามใกล้ชิดและพิจารณาส่งต่อ',severeDesc:'มีความเสี่ยงสูงต่อการสูญเสียการมองเห็น ควรส่งต่อจักษุแพทย์โดยเร็ว',pdrDesc:'พบหลอดเลือดงอกผิดปกติหรือภาวะแทรกซ้อนรุนแรง ต้องส่งต่อจักษุแพทย์เร่งด่วน',riskBadge:'ปัจจัยเสี่ยง',riskTitle:'ใครบ้างที่เสี่ยง?',risk1:'ควบคุมน้ำตาลไม่ดี',risk1Desc:'ระดับน้ำตาลสูงเรื้อรังทำให้หลอดเลือดจอประสาทตาเสียหาย',risk2:'เป็นเบาหวานมานาน',risk2Desc:'ยิ่งเป็นนาน ยิ่งมีโอกาสเกิดภาวะแทรกซ้อนทางตาเพิ่มขึ้น',risk3:'มีความดันหรือไขมันสูง',risk3Desc:'เพิ่มความเสียหายต่อหลอดเลือดและเพิ่มความเสี่ยงต่อจอประสาทตา',preventBadge:'การป้องกัน',careTitle:'ดูแลตนเองอย่างไร?',care1:'ควบคุมระดับน้ำตาล',care1Desc:'รับประทานยา/ฉีดยาตามแพทย์สั่ง และติดตามระดับน้ำตาลอย่างสม่ำเสมอ',care2:'ปรับพฤติกรรมสุขภาพ',care2Desc:'เลือกอาหารเหมาะสม ออกกำลังกาย และควบคุมน้ำหนัก',care3:'ตรวจตาตามนัด',care3Desc:'แม้ไม่มีอาการก็ควรตรวจ เพราะระยะแรกอาจไม่แสดงอาการชัดเจน',patientNoteTitle:'ข้อความแนะนำสำหรับอธิบายผู้ป่วย',patientNoteDesc:'ผู้ป่วยเบาหวานควรตรวจจอประสาทตาอย่างสม่ำเสมอ เพราะระยะแรกอาจยังไม่มีอาการ หากพบเร็วจะช่วยวางแผนดูแล รักษา และลดความเสี่ยงต่อการสูญเสียการมองเห็นได้'},
-    en:{navHome:'Home',navUser:'User Account',navPatients:'Patient Information',navGroup:'Screening',navCreate:'Create New Patient',navAnalysis:'Retina Analysis',navReport:'Report',navAppointment:'Appointment',navTransfer:'Patient Transfer',navKnowledge:'Knowledge',navHistory:'Screening History',navSettings:'Settings',orgName:"King Mongkut's University of Technology North Bangkok",orgSub:'Diabetic Retinopathy Screening System',logout:'Logout',tag:'Health Education',heroTitle:'Diabetic Retinopathy Knowledge',heroDesc:'Essential knowledge about diabetic retinopathy, prevention, screening, and care so healthcare staff can explain the condition clearly to patients.',retinalDisease:'Retinal disease',retinalDiseaseDesc:'Caused by damage to small blood vessels in the retina from diabetes.',highSugar:'Chronic high blood sugar',highSugarDesc:'A key factor that damages retinal blood vessels over time.',annualEye:'Annual eye screening',annualEyeDesc:'People with diabetes should have regular retinal screening.',preventable:'Preventable',preventableDesc:'Control blood sugar, blood pressure, lipids, and attend follow-up visits.',meaning:'Definition',whatIsDR:'What is diabetic retinopathy?',whatIsDRDesc:'Diabetic retinopathy is a complication of diabetes that affects small blood vessels in the retina. Long-term high blood sugar can weaken, leak, rupture, or create abnormal blood vessels, causing blurred vision, abnormal vision, and severe vision loss.',symptomBadge:'Key symptoms',symptomsWatch:'Symptoms to watch for',symptom1:'Blurred or unclear vision',symptom1Desc:'Especially when blood sugar is unstable or bleeding occurs in the retina.',symptom2:'Floating dark spots',symptom2Desc:'May be related to vitreous bleeding or retinal abnormalities.',symptom3:'Flashes or distorted vision',symptom3Desc:'Patients should see an eye specialist for retinal evaluation.',levelBadge:'Severity levels',drLevel:'Diabetic retinopathy severity levels',drLevelDesc:'Screening classifies diabetic retinopathy into 5 severity levels so staff can decide follow-up or referral appropriately.',noDrDesc:'No diabetic retinal abnormality detected, but routine screening is still recommended.',mildDesc:'Early mild abnormality such as small hemorrhages or microaneurysms.',moderateDesc:'More abnormalities are present. Close follow-up and referral should be considered.',severeDesc:'High risk of vision loss. Refer to an ophthalmologist promptly.',pdrDesc:'Abnormal new blood vessels or severe complications are present. Urgent ophthalmology referral is required.',riskBadge:'Risk factors',riskTitle:'Who is at risk?',risk1:'Poor glucose control',risk1Desc:'Chronic high blood sugar damages retinal blood vessels.',risk2:'Long diabetes duration',risk2Desc:'The longer the duration, the higher the risk of eye complications.',risk3:'High blood pressure or lipids',risk3Desc:'These increase vascular damage and retinal risk.',preventBadge:'Prevention',careTitle:'How to take care of yourself?',care1:'Control blood sugar',care1Desc:'Take medication or insulin as prescribed and monitor blood sugar regularly.',care2:'Improve lifestyle',care2Desc:'Choose appropriate food, exercise, and manage body weight.',care3:'Attend eye appointments',care3Desc:'Screening is important even without symptoms because early stages may be silent.',patientNoteTitle:'Patient explanation message',patientNoteDesc:'People with diabetes should have retinal screening regularly because early disease may have no symptoms. Early detection helps plan care, treatment, and reduce the risk of vision loss.'}
+    th:{navHome:'หน้าหลัก',navUser:'บัญชีผู้ใช้',navPatients:'ข้อมูลผู้ป่วย',navGroup:'การตรวจ',navCreate:'สร้างคนไข้ใหม่',navAnalysis:'วิเคราะห์จอประสาทตา',navReport:'รายงานผล',navAppointment:'การนัดหมาย',navTransfer:'โอนย้ายผู้ป่วย',navKnowledge:'เกร็ดความรู้',navHistory:'ประวัติการตรวจ',navSettings:'ตั้งค่า',orgName:'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ',orgSub:'ระบบตรวจคัดกรองจอประสาทตาเบาหวาน',logout:'ออกจากระบบ',tag:'Health Education',heroTitle:'เกร็ดความรู้โรคเบาหวานขึ้นจอประสาทตา',heroDesc:'องค์ความรู้เกี่ยวกับโรคเบาหวานขึ้นจอประสาทตา การป้องกัน การตรวจคัดกรอง และการดูแลรักษา เพื่อให้ผู้ดูแลสามารถอธิบายผู้ป่วยได้เข้าใจง่าย',retinalDisease:'โรคเกี่ยวกับจอประสาทตา',retinalDiseaseDesc:'เกิดจากหลอดเลือดเล็กบริเวณจอประสาทตาถูกทำลายจากเบาหวาน',highSugar:'น้ำตาลสูงเรื้อรัง',highSugarDesc:'เป็นปัจจัยสำคัญที่ทำให้หลอดเลือดจอประสาทตาเสื่อม',annualEye:'ควรตรวจตาทุกปี',annualEyeDesc:'ผู้ป่วยเบาหวานควรตรวจจอประสาทตาอย่างสม่ำเสมอ',preventable:'ป้องกันได้',preventableDesc:'ควบคุมน้ำตาล ความดัน ไขมัน และพบแพทย์ตามนัด',meaning:'ความหมาย',whatIsDR:'เบาหวานขึ้นจอประสาทตาคืออะไร?',whatIsDRDesc:'เบาหวานขึ้นจอประสาทตา คือภาวะแทรกซ้อนของโรคเบาหวานที่ส่งผลต่อหลอดเลือดขนาดเล็กในจอประสาทตา เมื่อระดับน้ำตาลในเลือดสูงเป็นเวลานาน ผนังหลอดเลือดจะเสื่อม เปราะ แตก รั่ว หรือเกิดหลอดเลือดผิดปกติ ทำให้ผู้ป่วยมีอาการตามัว มองเห็นภาพผิดปกติ และอาจรุนแรงจนสูญเสียการมองเห็นได้',symptomBadge:'อาการสำคัญ',symptomsWatch:'อาการที่ควรสังเกต',symptom1:'ตามัวหรือมองไม่ชัด',symptom1Desc:'โดยเฉพาะเมื่อระดับน้ำตาลไม่คงที่ หรือมีเลือดออกในจอประสาทตา',symptom2:'เห็นจุดดำลอยไปมา',symptom2Desc:'อาจสัมพันธ์กับเลือดออกในวุ้นตาหรือความผิดปกติของจอประสาทตา',symptom3:'มองเห็นแสงวาบหรือภาพบิดเบี้ยว',symptom3Desc:'ควรรีบพบแพทย์เพื่อประเมินความผิดปกติของจอประสาทตา',levelBadge:'ระดับความรุนแรง',drLevel:'ระดับของเบาหวานขึ้นจอประสาทตา',drLevelDesc:'ระบบคัดกรองสามารถช่วยแบ่งระดับความรุนแรงเบื้องต้น เพื่อให้บุคลากรตัดสินใจเรื่องการติดตามหรือส่งต่อได้เหมาะสม',noDrDesc:'ยังไม่พบความผิดปกติของจอประสาทตาจากเบาหวาน แต่ยังควรตรวจตามรอบ',mildDesc:'เริ่มพบความผิดปกติเล็กน้อย เช่น จุดเลือดออกเล็ก ๆ หรือ microaneurysm',moderateDesc:'มีความผิดปกติมากขึ้น ควรติดตามใกล้ชิดและพิจารณาส่งต่อ',severeDesc:'มีความเสี่ยงสูงต่อการสูญเสียการมองเห็น ควรส่งต่อจักษุแพทย์โดยเร็ว',riskBadge:'ปัจจัยเสี่ยง',riskTitle:'ใครบ้างที่เสี่ยง?',risk1:'ควบคุมน้ำตาลไม่ดี',risk1Desc:'ระดับน้ำตาลสูงเรื้อรังทำให้หลอดเลือดจอประสาทตาเสียหาย',risk2:'เป็นเบาหวานมานาน',risk2Desc:'ยิ่งเป็นนาน ยิ่งมีโอกาสเกิดภาวะแทรกซ้อนทางตาเพิ่มขึ้น',risk3:'มีความดันหรือไขมันสูง',risk3Desc:'เพิ่มความเสียหายต่อหลอดเลือดและเพิ่มความเสี่ยงต่อจอประสาทตา',preventBadge:'การป้องกัน',careTitle:'ดูแลตนเองอย่างไร?',care1:'ควบคุมระดับน้ำตาล',care1Desc:'รับประทานยา/ฉีดยาตามแพทย์สั่ง และติดตามระดับน้ำตาลอย่างสม่ำเสมอ',care2:'ปรับพฤติกรรมสุขภาพ',care2Desc:'เลือกอาหารเหมาะสม ออกกำลังกาย และควบคุมน้ำหนัก',care3:'ตรวจตาตามนัด',care3Desc:'แม้ไม่มีอาการก็ควรตรวจ เพราะระยะแรกอาจไม่แสดงอาการชัดเจน',patientNoteTitle:'ข้อความแนะนำสำหรับอธิบายผู้ป่วย',patientNoteDesc:'ผู้ป่วยเบาหวานควรตรวจจอประสาทตาอย่างสม่ำเสมอ เพราะระยะแรกอาจยังไม่มีอาการ หากพบเร็วจะช่วยวางแผนดูแล รักษา และลดความเสี่ยงต่อการสูญเสียการมองเห็นได้'},
+    en:{navHome:'Home',navUser:'User Account',navPatients:'Patient Information',navGroup:'Screening',navCreate:'Create New Patient',navAnalysis:'Retina Analysis',navReport:'Report',navAppointment:'Appointment',navTransfer:'Patient Transfer',navKnowledge:'Knowledge',navHistory:'Screening History',navSettings:'Settings',orgName:"King Mongkut's University of Technology North Bangkok",orgSub:'Diabetic Retinopathy Screening System',logout:'Logout',tag:'Health Education',heroTitle:'Diabetic Retinopathy Knowledge',heroDesc:'Essential knowledge about diabetic retinopathy, prevention, screening, and care so healthcare staff can explain the condition clearly to patients.',retinalDisease:'Retinal disease',retinalDiseaseDesc:'Caused by damage to small blood vessels in the retina from diabetes.',highSugar:'Chronic high blood sugar',highSugarDesc:'A key factor that damages retinal blood vessels over time.',annualEye:'Annual eye screening',annualEyeDesc:'People with diabetes should have regular retinal screening.',preventable:'Preventable',preventableDesc:'Control blood sugar, blood pressure, lipids, and attend follow-up visits.',meaning:'Definition',whatIsDR:'What is diabetic retinopathy?',whatIsDRDesc:'Diabetic retinopathy is a complication of diabetes that affects small blood vessels in the retina. Long-term high blood sugar can weaken, leak, rupture, or create abnormal blood vessels, causing blurred vision, abnormal vision, and severe vision loss.',symptomBadge:'Key symptoms',symptomsWatch:'Symptoms to watch for',symptom1:'Blurred or unclear vision',symptom1Desc:'Especially when blood sugar is unstable or bleeding occurs in the retina.',symptom2:'Floating dark spots',symptom2Desc:'May be related to vitreous bleeding or retinal abnormalities.',symptom3:'Flashes or distorted vision',symptom3Desc:'Patients should see an eye specialist for retinal evaluation.',levelBadge:'Severity levels',drLevel:'Diabetic retinopathy severity levels',drLevelDesc:'Screening can help classify initial severity so staff can decide follow-up or referral appropriately.',noDrDesc:'No diabetic retinal abnormality detected, but routine screening is still recommended.',mildDesc:'Early mild abnormality such as small hemorrhages or microaneurysms.',moderateDesc:'More abnormalities are present. Close follow-up and referral should be considered.',severeDesc:'High risk of vision loss. Refer to an ophthalmologist promptly.',riskBadge:'Risk factors',riskTitle:'Who is at risk?',risk1:'Poor glucose control',risk1Desc:'Chronic high blood sugar damages retinal blood vessels.',risk2:'Long diabetes duration',risk2Desc:'The longer the duration, the higher the risk of eye complications.',risk3:'High blood pressure or lipids',risk3Desc:'These increase vascular damage and retinal risk.',preventBadge:'Prevention',careTitle:'How to take care of yourself?',care1:'Control blood sugar',care1Desc:'Take medication or insulin as prescribed and monitor blood sugar regularly.',care2:'Improve lifestyle',care2Desc:'Choose appropriate food, exercise, and manage body weight.',care3:'Attend eye appointments',care3Desc:'Screening is important even without symptoms because early stages may be silent.',patientNoteTitle:'Patient explanation message',patientNoteDesc:'People with diabetes should have retinal screening regularly because early disease may have no symptoms. Early detection helps plan care, treatment, and reduce the risk of vision loss.'}
   };
   function getLang(){return String(localStorage.getItem('dr_lang')||localStorage.getItem('dr_language')||localStorage.getItem('language')||localStorage.getItem('site_language')||localStorage.getItem('dr_dashboard_language')||'th').toLowerCase().startsWith('en')?'en':'th'}
   let lang=getLang();
@@ -141,5 +193,59 @@
   window.addEventListener('focus',()=>{applyTheme();applyLang();});
 })();
 </script>
+
+<!-- DR THEME SYNC PATCH START -->
+<script id="dr-theme-sync-script">
+(function(){
+  const THEME_KEYS = ["dr_theme", "theme", "dr_dashboard_theme", "site_theme", "app_theme"];
+  function normalizeTheme(value){
+    return String(value || "light").toLowerCase() === "dark" ? "dark" : "light";
+  }
+  function getSavedTheme(){
+    for(const key of THEME_KEYS){
+      const value = localStorage.getItem(key);
+      if(value) return normalizeTheme(value);
+    }
+    return "light";
+  }
+  function saveTheme(theme){
+    theme = normalizeTheme(theme);
+    THEME_KEYS.forEach(key => localStorage.setItem(key, theme));
+    return theme;
+  }
+  function applyDoctorTheme(theme){
+    theme = normalizeTheme(theme || getSavedTheme());
+    document.documentElement.setAttribute("data-theme", theme);
+    document.body.classList.toggle("dark", theme === "dark");
+    document.body.classList.toggle("dark-mode", theme === "dark");
+    document.body.classList.toggle("light-mode", theme !== "dark");
+    return theme;
+  }
+  window.getDoctorTheme = getSavedTheme;
+  window.setDoctorTheme = function(theme){
+    theme = saveTheme(theme);
+    applyDoctorTheme(theme);
+    window.dispatchEvent(new CustomEvent("dr:theme-changed", {detail:{theme}}));
+    document.dispatchEvent(new CustomEvent("dr:theme-applied", {detail:{theme}}));
+    return theme;
+  };
+  window.toggleDoctorTheme = function(){
+    return window.setDoctorTheme(getSavedTheme() === "dark" ? "light" : "dark");
+  };
+  window.applyTheme = function(){ return applyDoctorTheme(getSavedTheme()); };
+  window.applyDoctorTheme = window.applyTheme;
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", window.applyTheme);
+  }else{
+    window.applyTheme();
+  }
+  window.addEventListener("storage", function(e){
+    if(!e.key || THEME_KEYS.includes(e.key)) window.applyTheme();
+  });
+  window.addEventListener("focus", window.applyTheme);
+})();
+</script>
+<!-- DR THEME SYNC PATCH END -->
+
 </body>
 </html>

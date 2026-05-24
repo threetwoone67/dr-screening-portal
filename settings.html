@@ -161,7 +161,7 @@ h1{font-size:34px;margin:6px 0}.muted{color:var(--muted)}
 
     <div class="card">
       <div class="row"><h2 data-i18n="theme">โหมดมืด-สว่าง</h2><span class="pill" id="themeStatus">Light</span></div>
-      <button id="themeToggleBtn" type="button"><span data-theme-label>โหมดมืด</span></button>
+      <button id="themeToggleBtn" type="button" onclick="window.toggleDoctorTheme && window.toggleDoctorTheme()"><span data-theme-label>โหมดมืด</span></button>
       <p class="muted status" data-i18n="themeHelp">เมื่อเปลี่ยนโหมด ระบบจะจำค่าและใช้กับทุกหน้า</p>
     </div>
 
@@ -226,12 +226,17 @@ h1{font-size:34px;margin:6px 0}.muted{color:var(--muted)}
     const org=document.getElementById("orgName"); if(org) org.textContent=t("orgName");
     updateThemeText();
   }
-  function getTheme(){return (localStorage.getItem("dr_theme")||localStorage.getItem("dr_dashboard_theme")||"light")==="dark"?"dark":"light"}
+  function getTheme(){return (localStorage.getItem("dr_theme")||localStorage.getItem("theme")||localStorage.getItem("dr_dashboard_theme")||localStorage.getItem("site_theme")||localStorage.getItem("app_theme")||"light")==="dark"?"dark":"light"}
   function setTheme(theme){
     theme=theme==="dark"?"dark":"light";
     localStorage.setItem("dr_theme",theme);
+    localStorage.setItem("theme",theme);
     localStorage.setItem("dr_dashboard_theme",theme);
-    if(window.DR_SETTINGS&&DR_SETTINGS.setTheme) DR_SETTINGS.setTheme(theme);
+    localStorage.setItem("site_theme",theme);
+    localStorage.setItem("app_theme",theme);
+    if(window.DR_SETTINGS&&DR_SETTINGS.setTheme){
+      try{ DR_SETTINGS.setTheme(theme); }catch(e){}
+    }
     applyTheme();
   }
   function applyTheme(){
@@ -267,12 +272,13 @@ h1{font-size:34px;margin:6px 0}.muted{color:var(--muted)}
   });
   window.addEventListener("storage",(e)=>{
     if(LANG_KEYS.includes(e.key)) applyLanguage();
-    if(["dr_theme","dr_dashboard_theme","theme"].includes(e.key)) applyTheme();
+    if(["dr_theme","theme","dr_dashboard_theme","site_theme","app_theme"].includes(e.key)) applyTheme();
   });
   window.addEventListener("focus",()=>{applyTheme();applyLanguage();});
   window.getLang=getLang;
   window.setLang=setLang;
   window.applyLanguage=applyLanguage;
+  window.toggleDoctorTheme=function(){ setTheme(getTheme()==="dark"?"light":"dark"); };
 })();
 </script>
 </body>

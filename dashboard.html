@@ -45,6 +45,30 @@
 
     @media(max-width:1180px){.layout{grid-template-columns:235px 1fr}.stats{grid-template-columns:repeat(2,1fr)}.grid,.grid2{grid-template-columns:1fr}.main{padding:22px}} @media(max-width:760px){.layout{display:block}.sidebar{position:relative;width:100%;height:auto}.topbar,.hero{grid-template-columns:1fr;display:grid}.stats{grid-template-columns:1fr}}
   </style>
+<style>
+body.dark-mode {
+    background: #121212 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .card,
+body.dark-mode .sidebar,
+body.dark-mode .topbar,
+body.dark-mode .content {
+    background: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background: #2b2b2b !important;
+    color: white !important;
+    border: 1px solid #555 !important;
+}
+</style>
+
+
 </head>
 <body>
 <div class="layout">
@@ -223,6 +247,29 @@ if(window.supabase){
 </script>
 <script src="language.js"></script>
 <script src="settings-global.js"></script>
+<script>
+function applyTheme() {
+    const theme =
+        localStorage.getItem("dr_theme") ||
+        localStorage.getItem("theme") ||
+        localStorage.getItem("dr_dashboard_theme") ||
+        localStorage.getItem("site_theme") ||
+        "light";
+
+    document.documentElement.setAttribute("data-theme", theme);
+
+    if (theme === "dark") {
+        document.body.classList.add("dark-mode");
+    } else {
+        document.body.classList.remove("dark-mode");
+    }
+}
+
+applyTheme();
+
+window.addEventListener("storage", applyTheme);
+window.addEventListener("focus", applyTheme);
+</script>
 
 </body>
 </html>

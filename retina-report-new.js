@@ -1,5 +1,5 @@
 const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuY2dicGhiY210bHpybXduaGN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyODEwOTksImV4cCI6MjA5NDg1NzA5OX0.-JS7vYBzMJYybm5QA4RxKUA5rTa5ibR2_40W73PPYso";
+const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const QR_API = "https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=";
 const WORD_CSS = "\n@page WordSection1{size:595.3pt 841.9pt;margin:32pt 38pt 28pt 38pt}\ndiv.WordSection1{page:WordSection1}\nbody{margin:0;font-family:Arial,\"Noto Sans Thai\",sans-serif;color:#0f172a;font-size:10pt}\ntable{border-collapse:collapse}\n.wTitle{font-size:18pt;font-weight:700;margin-top:4pt}\n.wSub{font-size:9pt;font-weight:700;margin-top:4pt}\n.wOrg{font-size:9pt;font-weight:700;color:#173764;margin-top:5pt}\n.wSmall{font-size:7pt;font-weight:700}\n.wCode{font-size:7.5pt;font-weight:700;word-break:break-word}\n.wTiny{font-size:6.5pt;color:#64748b}\n.wRule{border-top:1.5pt solid #20395f;margin:14pt 0 9pt}\n.wInfo td{width:50%;font-size:9pt;font-weight:700;padding:1.8pt 4pt;vertical-align:top}\n.wInfo b{font-weight:900}\n.wResult{margin-top:9pt;font-size:8.2pt}\n.wResult th{background:#f1f5f9;border:1pt solid #d9e2ef;padding:5pt;text-align:left;font-weight:900}\n.wResult td{border:1pt solid #d9e2ef;padding:5pt;vertical-align:top;font-weight:700}\n.wSummary{margin-top:9pt;border:1pt solid #d9e2ef;background:#f8fafc;padding:8pt;font-size:8.5pt;font-weight:700;line-height:1.2}\n.wSign{margin-top:24pt;font-size:8.5pt;font-weight:700}\n.wSign td{width:50%;padding:3pt 12pt}\n";
@@ -436,25 +436,18 @@ function setupSidebarImages(){
     const paths = img.dataset.logoFallbacks.split(",").map(s => s.trim()).filter(Boolean);
     let i = 0;
     const fallback = img.parentElement ? img.parentElement.querySelector("span") : null;
-
-    const showFallback = () => {
-      img.style.display = "none";
-      if(fallback) fallback.style.display = "grid";
-    };
-
     const tryNext = () => {
       if(i >= paths.length){
-        showFallback();
+        img.style.display = "none";
+        if(fallback) fallback.style.display = "grid";
         return;
       }
       img.src = paths[i++];
     };
-
     img.onload = () => {
       img.style.display = "block";
       if(fallback) fallback.style.display = "none";
     };
-
     img.onerror = tryNext;
     tryNext();
   });
@@ -495,3 +488,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadProfile();
   loadData();
 });
+
+/* DR THEME SYNC PATCH START */
+(function(){
+  const THEME_KEYS = ["dr_theme", "theme", "dr_dashboard_theme", "site_theme", "app_theme"];
+  function normalizeTheme(value){ return String(value || "light").toLowerCase() === "dark" ? "dark" : "light"; }
+  function getSavedTheme(){
+    for(const key of THEME_KEYS){ const value = localStorage.getItem(key); if(value) return normalizeTheme(value); }
+    return "light";
+  }
+  function saveTheme(theme){ theme = normalizeTheme(theme); THEME_KEYS.forEach(key => localStorage.setItem(key, theme)); return theme; }
+  function applyDoctorTheme(theme){
+    theme = normalizeTheme(theme || getSavedTheme());
+    document.documentElement.setAttribute("data-theme", theme);
+    document.body.classList.toggle("dark", theme === "dark");
+    document.body.classList.toggle("dark-mode", theme === "dark");
+    document.body.classList.toggle("light-mode", theme !== "dark");
+    return theme;
+  }
+  window.getDoctorTheme = getSavedTheme;
+  window.setDoctorTheme = function(theme){
+    theme = saveTheme(theme); applyDoctorTheme(theme);
+    window.dispatchEvent(new CustomEvent("dr:theme-changed", {detail:{theme}}));
+    document.dispatchEvent(new CustomEvent("dr:theme-applied", {detail:{theme}}));
+    return theme;
+  };
+  window.toggleDoctorTheme = function(){ return window.setDoctorTheme(getSavedTheme() === "dark" ? "light" : "dark"); };
+  window.applyTheme = function(){ return applyDoctorTheme(getSavedTheme()); };
+  window.applyDoctorTheme = window.applyTheme;
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", window.applyTheme); else window.applyTheme();
+  window.addEventListener("storage", function(e){ if(!e.key || THEME_KEYS.includes(e.key)) window.applyTheme(); });
+  window.addEventListener("focus", window.applyTheme);
+})();
+/* DR THEME SYNC PATCH END */
