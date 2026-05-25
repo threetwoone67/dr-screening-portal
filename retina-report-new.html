@@ -6,11 +6,27 @@
   <title>Report | DR Screening Portal</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="report-style.css?v=14">
+
+<style>
+/* report page compatibility patch: keep same layout, only restore images + theme sync */
+.brand .logo{overflow:hidden;display:grid;place-items:center}
+.brand .logo img{width:100%;height:100%;object-fit:cover;display:block}
+.org{display:flex!important;align-items:center;gap:10px}
+.orgLogo{width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid rgba(148,163,184,.25);display:grid;place-items:center;overflow:hidden;flex:0 0 auto}
+.orgLogo img{width:100%;height:100%;object-fit:contain;display:block}
+html[data-theme="light"] body:not(.dark-mode) .side,
+html[data-theme="light"] body:not(.dark-mode) .main{color:#0f172a}
+html[data-theme="dark"] body{background:#08111f;color:#eaf2ff}
+</style>
+
 </head>
 <body>
 <div class="app">
   <aside class="side">
-    <div class="brand"><div class="logo">DR</div><div><b>Diabetic<br>Retinopathy</b><small>DR Screening Portal</small></div></div>
+    <div class="brand">
+      <div class="logo"><img src="logo-new.jpg" alt="DR" onerror="this.style.display='none';this.parentNode.textContent='DR';"></div>
+      <div><b>Diabetic<br>Retinopathy</b><small>DR Screening Portal</small></div>
+    </div>
     <nav class="nav">
       <a href="dashboard.html" data-i="navHome">🏠 หน้าหลัก</a>
       <a href="user.html" data-i="navUser">👤 บัญชีผู้ใช้</a>
@@ -25,7 +41,10 @@
       <a href="screening-history.html" data-i="navHistory">🕘 ประวัติการตรวจ</a>
       <a href="settings.html" data-i="navSettings">⚙️ ตั้งค่า</a>
     </nav>
-    <div class="org"><b data-i="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</b><br><span data-i="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</span></div>
+    <div class="org">
+      <div class="orgLogo"><img src="institution-logo.png" alt="KMUTNB" onerror="this.style.display='none';"></div>
+      <div><b data-i="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</b><br><span data-i="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</span></div>
+    </div>
     <button id="logoutBtn" class="logout" data-i="logout">ออกจากระบบ</button>
   </aside>
 
