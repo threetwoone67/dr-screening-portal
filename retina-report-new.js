@@ -48,22 +48,7 @@ const dict = {
   }
 };
 
-function normalizeLang(v){
-  v = String(v || "th").toLowerCase();
-  return v.startsWith("en") ? "en" : "th";
-}
-function getSavedLang(){
-  return normalizeLang(
-    localStorage.getItem("dr_lang") ||
-    localStorage.getItem("dr_language") ||
-    localStorage.getItem("language") ||
-    localStorage.getItem("app_lang") ||
-    localStorage.getItem("site_lang") ||
-    localStorage.getItem("dr_report_language") ||
-    "th"
-  );
-}
-let lang = getSavedLang();
+let lang = localStorage.getItem("dr_lang") || localStorage.getItem("language") || "th";
 let reports = [];
 let patients = [];
 let selected = null;
@@ -121,10 +106,23 @@ function bmi(p){
   return (w / (h*h)).toFixed(2) + " kg/m²";
 }
 function patientOf(r){
-  const code = String(r.patient_code || r.hn || "");
-  const name = String(r.patient_name || "").toLowerCase();
-  return patients.find(p => String(p.patient_code || p.hn || p.id || "") === code) ||
-         patients.find(p => String(p.full_name || p.name || p.patient_name || "").toLowerCase() === name) || {};
+  if(!r) return {};
+  const code = String(r.patient_code || r.hn || r.patient_id || "").trim().toLowerCase();
+  const pid = String(r.patient_id || r.patient_uuid || "").trim().toLowerCase();
+  const name = String(r.patient_name || r.full_name || r.name || "").trim().toLowerCase();
+
+  return patients.find(p => {
+    const codes = [
+      p.patient_code, p.hn, p.id, p.patient_id, p.patient_uuid
+    ].map(x => String(x || "").trim().toLowerCase());
+    const names = [
+      p.full_name, p.name, p.patient_name
+    ].map(x => String(x || "").trim().toLowerCase());
+
+    return (code && codes.includes(code)) ||
+           (pid && codes.includes(pid)) ||
+           (name && names.includes(name));
+  }) || {};
 }
 function publicStorageUrl(path){
   if(!path) return "";
@@ -210,40 +208,17 @@ async function resolveAllVisibleImages(){
   if(selected) renderPaper(selected);
 }
 function applyLang(){
-  lang = getSavedLang();
   document.documentElement.lang = lang;
-
-  document.querySelectorAll("[data-i]").forEach(e => {
-    const key = e.dataset.i;
-    if(key) e.textContent = tr(key);
-  });
-  document.querySelectorAll("[data-i18n]").forEach(e => {
-    const key = e.dataset.i18n;
-    if(key) e.textContent = tr(key);
-  });
-  document.querySelectorAll("[data-i-placeholder]").forEach(e => {
-    const key = e.dataset.iPlaceholder;
-    if(key) e.placeholder = tr(key);
-  });
-  document.querySelectorAll("[data-i18n-placeholder]").forEach(e => {
-    const key = e.dataset.i18nPlaceholder;
-    if(key) e.placeholder = tr(key);
-  });
-
-  const sel = document.getElementById("langSelect") || document.getElementById("reportLangSelect") || document.getElementById("languageSelect");
+  document.querySelectorAll("[data-i]").forEach(e => { e.textContent = tr(e.dataset.i); });
+  const sel = document.getElementById("langSelect");
   if(sel) sel.value = lang;
-
   renderList();
   if(selected) renderPaper(selected);
 }
 function setLang(x){
-  lang = normalizeLang(x);
-  localStorage.setItem("dr_lang", lang);
-  localStorage.setItem("dr_language", lang);
-  localStorage.setItem("language", lang);
-  localStorage.setItem("app_lang", lang);
-  localStorage.setItem("site_lang", lang);
-  localStorage.setItem("dr_report_language", lang);
+  lang = x;
+  localStorage.setItem("dr_lang", x);
+  localStorage.setItem("language", x);
   applyLang();
 }
 async function loadProfile(){
@@ -261,54 +236,97 @@ function examinerName(r){
   return r.doctor_name || r.created_by_name || currentProfile.full_name || currentProfile.name || currentProfile.display_name || currentProfile.email || "-";
 }
 async function loadData(){
-  document.getElementById("reportList").innerHTML = '<div class="empty">' + tr("typeToSearch") + '</div>';
+  const listBox = document.getElementById("reportList");
+  if(listBox) listBox.innerHTML = '<div class="empty">' + tr("loading") + '</div>';
+
   const res = await Promise.allSettled([
-    db.from("analysis_reports").select("*").order("id", {ascending:false}).limit(300),
-    db.from("patients").select("*").order("id", {ascending:false}).limit(500)
+    db.from("analysis_reports").select("*").order("created_at", {ascending:false}).limit(1000),
+    db.from("patients").select("*").order("created_at", {ascending:false}).limit(1000)
   ]);
+
   if(res[0].status === "fulfilled" && !res[0].value.error) reports = res[0].value.data || [];
   if(res[1].status === "fulfilled" && !res[1].value.error) patients = res[1].value.data || [];
+
   let msg = "reports " + reports.length + " / patients " + patients.length;
   if(res[0].status === "fulfilled" && res[0].value.error) msg = "analysis_reports error: " + res[0].value.error.message;
-  document.getElementById("debugText").textContent = msg;
-  document.getElementById("totalReports").textContent = reports.length;
-  document.getElementById("normalReports").textContent = reports.filter(r => String(r.severity_result || "").toLowerCase().includes("no")).length;
-  document.getElementById("abnormalReports").textContent = reports.filter(r => !String(r.severity_result || "").toLowerCase().includes("no")).length;
+  if(document.getElementById("debugText")) document.getElementById("debugText").textContent = msg;
+
+  if(document.getElementById("totalReports")) document.getElementById("totalReports").textContent = reports.length;
+  if(document.getElementById("normalReports")) document.getElementById("normalReports").textContent = reports.filter(r => String(r.severity_result || r.result || "").toLowerCase().includes("no")).length;
+  if(document.getElementById("abnormalReports")) document.getElementById("abnormalReports").textContent = reports.filter(r => !String(r.severity_result || r.result || "").toLowerCase().includes("no")).length;
+
   const rid = new URLSearchParams(location.search).get("report_id");
-  if(rid) selectReport(rid);
-  else renderList();
+  if(rid){
+    await selectReport(rid);
+  } else {
+    renderList();
+  }
+
   resolveAllVisibleImages();
 }
+function searchableReportText(r){
+  const p = patientOf(r);
+  return [
+    r.patient_name, r.full_name, r.name,
+    r.patient_code, r.hn, r.patient_id, r.report_id, r.id,
+    r.severity_result, r.result, r.diagnosis, r.result_note,
+    p.full_name, p.name, p.patient_name, p.patient_code, p.hn, p.id, p.phone
+  ].map(x => String(x || "").toLowerCase()).join(" ");
+}
+
 function renderList(){
   const search = document.getElementById("searchInput");
   const q = (search ? search.value : "").toLowerCase().trim();
   const box = document.getElementById("reportList");
   if(!box) return;
-  if(!q && !selected){
-    box.innerHTML = '<div class="empty">' + tr("typeToSearch") + '</div>';
-    return;
-  }
-  const rows = reports.filter(r => {
-    const txt = [r.patient_name, r.patient_code, r.hn, r.report_id, r.severity_result, r.result_note].map(x => String(x || "").toLowerCase()).join(" ");
-    return !q || txt.includes(q);
-  });
+
+  let rows = reports.filter(r => !q || searchableReportText(r).includes(q));
+
+  // ถ้ายังไม่พิมพ์ค้นหา ให้แสดงรายการล่าสุดแทน เพื่อให้กดดูรายงานได้ทันที
+  if(!q) rows = reports.slice(0, 30);
+
   if(!rows.length){
     box.innerHTML = '<div class="empty">' + tr("noReports") + '</div>';
     return;
   }
+
   box.innerHTML = rows.map(r => {
+    const p = patientOf(r);
     const id = r.report_id || r.id;
     const active = selected && String(selected.report_id || selected.id) === String(id) ? "active" : "";
-    return '<div class="item ' + active + '" data-id="' + esc(id) + '"><b>' + esc(r.patient_name) + '</b><span>HN: ' + esc(r.patient_code || r.hn) + ' | ' + esc(tr("reportNo")) + ': ' + esc(r.report_id) + '</span><span>' + esc(dt(r.created_at)) + '</span><span class="pill">' + esc(sev(r.severity_result)) + '</span></div>';
+    const patientName = r.patient_name || r.full_name || r.name || p.full_name || p.name || p.patient_name || "-";
+    const patientCode = r.patient_code || r.hn || r.patient_id || p.patient_code || p.hn || "-";
+    const reportNo = r.report_id || r.id || "-";
+    return '<div class="item ' + active + '" data-id="' + esc(id) + '"><b>' + esc(patientName) + '</b><span>HN: ' + esc(patientCode) + ' | ' + esc(tr("reportNo")) + ': ' + esc(reportNo) + '</span><span>' + esc(dt(r.created_at || r.report_date || r.exam_date)) + '</span><span class="pill">' + esc(sev(r.severity_result || r.result || r.diagnosis)) + '</span></div>';
   }).join("");
+
   document.querySelectorAll(".item").forEach(el => {
     el.onclick = () => selectReport(el.dataset.id);
   });
 }
 async function selectReport(id){
   selected = reports.find(r => String(r.report_id || r.id) === String(id));
+
+  // รองรับการเปิดจาก URL โดยตรง เช่น ?report_id=...
+  if(!selected && id){
+    try{
+      let q1 = await db.from("analysis_reports").select("*").eq("report_id", id).maybeSingle();
+      if(!q1.error && q1.data) selected = q1.data;
+      if(!selected){
+        let q2 = await db.from("analysis_reports").select("*").eq("id", id).maybeSingle();
+        if(!q2.error && q2.data) selected = q2.data;
+      }
+      if(selected && !reports.some(r => String(r.report_id || r.id) === String(selected.report_id || selected.id))){
+        reports.unshift(selected);
+      }
+    }catch(e){
+      console.warn("selectReport direct load warning:", e);
+    }
+  }
+
   renderList();
   renderPaper(selected);
+
   if(selected) {
     await resolveImage(selected);
     renderPaper(selected);
@@ -424,100 +442,39 @@ async function exportDoc(){
   URL.revokeObjectURL(a.href);
 }
 
-
-function applyTheme(){
-  const theme = localStorage.getItem("dr_theme") || localStorage.getItem("theme") || localStorage.getItem("dr_dashboard_theme") || "light";
-  const isDark = theme === "dark";
-  document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
-  document.body.classList.toggle("dark-mode", isDark);
-}
-function setupSidebarImages(){
-  document.querySelectorAll("img[data-logo-fallbacks]").forEach(img => {
-    const paths = img.dataset.logoFallbacks.split(",").map(s => s.trim()).filter(Boolean);
-    let i = 0;
-    const fallback = img.parentElement ? img.parentElement.querySelector("span") : null;
-    const tryNext = () => {
-      if(i >= paths.length){
-        img.style.display = "none";
-        if(fallback) fallback.style.display = "grid";
-        return;
-      }
-      img.src = paths[i++];
-    };
-    img.onload = () => {
-      img.style.display = "block";
-      if(fallback) fallback.style.display = "none";
-    };
-    img.onerror = tryNext;
-    tryNext();
-  });
-}
-function markActiveReportMenu(){
-  document.querySelectorAll(".nav a, .nav-menu a, .nav-item").forEach(a => {
-    const href = a.getAttribute("href") || "";
-    if(href.includes("retina-report-new.html")) a.classList.add("active");
-  });
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
   applyTheme();
   setupSidebarImages();
   markActiveReportMenu();
+
   const langSelector = document.getElementById("langSelect") || document.getElementById("reportLangSelect") || document.getElementById("languageSelect");
   if(langSelector) langSelector.onchange = e => setLang(e.target.value);
+
   const searchInput = document.getElementById("searchInput");
   if(searchInput) searchInput.addEventListener("input", () => {
     clearTimeout(timer);
-    timer = setTimeout(renderList, 180);
+    timer = setTimeout(renderList, 120);
   });
+
   const pdfBtn = document.getElementById("pdfBtn");
   if(pdfBtn) pdfBtn.onclick = () => window.print();
+
   const docBtn = document.getElementById("docBtn");
   if(docBtn) docBtn.onclick = exportDoc;
+
   const logoutBtn = document.getElementById("logoutBtn");
   if(logoutBtn) logoutBtn.onclick = async () => {
     try { await db.auth.signOut(); } catch(e) {}
     location.href = "index.html";
   };
+
   window.addEventListener("storage", (e) => {
     if(["dr_lang","dr_language","language","app_lang","site_lang","dr_report_language"].includes(e.key)) applyLang();
-    if(["dr_theme","theme","dr_dashboard_theme"].includes(e.key)) applyTheme();
+    if(["dr_theme","theme","dr_dashboard_theme","site_theme","app_theme"].includes(e.key)) applyTheme();
   });
   window.addEventListener("focus", () => { applyTheme(); applyLang(); });
+
   applyLang();
   await loadProfile();
-  loadData();
+  await loadData();
 });
-
-/* DR THEME SYNC PATCH START */
-(function(){
-  const THEME_KEYS = ["dr_theme", "theme", "dr_dashboard_theme", "site_theme", "app_theme"];
-  function normalizeTheme(value){ return String(value || "light").toLowerCase() === "dark" ? "dark" : "light"; }
-  function getSavedTheme(){
-    for(const key of THEME_KEYS){ const value = localStorage.getItem(key); if(value) return normalizeTheme(value); }
-    return "light";
-  }
-  function saveTheme(theme){ theme = normalizeTheme(theme); THEME_KEYS.forEach(key => localStorage.setItem(key, theme)); return theme; }
-  function applyDoctorTheme(theme){
-    theme = normalizeTheme(theme || getSavedTheme());
-    document.documentElement.setAttribute("data-theme", theme);
-    document.body.classList.toggle("dark", theme === "dark");
-    document.body.classList.toggle("dark-mode", theme === "dark");
-    document.body.classList.toggle("light-mode", theme !== "dark");
-    return theme;
-  }
-  window.getDoctorTheme = getSavedTheme;
-  window.setDoctorTheme = function(theme){
-    theme = saveTheme(theme); applyDoctorTheme(theme);
-    window.dispatchEvent(new CustomEvent("dr:theme-changed", {detail:{theme}}));
-    document.dispatchEvent(new CustomEvent("dr:theme-applied", {detail:{theme}}));
-    return theme;
-  };
-  window.toggleDoctorTheme = function(){ return window.setDoctorTheme(getSavedTheme() === "dark" ? "light" : "dark"); };
-  window.applyTheme = function(){ return applyDoctorTheme(getSavedTheme()); };
-  window.applyDoctorTheme = window.applyTheme;
-  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", window.applyTheme); else window.applyTheme();
-  window.addEventListener("storage", function(e){ if(!e.key || THEME_KEYS.includes(e.key)) window.applyTheme(); });
-  window.addEventListener("focus", window.applyTheme);
-})();
-/* DR THEME SYNC PATCH END */
