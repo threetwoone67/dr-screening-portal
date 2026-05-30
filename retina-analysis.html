@@ -1126,7 +1126,10 @@
 <script>
   const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
   const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
-  const API_URL = "http://127.0.0.1:8000/predict";
+  const API_URL =
+  (location.hostname === "127.0.0.1" || location.hostname === "localhost")
+    ? "http://127.0.0.1:8000/predict"
+    : "https://dr-screening-portal.onrender.com/predict";
   const BUCKET = "retina-images";
   const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
