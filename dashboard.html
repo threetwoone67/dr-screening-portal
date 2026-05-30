@@ -69,6 +69,376 @@ body.dark-mode textarea {
 </style>
 
 
+
+<style id="drDashboardMobileAppShell">
+/* =========================================================
+   DASHBOARD MOBILE APP SHELL
+   Desktop >= 901px: ไม่เปลี่ยน Layout เดิม
+   Mobile <= 900px: ซ่อน Sidebar เดิม + ใช้เมนูล่าง
+========================================================= */
+
+.dr-mobile-bottom-nav,
+.dr-mobile-more-overlay,
+.dr-mobile-more-sheet,
+.dr-mobile-quick-action {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  body {
+    padding-bottom: 96px !important;
+    background: linear-gradient(180deg,#f8fbff 0%,#eef4ff 100%) !important;
+  }
+
+  .layout {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 100vh !important;
+  }
+
+  /* ซ่อน Sidebar เดิมเฉพาะมือถือ */
+  .layout > .sidebar,
+  aside.sidebar,
+  .sidebar {
+    position: fixed !important;
+    left: -120vw !important;
+    top: 0 !important;
+    width: min(86vw, 320px) !important;
+    max-width: 320px !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    overflow-y: auto !important;
+    z-index: 99980 !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .main {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px 14px 104px !important;
+    margin: 0 !important;
+  }
+
+  .topbar {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .headline h2 {
+    font-size: 24px !important;
+    line-height: 1.18 !important;
+  }
+
+  .headline p,
+  .crumb {
+    font-size: 12px !important;
+  }
+
+  .topbar > div:last-child {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 104px minmax(0,1fr) !important;
+    gap: 10px !important;
+  }
+
+  .lang-select {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 10px 12px !important;
+  }
+
+  .userbox {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 10px 12px !important;
+  }
+
+  .hero {
+    grid-template-columns: 1fr !important;
+    padding: 18px !important;
+    border-radius: 22px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .hero h3 {
+    font-size: 18px !important;
+  }
+
+  .hero p {
+    font-size: 12px !important;
+  }
+
+  .hero-icon {
+    display: none !important;
+  }
+
+  .dr-mobile-quick-action {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin: 0 0 14px !important;
+  }
+
+  .dr-mobile-quick-action a {
+    border-radius: 18px !important;
+    padding: 14px 12px !important;
+    font-weight: 1000 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    border: 1px solid #cfe0fb !important;
+    background: #ffffff !important;
+    color: #1d4ed8 !important;
+    box-shadow: 0 12px 28px rgba(15,39,72,.08) !important;
+  }
+
+  .dr-mobile-quick-action a.primary {
+    background: linear-gradient(135deg,#2563eb,#38bdf8) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    gap: 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .stat {
+    border-radius: 18px !important;
+    padding: 12px !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+  }
+
+  .stat-icon {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 14px !important;
+    font-size: 18px !important;
+  }
+
+  .stat small {
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+  }
+
+  .stat strong {
+    font-size: 24px !important;
+  }
+
+  .stat p {
+    display: none !important;
+  }
+
+  .grid,
+  .grid2 {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .card {
+    border-radius: 20px !important;
+    padding: 14px !important;
+  }
+
+  .card h3 {
+    font-size: 17px !important;
+  }
+
+  .card .desc {
+    font-size: 12px !important;
+  }
+
+  .chart-wrap {
+    height: 220px !important;
+  }
+
+  .case-item,
+  .appt-item {
+    grid-template-columns: 48px 1fr auto !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    border-radius: 16px !important;
+  }
+
+  .thumb {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 14px !important;
+  }
+
+  .btn {
+    padding: 9px 11px !important;
+    border-radius: 13px !important;
+    font-size: 12px !important;
+  }
+
+  .calendar {
+    gap: 6px !important;
+  }
+
+  .dow,
+  .day {
+    height: 34px !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* Bottom Navigation */
+  .dr-mobile-bottom-nav {
+    display: grid !important;
+    grid-template-columns: repeat(5,1fr) !important;
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    height: 70px !important;
+    z-index: 99990 !important;
+    background: rgba(255,255,255,.97) !important;
+    border: 1px solid #dbe7f5 !important;
+    border-radius: 24px !important;
+    box-shadow: 0 14px 42px rgba(15,23,42,.18) !important;
+    backdrop-filter: blur(12px) !important;
+    overflow: visible !important;
+  }
+
+  .dr-mobile-nav-item {
+    border: 0 !important;
+    background: transparent !important;
+    color: #64748b !important;
+    font-family: 'Noto Sans Thai', Arial, sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 11px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    min-width: 0 !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .dr-mobile-nav-item span:first-child {
+    font-size: 21px !important;
+    line-height: 1 !important;
+  }
+
+  .dr-mobile-nav-item.active {
+    color: #1d4ed8 !important;
+  }
+
+  .dr-mobile-nav-item.primary {
+    transform: translateY(-12px) !important;
+  }
+
+  .dr-mobile-nav-item.primary span:first-child {
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 20px !important;
+    display: grid !important;
+    place-items: center !important;
+    background: linear-gradient(135deg,#2563eb,#38bdf8) !important;
+    color: #ffffff !important;
+    box-shadow: 0 12px 26px rgba(37,99,235,.35) !important;
+    font-size: 24px !important;
+  }
+
+  .dr-mobile-more-overlay {
+    display: none !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 99991 !important;
+    background: rgba(15,23,42,.45) !important;
+    backdrop-filter: blur(2px) !important;
+  }
+
+  .dr-mobile-more-sheet {
+    display: block !important;
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 99992 !important;
+    background: #ffffff !important;
+    border: 1px solid #dbe7f5 !important;
+    border-radius: 24px !important;
+    box-shadow: 0 18px 50px rgba(15,23,42,.24) !important;
+    padding: 14px !important;
+    transform: translateY(130%) !important;
+    transition: transform .25s ease !important;
+  }
+
+  body.dr-mobile-more-open .dr-mobile-more-overlay {
+    display: block !important;
+  }
+
+  body.dr-mobile-more-open .dr-mobile-more-sheet {
+    transform: translateY(0) !important;
+  }
+
+  .dr-mobile-more-title {
+    font-weight: 1000 !important;
+    color: #0f172a !important;
+    font-size: 16px !important;
+    padding: 6px 8px 12px !important;
+  }
+
+  .dr-mobile-more-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .dr-mobile-more-link,
+  .dr-mobile-more-logout {
+    border: 1px solid #e5edf8 !important;
+    background: #f8fbff !important;
+    color: #17345d !important;
+    border-radius: 16px !important;
+    padding: 13px 12px !important;
+    text-decoration: none !important;
+    font-weight: 900 !important;
+    font-size: 13px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    font-family: 'Noto Sans Thai', Arial, sans-serif !important;
+  }
+
+  .dr-mobile-more-logout {
+    background: #fff5f5 !important;
+    color: #dc2626 !important;
+    border-color: #fecaca !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .dr-mobile-bottom-nav,
+  .dr-mobile-more-overlay,
+  .dr-mobile-more-sheet,
+  .dr-mobile-quick-action {
+    display: none !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="layout">
@@ -376,6 +746,141 @@ function applyTheme() {
 }
 
 applyTheme();
+</script>
+
+
+<script id="drDashboardMobileAppShellScript">
+/* =========================================================
+   DASHBOARD MOBILE APP SHELL SCRIPT
+   ใช้เฉพาะ Dashboard มือถือ ไม่กระทบ Desktop
+========================================================= */
+(function(){
+  function getLang(){
+    const raw = localStorage.getItem("dr_language") ||
+      localStorage.getItem("site_language") ||
+      localStorage.getItem("app_language") ||
+      localStorage.getItem("language") ||
+      "th";
+    return raw === "en" ? "en" : "th";
+  }
+
+  function tx(th,en){
+    return getLang() === "en" ? en : th;
+  }
+
+  function closeMore(){
+    document.body.classList.remove("dr-mobile-more-open");
+  }
+
+  function openMore(){
+    document.body.classList.add("dr-mobile-more-open");
+  }
+
+  function go(url){
+    closeMore();
+    location.href = url;
+  }
+
+  function createQuickAction(){
+    const main = document.querySelector(".main");
+    const hero = document.querySelector(".hero");
+    if(!main || !hero || document.querySelector(".dr-mobile-quick-action")) return;
+
+    const box = document.createElement("div");
+    box.className = "dr-mobile-quick-action";
+    box.innerHTML = `
+      <a class="primary" href="retina-analysis.html">🔬 ${tx("เริ่มตรวจใหม่","New Scan")}</a>
+      <a href="create-patient.html">➕ ${tx("เพิ่มผู้ป่วย","New Patient")}</a>
+    `;
+    hero.insertAdjacentElement("afterend", box);
+  }
+
+  function createMobileNav(){
+    if(document.querySelector(".dr-mobile-bottom-nav")) return;
+
+    const nav = document.createElement("nav");
+    nav.className = "dr-mobile-bottom-nav";
+    nav.innerHTML = `
+      <button class="dr-mobile-nav-item active" type="button" data-go="dashboard.html">
+        <span>🏠</span><small>${tx("หน้าหลัก","Home")}</small>
+      </button>
+      <button class="dr-mobile-nav-item" type="button" data-go="patients.html">
+        <span>👥</span><small>${tx("ผู้ป่วย","Patients")}</small>
+      </button>
+      <button class="dr-mobile-nav-item primary" type="button" data-go="retina-analysis.html">
+        <span>🔬</span><small>${tx("ตรวจ","Analyze")}</small>
+      </button>
+      <button class="dr-mobile-nav-item" type="button" data-go="retina-report-new.html">
+        <span>📄</span><small>${tx("รายงาน","Report")}</small>
+      </button>
+      <button class="dr-mobile-nav-item" type="button" data-more="true">
+        <span>☰</span><small>${tx("เพิ่มเติม","More")}</small>
+      </button>
+    `;
+    document.body.appendChild(nav);
+
+    nav.addEventListener("click", function(e){
+      const btn = e.target.closest(".dr-mobile-nav-item");
+      if(!btn) return;
+      if(btn.dataset.more){
+        openMore();
+        return;
+      }
+      if(btn.dataset.go) go(btn.dataset.go);
+    });
+
+    const overlay = document.createElement("div");
+    overlay.className = "dr-mobile-more-overlay";
+    overlay.addEventListener("click", closeMore);
+    document.body.appendChild(overlay);
+
+    const sheet = document.createElement("div");
+    sheet.className = "dr-mobile-more-sheet";
+    sheet.innerHTML = `
+      <div class="dr-mobile-more-title">${tx("เมนูเพิ่มเติม","More Menu")}</div>
+      <div class="dr-mobile-more-grid">
+        <a class="dr-mobile-more-link" href="user.html">👤 ${tx("บัญชีผู้ใช้","Account")}</a>
+        <a class="dr-mobile-more-link" href="create-patient.html">➕ ${tx("สร้างผู้ป่วย","New Patient")}</a>
+        <a class="dr-mobile-more-link" href="appointment-followup.html">📅 ${tx("นัดหมาย","Appointment")}</a>
+        <a class="dr-mobile-more-link" href="patient-transfer.html">🔁 ${tx("โอนย้าย","Transfer")}</a>
+        <a class="dr-mobile-more-link" href="screening-history.html">🕘 ${tx("ประวัติ","History")}</a>
+        <a class="dr-mobile-more-link" href="knowledge-dr.html">💡 ${tx("ความรู้","Knowledge")}</a>
+        <a class="dr-mobile-more-link" href="settings.html">⚙️ ${tx("ตั้งค่า","Settings")}</a>
+        <button class="dr-mobile-more-logout" type="button" id="drDashboardMobileLogout">🚪 ${tx("ออกจากระบบ","Logout")}</button>
+      </div>
+    `;
+    document.body.appendChild(sheet);
+
+    sheet.querySelectorAll("a").forEach(function(a){
+      a.addEventListener("click", closeMore);
+    });
+
+    const logout = sheet.querySelector("#drDashboardMobileLogout");
+    if(logout){
+      logout.addEventListener("click", async function(){
+        try{
+          await supabaseClient.auth.signOut();
+        }catch(e){}
+        location.href = "index.html";
+      });
+    }
+
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape") closeMore();
+    });
+  }
+
+  function boot(){
+    createQuickAction();
+    createMobileNav();
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  }else{
+    boot();
+  }
+})();
 </script>
 
 </body>
