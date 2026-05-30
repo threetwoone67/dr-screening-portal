@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Report | DR Screening Portal</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="report-style.css?v=mobile31">
+  <link rel="stylesheet" href="report-style.css?v=mobile_search_logo_41">
 
 <style>
 /* report page compatibility patch: keep same layout, only restore images + theme sync */
@@ -24,7 +24,7 @@ html[data-theme="dark"] body{background:#08111f;color:#eaf2ff}
 <div class="app">
   <aside class="side">
     <div class="brand">
-      <div class="logo"><img src="logo-new.jpg" alt="DR" onerror="this.style.display='none';this.parentNode.textContent='DR';"></div>
+      <div class="logo"><img src="logo-new.jpg?v=eye41" alt="DR" onerror="this.onerror=null;this.style.display='none';this.parentNode.innerHTML='<span style=&quot;font-size:22px;line-height:1&quot;>👁️</span>';"></div>
       <div><b>Diabetic<br>Retinopathy</b><small>DR Screening Portal</small></div>
     </div>
     <nav class="nav">
@@ -86,7 +86,7 @@ html[data-theme="dark"] body{background:#08111f;color:#eaf2ff}
   </main>
 </div>
 
-<script src="retina-report-new.js?v=30" defer></script>
+<script src="retina-report-new.js?v=mobile_search_logo_41" defer></script>
 <script src="language.js"></script>
 <script src="settings-global.js"></script>
 
@@ -147,6 +147,23 @@ html[data-theme="dark"] body{background:#08111f;color:#eaf2ff}
   function closeMore(){
     document.body.classList.remove("dr-report-mobile-more-open");
   }
+function isMobileInAppBrowser(){
+    return /Line\/|Line|FBAN|FBAV|Instagram|Messenger/i.test(navigator.userAgent || "");
+  }
+
+  function explainMobileExport(){
+    if (!window.matchMedia("(max-width: 900px)").matches) return;
+    if (!isMobileInAppBrowser()) return;
+    if (sessionStorage.getItem("dr_report_mobile_export_hint") === "1") return;
+    sessionStorage.setItem("dr_report_mobile_export_hint", "1");
+    setTimeout(function(){
+      alert(text(
+        "ถ้าเปิดผ่าน LINE/iPhone แล้วกด PDF หรือ DOC ให้กด ‘อนุญาต’ เพื่อเปิดหน้าพิมพ์หรือดาวน์โหลดเอกสาร",
+        "If opened in LINE/iPhone, tap ‘Allow’ when exporting PDF or DOC."
+      ));
+    }, 250);
+  }
+
 
   function buildMobileNav(){
     if (document.querySelector(".dr-report-mobile-bottom-nav")) return;
@@ -261,6 +278,7 @@ html[data-theme="dark"] body{background:#08111f;color:#eaf2ff}
 
     buildMobileNav();
     fitPaperPreview();
+    explainMobileExport();
   }
 
   function init(){

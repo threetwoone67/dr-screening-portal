@@ -2,8 +2,188 @@ const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const QR_API = "https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=";
-const REPORT_VIEW_URL = "https://dr-screening-portal.onrender.com/report-view.html";
-const WORD_CSS = "\n@page WordSection1{size:595.3pt 841.9pt;margin:32pt 38pt 28pt 38pt}\ndiv.WordSection1{page:WordSection1}\nbody{margin:0;font-family:\"Sarabun\",Arial,sans-serif;color:#0f172a;font-size:10pt}\ntable{border-collapse:collapse}\n.wTitle{font-size:18pt;font-weight:700;margin-top:4pt}\n.wSub{font-size:9pt;font-weight:700;margin-top:4pt}\n.wOrg{font-size:9pt;font-weight:700;color:#173764;margin-top:5pt}\n.wSmall{font-size:7pt;font-weight:700}\n.wCode{font-size:7.5pt;font-weight:700;word-break:break-word}\n.wTiny{font-size:6.5pt;color:#64748b}\n.wRule{border-top:1.5pt solid #20395f;margin:14pt 0 9pt}\n.wInfo td{width:50%;font-size:9pt;font-weight:700;padding:1.8pt 4pt;vertical-align:top}\n.wInfo b{font-weight:900}\n.wResult{margin-top:9pt;font-size:8.2pt}\n.wResult th{background:#f1f5f9;border:1pt solid #d9e2ef;padding:5pt;text-align:left;font-weight:900}\n.wResult td{border:1pt solid #d9e2ef;padding:5pt;vertical-align:top;font-weight:700}\n.wSummary{margin-top:9pt;border:1pt solid #d9e2ef;background:#f8fafc;padding:8pt;font-size:8.5pt;font-weight:700;line-height:1.2}\n.wSign{margin-top:24pt;font-size:8.5pt;font-weight:700}\n.wSign td{width:50%;padding:3pt 12pt}\n";
+const WORD_CSS = `
+@page WordSection1{
+  size:595.3pt 841.9pt;
+  margin:28pt 34pt 26pt 34pt;
+}
+div.WordSection1{
+  page:WordSection1;
+  width:527pt;
+  margin:0 auto;
+}
+body{
+  margin:0;
+  background:#ffffff;
+  color:#0f172a;
+  font-family:"Sarabun","Noto Sans Thai",Arial,sans-serif;
+  font-size:8.7pt;
+  line-height:1.22;
+}
+table{
+  border-collapse:collapse;
+  mso-table-lspace:0pt;
+  mso-table-rspace:0pt;
+}
+.wHead{
+  width:100%;
+  table-layout:fixed;
+  border-bottom:1.6pt solid #20395f;
+  margin:0 0 8pt 0;
+}
+.wHead td{
+  border:0;
+  padding:0 0 8pt 0;
+  vertical-align:top;
+}
+.wLogoCell{width:62pt;text-align:left;}
+.wLogo{
+  width:46pt!important;
+  height:46pt!important;
+  max-width:46pt!important;
+  max-height:46pt!important;
+  object-fit:contain;
+  display:block;
+}
+.wTitleCell{
+  text-align:center;
+  padding:0 8pt!important;
+  width:315pt;
+}
+.wTitle{
+  font-size:16pt;
+  font-weight:900;
+  line-height:1.08;
+  margin:0 0 2pt 0;
+}
+.wSub{
+  font-size:8pt;
+  font-weight:800;
+  line-height:1.18;
+  margin:2pt 0;
+}
+.wOrg{
+  font-size:7.8pt;
+  font-weight:900;
+  color:#173764;
+  line-height:1.18;
+  margin:2pt 0 0 0;
+}
+.wQrCell{
+  width:92pt;
+  text-align:right;
+  vertical-align:top;
+}
+.wSmall{
+  font-size:6.5pt;
+  font-weight:900;
+  line-height:1.1;
+}
+.wCode{
+  font-size:7pt;
+  font-weight:900;
+  line-height:1.12;
+  word-break:break-word;
+}
+.wTiny{
+  font-size:6pt;
+  color:#64748b;
+  font-weight:800;
+  line-height:1.1;
+}
+.wQr{
+  width:60pt!important;
+  height:60pt!important;
+  max-width:60pt!important;
+  max-height:60pt!important;
+  object-fit:contain;
+  display:inline-block;
+  margin-top:2pt;
+}
+.wInfo{
+  width:100%;
+  table-layout:fixed;
+  margin:6pt 0 8pt 0;
+}
+.wInfo td{
+  width:50%;
+  font-size:8.2pt;
+  font-weight:750;
+  padding:1.4pt 4pt;
+  vertical-align:top;
+  line-height:1.18;
+}
+.wInfo b{font-weight:900;}
+.wResult{
+  width:100%;
+  table-layout:fixed;
+  margin-top:7pt;
+  font-size:7.2pt;
+  line-height:1.16;
+}
+.wResult th{
+  background:#f1f5f9;
+  border:1pt solid #d9e2ef;
+  padding:3.8pt 4pt;
+  text-align:left;
+  font-weight:900;
+}
+.wResult td{
+  border:1pt solid #d9e2ef;
+  padding:4pt;
+  vertical-align:top;
+  font-weight:750;
+}
+.wResult .cImg{width:90pt;}
+.wResult .cResult{width:75pt;}
+.wResult .cConf{width:70pt;}
+.wResult .cScreen{width:48pt;}
+.wFundus{
+  width:76pt!important;
+  height:70pt!important;
+  max-width:76pt!important;
+  max-height:70pt!important;
+  object-fit:cover;
+  background:#020617;
+  display:block;
+  border-radius:5pt;
+}
+.wCaption{
+  font-size:6.6pt;
+  margin-top:3pt;
+  font-weight:800;
+}
+.wSummary{
+  margin-top:8pt;
+  border:1pt solid #d9e2ef;
+  background:#f8fafc;
+  padding:7pt;
+  font-size:7.6pt;
+  font-weight:750;
+  line-height:1.22;
+  border-radius:7pt;
+}
+.wSummary b{font-weight:900;}
+.wSummary p{margin:2.4pt 0;}
+.wSign{
+  width:100%;
+  table-layout:fixed;
+  margin-top:18pt;
+  font-size:7.5pt;
+  font-weight:750;
+}
+.wSign td{
+  width:50%;
+  padding:0 18pt;
+  text-align:center;
+  vertical-align:top;
+}
+.wLine{
+  border-top:1pt dotted #0f2b4c;
+  height:7pt;
+  margin-bottom:2pt;
+}
+`;
 const IMAGE_BUCKET = "retina-images";
 
 const dict = {
@@ -130,77 +310,23 @@ function patientOf(r){
            reportNames.some(n => codes.includes(n));
   }) || {};
 }
-function safeJsonParse(x){
-  if(typeof x !== "string") return x;
-  const t = x.trim();
-  if(!t || !(t.startsWith("{") || t.startsWith("["))) return x;
-  try { return JSON.parse(t); } catch(e) { return x; }
-}
-function collectDeepValues(obj, out=[], depth=0){
-  if(obj === null || obj === undefined || depth > 5) return out;
-  obj = safeJsonParse(obj);
-  if(typeof obj === "string") {
-    out.push(obj);
-    return out;
-  }
-  if(Array.isArray(obj)) {
-    obj.forEach(v => collectDeepValues(v, out, depth + 1));
-    return out;
-  }
-  if(typeof obj === "object") {
-    Object.keys(obj).forEach(k => collectDeepValues(obj[k], out, depth + 1));
-  }
-  return out;
-}
 function publicStorageUrl(path){
   if(!path) return "";
   const s = String(path).trim();
-  if(!s || s === "-" || s.startsWith("data:")) return "";
+  if(s.startsWith("data:")) return "";
   if(s.startsWith("http://") || s.startsWith("https://")) return s;
   let key = s.replace(/^\/+/, "");
-  key = key.replace(/^public\//, "");
-  if(key.includes("/object/public/" + IMAGE_BUCKET + "/")) {
-    key = key.split("/object/public/" + IMAGE_BUCKET + "/").pop();
-  }
   if(key.startsWith(IMAGE_BUCKET + "/")) key = key.slice((IMAGE_BUCKET + "/").length);
-  return SUPABASE_URL + "/storage/v1/object/public/" + IMAGE_BUCKET + "/" + encodeURI(key).replace(/#/g, "%23");
-}
-function looksLikeImagePath(x){
-  const s = String(x || "").trim();
-  if(!s || s.startsWith("data:")) return false;
-  if(/api\.qrserver\.com/i.test(s)) return false;
-  if(/institution-logo|logo-new|logo-kmutnb/i.test(s)) return false;
-  if(/\.(png|jpg|jpeg|webp|gif)(\?|$)/i.test(s)) return true;
-  if(s.includes("/storage/v1/object/")) return true;
-  if(s.includes(IMAGE_BUCKET + "/")) return true;
-  return false;
+  return SUPABASE_URL + "/storage/v1/object/public/" + IMAGE_BUCKET + "/" + key;
 }
 function directImageCandidate(r){
-  if(!r) return "";
-  const priority = [
+  const candidates = [
     r.image_url, r.original_image_url, r.image_public_url, r.fundus_image_url, r.retina_image_url,
-    r.storage_url, r.file_url, r.original_url, r.public_url, r.url,
-    r.image_path, r.original_image_path, r.storage_path, r.file_path, r.image_storage_path,
-    r.gradcam_url, r.heatmap_url, r.overlay_url
+    r.storage_url, r.file_url, r.original_url,
+    r.image_path, r.original_image_path, r.storage_path, r.file_path, r.image_storage_path
   ];
-  for(const c of priority){
-    if(c && looksLikeImagePath(c)) return publicStorageUrl(c);
-  }
-
-  // รองรับกรณีบันทึกรูปไว้ใน JSON เช่น results, images, image_urls, files
-  const deepValues = collectDeepValues({
-    image_urls: r.image_urls,
-    images: r.images,
-    files: r.files,
-    results: r.results,
-    result: r.result,
-    analysis_results: r.analysis_results,
-    prediction_results: r.prediction_results,
-    metadata: r.metadata,
-    data: r.data
-  });
-  const found = deepValues.find(looksLikeImagePath);
-  return found ? publicStorageUrl(found) : "";
+  for(const c of candidates) if(c) return publicStorageUrl(c);
+  return "";
 }
 async function fileExists(url){
   if(!url) return false;
@@ -208,8 +334,7 @@ async function fileExists(url){
     const res = await fetch(url, {method:"HEAD", cache:"no-store"});
     return res.ok;
   } catch(e) {
-    // บาง Storage/CDN ไม่ตอบ HEAD หรือโดน CORS block แต่รูปยังแสดงด้วย <img> ได้
-    return true;
+    return false;
   }
 }
 async function listStorage(folder){
@@ -223,7 +348,7 @@ async function listStorage(folder){
 }
 async function firstFileInFolder(folder){
   const items = await listStorage(folder);
-  const img = items.find(f => f && f.name && /\.(png|jpg|jpeg|webp|gif)$/i.test(f.name));
+  const img = items.find(f => f && f.name && /\.(png|jpg|jpeg|webp)$/i.test(f.name));
   if(img) return publicStorageUrl(folder.replace(/^\/+|\/+$/g, "") + "/" + img.name);
   return "";
 }
@@ -232,7 +357,7 @@ async function firstImageRecursive(folder, depth=0){
   const direct = await firstFileInFolder(folder);
   if(direct) return direct;
   const items = await listStorage(folder);
-  const subfolders = items.filter(f => f && f.name && !/\.(png|jpg|jpeg|webp|gif)$/i.test(f.name));
+  const subfolders = items.filter(f => f && f.name && !/\.(png|jpg|jpeg|webp)$/i.test(f.name));
   for(const sub of subfolders){
     const url = await firstImageRecursive(folder.replace(/^\/+|\/+$/g, "") + "/" + sub.name, depth + 1);
     if(url) return url;
@@ -241,14 +366,11 @@ async function firstImageRecursive(folder, depth=0){
 }
 async function resolveImage(r){
   if(r.__resolvedImage !== undefined) return r.__resolvedImage;
-
-  // ใช้ URL/path ที่บันทึกไว้ใน report ก่อน ไม่บังคับ HEAD เพราะมือถือ/Storage บางตัวไม่ตอบ HEAD
   const direct = directImageCandidate(r);
-  if(direct) {
+  if(direct && await fileExists(direct)) {
     r.__resolvedImage = direct;
     return direct;
   }
-
   const code = String(r.patient_code || r.hn || "").trim();
   const rid = String(r.report_id || r.id || "").trim();
   const folders = [];
@@ -326,10 +448,6 @@ function syncLangStorage(){
   ["dr_language","dr_lang","language","site_language","app_language","dr_report_language"].forEach(k=>localStorage.setItem(k, lang));
 }
 
-function reportViewUrl(reportId){
-  return REPORT_VIEW_URL + "?report_id=" + encodeURIComponent(reportId || "");
-}
-
 function applyLang(){
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i]").forEach(e => { e.textContent = tr(e.dataset.i); });
@@ -359,19 +477,24 @@ async function loadProfile(){
 function examinerName(r){
   return r.doctor_name || r.created_by_name || currentProfile.full_name || currentProfile.name || currentProfile.display_name || currentProfile.email || "-";
 }
-async function loadData(){
-  const listBox = document.getElementById("reportList");
-  if(listBox) listBox.innerHTML = '<div class="empty">' + tr("loading") + '</div>';
 
-  const res = await Promise.allSettled([
+async function queryReportsAndPatients(){
+  return await Promise.allSettled([
     db.from("analysis_reports").select("*").order("created_at", {ascending:false}).limit(1000),
     db.from("patients").select("*").order("created_at", {ascending:false}).limit(1000)
   ]);
-
+}
+function applyQueryResults(res){
   if(res[0].status === "fulfilled" && !res[0].value.error) reports = res[0].value.data || [];
   if(res[1].status === "fulfilled" && !res[1].value.error) patients = res[1].value.data || [];
-
-  // fallback: use local cached report/patient data if Supabase returns empty due to session/RLS timing
+}
+function saveReportCache(){
+  try{
+    if(Array.isArray(reports) && reports.length) localStorage.setItem("dr_analysis_reports", JSON.stringify(reports.slice(0,200)));
+    if(Array.isArray(patients) && patients.length) localStorage.setItem("dr_patients", JSON.stringify(patients.slice(0,500)));
+  }catch(e){}
+}
+function loadReportCache(){
   try{
     const cachedReports = JSON.parse(localStorage.getItem("dr_analysis_reports") || localStorage.getItem("analysis_reports") || "[]");
     if(!reports.length && Array.isArray(cachedReports)) reports = cachedReports;
@@ -380,9 +503,30 @@ async function loadData(){
     const cachedPatients = JSON.parse(localStorage.getItem("dr_patients") || localStorage.getItem("patients") || "[]");
     if(!patients.length && Array.isArray(cachedPatients)) patients = cachedPatients;
   }catch(e){}
+}
+function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
+
+async function loadData(){
+  const listBox = document.getElementById("reportList");
+  if(listBox) listBox.innerHTML = '<div class="empty">' + tr("loading") + '</div>';
+
+  let res = await queryReportsAndPatients();
+  applyQueryResults(res);
+
+  // Supabase auth/session restoration can lag on deployed/mobile browsers.
+  // Retry once before falling back to local cache.
+  if(!reports.length){
+    await sleep(650);
+    res = await queryReportsAndPatients();
+    applyQueryResults(res);
+  }
+
+  if(reports.length || patients.length) saveReportCache();
+  loadReportCache();
 
   let msg = "reports " + reports.length + " / patients " + patients.length;
   if(res[0].status === "fulfilled" && res[0].value.error) msg = "analysis_reports error: " + res[0].value.error.message;
+  if(res[1].status === "fulfilled" && res[1].value.error) msg += " | patients error: " + res[1].value.error.message;
   if(document.getElementById("debugText")) document.getElementById("debugText").textContent = msg;
 
   if(document.getElementById("totalReports")) document.getElementById("totalReports").textContent = reports.length;
@@ -469,7 +613,7 @@ async function selectReport(id){
 function paperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(reportViewUrl(r.report_id || r.id || ""));
+  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
   const note = val(r.result_note || "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.");
   const screening = String(r.severity_result || "").toLowerCase().includes("no") ? "No DR" : "DR";
   const imgBlock = img ? '<img class="fundus" src="' + esc(img) + '" onerror="this.outerHTML=\'<div class=&quot;image-note&quot;>'+esc(tr("noImage"))+'</div>\'">' : '<div style="width:94px;height:86px;border:1px dashed #aaa;display:grid;place-items:center;color:#64748b;font-size:11px">' + esc(tr("noImage")) + '</div>';
@@ -484,57 +628,93 @@ function renderPaper(r){
   c.innerHTML = paperHTML(r);
 }
 
-function wordPaperHTML(r){
+
+function absDocUrl(src){
+  if(!src) return "";
+  try { return new URL(src, window.location.href).href; } catch(e) { return src; }
+}
+async function imageForWord(src){
+  if(!src) return "";
+  const raw = String(src || "").trim();
+  if(!raw) return "";
+  // ไม่ใช้ base64: ส่ง URL ตรงให้ Word โหลดรูปจากเว็บ / Supabase Storage
+  return absDocUrl(raw);
+}
+async function waitForPaperImages(){
+  const imgs = Array.from(document.querySelectorAll(".paper img"));
+  await Promise.all(imgs.map(img => {
+    if(img.complete) return Promise.resolve();
+    return new Promise(resolve => {
+      img.onload = resolve;
+      img.onerror = resolve;
+      setTimeout(resolve, 1800);
+    });
+  }));
+}
+
+async function wordPaperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(reportViewUrl(r.report_id || r.id || ""));
+  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
   const note = val(r.result_note || "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.");
   const screening = String(r.severity_result || "").toLowerCase().includes("no") ? "No DR" : "DR";
   const examiner = examinerName(r);
-  const imgTag = img ? '<img src="' + esc(img) + '" width="82" height="70" style="width:82px;height:70px;object-fit:cover;border-radius:6px;background:#020617;">' : '<div style="width:82px;height:70px;border:1px dashed #999;font-size:9px;color:#64748b;text-align:center;padding-top:22px;">' + esc(tr("noImage")) + '</div>';
+
+  const logoSrc = await imageForWord("institution-logo.png");
+  const qrSrc = await imageForWord(qr);
+  const imageSrc = await imageForWord(img);
+
+  const imgTag = imageSrc
+    ? '<img class="wFundus" src="' + esc(imageSrc) + '" width="76" height="70" style="width:76pt;height:70pt;object-fit:cover;">'
+    : '<div style="width:76pt;height:70pt;border:1pt dashed #999;font-size:6.5pt;color:#64748b;text-align:center;padding-top:22pt;">' + esc(tr("noImage")) + '</div>';
+
+  const infoRows = [
+    ['patientName', patientNameOf(r,p), 'HN', patientCodeOf(r,p), true],
+    ['patientCode', patientCodeOf(r,p), 'reportNo', reportNoOf(r), true],
+    ['birthDate', patientBirth(r,p), 'age', patientAge(r,p), true],
+    ['sex', patientSex(r,p), 'phone', patientPhone(r,p), true],
+    ['weight', patientWeight(r,p), 'height', patientHeight(r,p), true],
+    ['BMI', patientBMI(r,p), 'examDate', dt(r.created_at), false],
+    ['department', 'Diabetic Retinopathy Screening System', 'disease', patientDisease(r,p), true],
+    ['doctor', examiner, 'allergy', patientAllergy(r,p), true]
+  ].map(row => {
+    const leftLabel = row[4] ? tr(row[0]) : row[0];
+    const rightLabel = tr(row[2]);
+    return '<tr><td><b>' + esc(leftLabel) + ' :</b> ' + esc(row[1]) + '</td><td><b>' + esc(rightLabel) + ' :</b> ' + esc(row[3]) + '</td></tr>';
+  }).join('');
+
   return `
   <div class="WordSection1">
-    <table class="wHead" width="100%" cellspacing="0" cellpadding="0">
+    <table class="wHead" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="75" valign="top"><img src="institution-logo.png" width="58" height="58"></td>
-        <td align="center" valign="top">
+        <td class="wLogoCell">${logoSrc ? `<img class="wLogo" src="${esc(logoSrc)}" width="46" height="46" style="width:46pt;height:46pt;object-fit:contain;">` : ""}</td>
+        <td class="wTitleCell">
           <div class="wTitle">${esc(tr("reportTitle"))}</div>
           <div class="wSub">${esc(tr("screeningTitle"))}</div>
           <div class="wOrg">${esc(tr("orgName"))}</div>
         </td>
-        <td width="120" align="right" valign="top">
+        <td class="wQrCell">
           <div class="wSmall">${esc(tr("reportNo"))}</div>
           <div class="wCode">${esc(reportNoOf(r))}</div>
           <div class="wCode">${esc(patientCodeOf(r,p))}</div>
-          <img src="${esc(qr)}" width="78" height="78"><br>
+          ${qrSrc ? `<img class="wQr" src="${esc(qrSrc)}" width="60" height="60" style="width:60pt;height:60pt;object-fit:contain;">` : ""}<br>
           <span class="wTiny">${esc(tr("onlineScan"))}</span>
         </td>
       </tr>
     </table>
 
-    <div class="wRule"></div>
+    <table class="wInfo" cellspacing="0" cellpadding="0">${infoRows}</table>
 
-    <table class="wInfo" width="100%" cellspacing="0" cellpadding="0">
-      <tr><td><b>${esc(tr("patientName"))} :</b> ${esc(patientNameOf(r,p))}</td><td><b>HN :</b> ${esc(patientCodeOf(r,p))}</td></tr>
-      <tr><td><b>${esc(tr("patientCode"))} :</b> ${esc(patientCodeOf(r,p))}</td><td><b>${esc(tr("reportNo"))} :</b> ${esc(reportNoOf(r))}</td></tr>
-      <tr><td><b>${esc(tr("birthDate"))} :</b> ${esc(patientBirth(r,p))}</td><td><b>${esc(tr("age"))} :</b> ${esc(patientAge(r,p))}</td></tr>
-      <tr><td><b>${esc(tr("sex"))} :</b> ${esc(patientSex(r,p))}</td><td><b>${esc(tr("phone"))} :</b> ${esc(patientPhone(r,p))}</td></tr>
-      <tr><td><b>${esc(tr("weight"))} :</b> ${esc(patientWeight(r,p))}</td><td><b>${esc(tr("height"))} :</b> ${esc(patientHeight(r,p))}</td></tr>
-      <tr><td><b>BMI :</b> ${esc(patientBMI(r,p))}</td><td><b>${esc(tr("examDate"))} :</b> ${esc(dt(r.created_at))}</td></tr>
-      <tr><td><b>${esc(tr("department"))} :</b> Diabetic Retinopathy Screening System</td><td><b>${esc(tr("disease"))} :</b> ${esc(patientDisease(r,p))}</td></tr>
-      <tr><td><b>${esc(tr("doctor"))} :</b> ${esc(examiner)}</td><td><b>${esc(tr("allergy"))} :</b> ${esc(patientAllergy(r,p))}</td></tr>
-    </table>
-
-    <table class="wResult" width="100%" cellspacing="0" cellpadding="0">
+    <table class="wResult" cellspacing="0" cellpadding="0">
       <tr>
-        <th width="100">${esc(tr("image"))}</th>
-        <th width="105">${esc(tr("result"))}</th>
-        <th width="115">${esc(tr("confidence"))}</th>
-        <th width="75">${esc(tr("screeningResult"))}</th>
+        <th class="cImg" style="width:90pt">${esc(tr("image"))}</th>
+        <th class="cResult" style="width:75pt">${esc(tr("result"))}</th>
+        <th class="cConf" style="width:70pt">${esc(tr("confidence"))}</th>
+        <th class="cScreen" style="width:48pt">${esc(tr("screeningResult"))}</th>
         <th>${esc(tr("note"))}</th>
       </tr>
       <tr>
-        <td>${imgTag}<br><b>ภาพที่ 1</b></td>
+        <td>${imgTag}<div class="wCaption">ภาพที่ 1</div></td>
         <td><b>${esc(r.severity_result)}</b><br>${esc(sev(r.severity_result))}</td>
         <td><b>Severity:</b> ${esc(pct(r.confidence || r.severity_confidence))}<br><b>Binary:</b> ${esc(pct(r.binary_confidence))}</td>
         <td><b>${esc(screening)}</b></td>
@@ -543,19 +723,15 @@ function wordPaperHTML(r){
     </table>
 
     <div class="wSummary">
-      <b>${esc(tr("summary"))}</b><br>
-      ${esc((lang === "th" ? "ผลการคัดกรองโดย AI พบว่า: " : "AI screening result: ") + sev(r.severity_result))}<br>
-      ${esc(note)}
+      <b>${esc(tr("summary"))}</b>
+      <p>${esc((lang === "th" ? "ผลการคัดกรองโดย AI พบว่า: " : "AI screening result: ") + sev(r.severity_result))}</p>
+      <p>${esc(note)}</p>
     </div>
 
-    <table class="wSign" width="100%" cellspacing="0" cellpadding="0">
+    <table class="wSign" cellspacing="0" cellpadding="0">
       <tr>
-        <td align="center">....................................................</td>
-        <td align="center">....................................................</td>
-      </tr>
-      <tr>
-        <td align="center"><b>${esc(tr("reporter"))}</b><br>(${esc(examiner)})</td>
-        <td align="center"><b>${esc(tr("reviewer"))}</b><br>(............................)</td>
+        <td><div class="wLine"></div><b>${esc(tr("reporter"))}</b><br>(${esc(examiner)})</td>
+        <td><div class="wLine"></div><b>${esc(tr("reviewer"))}</b><br>(............................)</td>
       </tr>
     </table>
   </div>`;
@@ -567,14 +743,33 @@ async function exportDoc(){
     return;
   }
   await resolveImage(selected);
-  const content = '<!doctype html><html><head><meta charset="utf-8"><title>DR Report</title><style>' + WORD_CSS + '</style></head><body>' + wordPaperHTML(selected) + '</body></html>';
-  const blob = new Blob([content], {type:"application/msword;charset=utf-8"});
+  renderPaper(selected);
+  await waitForPaperImages();
+  const body = await wordPaperHTML(selected);
+  const content = '<!doctype html><html><head><meta charset="utf-8"><title>DR Report</title><style>' + WORD_CSS + '</style></head><body>' + body + '</body></html>';
+  const blob = new Blob(["\ufeff" + content], {type:"application/msword;charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "DR_Report_" + val(patientCodeOf(selected, patientOf(selected))) + "_" + lang + ".doc";
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(a.href);
 }
+
+async function printReportPdf(){
+  if(!selected){
+    alert(tr("selectReport"));
+    return;
+  }
+  await resolveImage(selected);
+  renderPaper(selected);
+  await waitForPaperImages();
+  setTimeout(() => window.print(), 150);
+}
+
+window.exportDoc = exportDoc;
+window.printReportPdf = printReportPdf;
 
 document.addEventListener("DOMContentLoaded", async () => {
   applyTheme();
@@ -591,7 +786,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   const pdfBtn = document.getElementById("pdfBtn");
-  if(pdfBtn) pdfBtn.onclick = () => window.print();
+  if(pdfBtn) pdfBtn.onclick = printReportPdf;
 
   const docBtn = document.getElementById("docBtn");
   if(docBtn) docBtn.onclick = exportDoc;

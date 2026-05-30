@@ -548,3 +548,8 @@
   }
 }
 
+
+
+/* SAFE CACHE LOGO PATCH: keep desktop layout, make brand logo visible if image loads */
+.brand .logo{overflow:hidden;display:grid;place-items:center;background:#fff}
+.brand .logo img{display:block;width:100%;height:100%;object-fit:cover}
