@@ -675,6 +675,332 @@
 </style>
 <!-- RETINA ANALYSIS MOBILE APP PATCH END -->
 
+
+
+<!-- RETINA ANALYSIS MOBILE POLISH v2 START -->
+<style id="retina-analysis-mobile-polish-v2">
+  /* Mobile polish only. Desktop >= 901px remains unchanged. */
+  @media (max-width: 900px) {
+    body {
+      padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .main {
+      padding: 18px 14px 30px !important;
+    }
+
+    .topbar {
+      margin-bottom: 12px !important;
+    }
+
+    .breadcrumb {
+      font-size: 13px !important;
+      line-height: 1.25 !important;
+      margin-bottom: 6px !important;
+    }
+
+    h2 {
+      font-size: clamp(25px, 6.3vw, 31px) !important;
+      line-height: 1.15 !important;
+      letter-spacing: -0.45px !important;
+      margin-bottom: 8px !important;
+      max-width: 94% !important;
+    }
+
+    .subtitle {
+      font-size: 14.5px !important;
+      line-height: 1.55 !important;
+      color: #6b7a90 !important;
+      max-width: 94% !important;
+    }
+
+    .top-actions {
+      display: grid !important;
+      grid-template-columns: 104px 1fr 1fr !important;
+      gap: 10px !important;
+      margin-top: 14px !important;
+      align-items: stretch !important;
+    }
+
+    .top-actions .lang {
+      grid-column: auto !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      height: 44px !important;
+      padding: 0 28px 0 13px !important;
+      border-radius: 18px !important;
+      font-size: 15px !important;
+      font-weight: 950 !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, .06) !important;
+    }
+
+    .top-actions .top-btn {
+      height: 44px !important;
+      border-radius: 18px !important;
+      font-size: 14px !important;
+      padding: 0 10px !important;
+      font-weight: 950 !important;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, .06) !important;
+    }
+
+    .hero {
+      margin: 16px 0 14px !important;
+      padding: 20px 18px !important;
+      border-radius: 26px !important;
+      background: linear-gradient(135deg, #2563eb 0%, #315be8 55%, #3b56d9 100%) !important;
+      box-shadow: 0 18px 42px rgba(37, 99, 235, .20) !important;
+    }
+
+    .hero h3 {
+      font-size: 24px !important;
+      line-height: 1.28 !important;
+      letter-spacing: -0.2px !important;
+    }
+
+    .hero p {
+      margin-top: 8px !important;
+      font-size: 14.5px !important;
+      line-height: 1.62 !important;
+      color: rgba(255, 255, 255, .92) !important;
+    }
+
+    .dr-mobile-steps {
+      gap: 10px !important;
+      margin: 0 0 16px !important;
+    }
+
+    .dr-mobile-step {
+      min-height: 86px !important;
+      border-radius: 22px !important;
+      padding: 13px 6px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      background: rgba(255,255,255,.94) !important;
+      box-shadow: 0 12px 30px rgba(15,23,42,.07) !important;
+    }
+
+    .dr-mobile-step span {
+      font-size: 24px !important;
+      margin-bottom: 7px !important;
+    }
+
+    .dr-mobile-step b {
+      font-size: 12.5px !important;
+      line-height: 1.18 !important;
+    }
+
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 12px !important;
+      margin-bottom: 18px !important;
+    }
+
+    .stat {
+      min-height: 98px !important;
+      padding: 15px 14px !important;
+      border-radius: 24px !important;
+      gap: 12px !important;
+      background: rgba(255,255,255,.94) !important;
+      border-color: rgba(219,231,245,.96) !important;
+      box-shadow: 0 14px 34px rgba(15,23,42,.075) !important;
+    }
+
+    .stat .icon {
+      width: 48px !important;
+      height: 48px !important;
+      border-radius: 18px !important;
+      font-size: 23px !important;
+      background: #eef5ff !important;
+      flex: 0 0 48px !important;
+    }
+
+    .stat small {
+      font-size: 13px !important;
+      line-height: 1.24 !important;
+      color: #6b7a90 !important;
+    }
+
+    .stat strong {
+      font-size: 23px !important;
+      line-height: 1.12 !important;
+      max-width: none !important;
+      color: #10213f !important;
+    }
+
+    .grid {
+      gap: 16px !important;
+    }
+
+    .card {
+      border-radius: 28px !important;
+      padding: 18px !important;
+      box-shadow: 0 14px 36px rgba(15,23,42,.075) !important;
+      border-color: rgba(219,231,245,.96) !important;
+      background: rgba(255,255,255,.96) !important;
+    }
+
+    .card h3 {
+      font-size: 20px !important;
+      line-height: 1.28 !important;
+      margin-bottom: 8px !important;
+    }
+
+    .card p {
+      font-size: 13.5px !important;
+      line-height: 1.58 !important;
+      margin-bottom: 12px !important;
+    }
+
+    .patient-list {
+      max-height: 330px !important;
+      gap: 10px !important;
+    }
+
+    .patient-item {
+      border-radius: 20px !important;
+      padding: 14px !important;
+      box-shadow: 0 8px 22px rgba(15,23,42,.045) !important;
+    }
+
+    .patient-item.active {
+      background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%) !important;
+      border-color: #93b4ff !important;
+    }
+
+    .patient-details {
+      gap: 10px !important;
+    }
+
+    .field-box {
+      border-radius: 18px !important;
+      padding: 12px !important;
+      background: #f8fbff !important;
+    }
+
+    .preview-wrap {
+      height: min(52vh, 420px) !important;
+      min-height: 315px !important;
+      border-radius: 28px !important;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) !important;
+    }
+
+    .image-caption {
+      margin-top: 10px !important;
+      font-size: 13px !important;
+    }
+
+    .image-toolbar {
+      gap: 10px !important;
+      margin-top: 13px !important;
+    }
+
+    .image-toolbar .btn,
+    .action-row .btn {
+      min-height: 54px !important;
+      border-radius: 20px !important;
+      font-size: 16px !important;
+      font-weight: 950 !important;
+    }
+
+    #cameraBtn {
+      background: #ffffff !important;
+      color: #1d4ed8 !important;
+      border: 1px solid #bfdbfe !important;
+    }
+
+    #deleteCurrentBtn,
+    #clearBtn {
+      min-height: 46px !important;
+      font-size: 14px !important;
+    }
+
+    .thumbs {
+      margin-top: 12px !important;
+      padding-bottom: 10px !important;
+    }
+
+    .save-hint {
+      margin-top: 12px !important;
+      border-radius: 18px !important;
+      background: #f8fbff !important;
+    }
+
+    .result {
+      margin-top: 18px !important;
+    }
+
+    .medical-card {
+      border-radius: 24px !important;
+      padding: 16px !important;
+    }
+
+    .dr-mobile-bottom-nav {
+      left: 14px !important;
+      right: 14px !important;
+      bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+      height: 76px !important;
+      border-radius: 28px !important;
+      box-shadow: 0 18px 52px rgba(15,23,42,.18) !important;
+    }
+
+    .dr-mobile-nav-item {
+      font-size: 11.5px !important;
+    }
+
+    .dr-mobile-nav-item.primary span:first-child {
+      width: 58px !important;
+      height: 58px !important;
+      border-radius: 22px !important;
+    }
+
+    .dr-mobile-more-sheet {
+      left: 14px !important;
+      right: 14px !important;
+      bottom: calc(104px + env(safe-area-inset-bottom)) !important;
+      border-radius: 28px !important;
+      padding: 16px !important;
+    }
+
+    .dr-mobile-more-link,
+    .dr-mobile-more-logout {
+      min-height: 60px !important;
+      border-radius: 18px !important;
+      font-size: 14.5px !important;
+    }
+  }
+
+  @media (max-width: 390px) {
+    h2 {
+      font-size: 24px !important;
+      max-width: 100% !important;
+    }
+    .subtitle {
+      font-size: 13.5px !important;
+      max-width: 100% !important;
+    }
+    .top-actions {
+      grid-template-columns: 96px 1fr 1fr !important;
+      gap: 8px !important;
+    }
+    .top-actions .top-btn,
+    .top-actions .lang {
+      font-size: 13px !important;
+    }
+    .dr-mobile-step b {
+      font-size: 11.5px !important;
+    }
+    .stat {
+      padding: 13px 12px !important;
+    }
+    .stat strong {
+      font-size: 21px !important;
+    }
+  }
+</style>
+<!-- RETINA ANALYSIS MOBILE POLISH v2 END -->
+
 </head>
 <body>
 <div class="app">

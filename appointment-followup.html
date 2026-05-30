@@ -10,6 +10,484 @@
 :root{--bg:#f3f7ff;--card:#fff;--text:#10213f;--muted:#667894;--line:#e4ecf8;--blue:#315be8;--blue2:#2449cf;--soft:#eef4ff;--green:#16a34a;--red:#dc2626;--yellow:#d97706;--shadow:0 18px 42px rgba(24,44,92,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans Thai",Inter,system-ui,sans-serif}a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.side{background:#fff;border-right:1px solid var(--line);height:100vh;position:sticky;top:0;padding:22px 16px;display:flex;flex-direction:column;gap:16px}.brand{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:16px}.logo{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);display:grid;place-items:center;color:var(--blue);font-weight:950;background:white;overflow:hidden}.logo img{width:36px;height:36px;object-fit:contain}.brand b{color:#0f4cdb;line-height:1.2}.brand small{display:block;color:var(--muted);font-size:11px}.nav{display:flex;flex-direction:column;gap:7px}.nav a{padding:11px 13px;border-radius:14px;color:#64748b;font-weight:850;font-size:14px;display:flex;align-items:center;gap:8px}.nav a.active,.nav a:hover{background:var(--blue);color:#fff}.group{font-size:11px;color:#9aa8bd;font-weight:900;margin:8px 10px 0}.org{margin-top:auto;background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:13px;color:var(--muted);font-size:12px;display:flex;align-items:center;gap:10px}.org-logo{width:42px;height:42px;border-radius:14px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;flex-shrink:0}.org-logo img{width:36px;height:36px;object-fit:contain}.logout{border:1px solid #fecaca;background:#fff;color:#dc2626;border-radius:14px;padding:12px;font-weight:900;cursor:pointer}.main{padding:26px 32px 42px;max-width:1720px;width:100%;margin:0 auto}.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.crumb{font-size:13px;color:var(--blue);font-weight:900}.title{font-size:30px;font-weight:950;margin:6px 0}.sub{color:var(--muted);font-weight:750}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.lang{height:42px;border:1px solid var(--line);border-radius:13px;background:#fff;padding:0 12px;font-weight:900}.btn{min-height:42px;border:0;border-radius:13px;padding:0 16px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1.15;white-space:nowrap}.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 10px 24px rgba(49,91,232,.22)}.ghost{background:#fff;border:1px solid var(--line);color:var(--blue)}.danger{background:#fee2e2;color:var(--red)}.green{background:#dcfce7;color:var(--green)}.hero{margin:20px 0;border-radius:24px;background:linear-gradient(135deg,#315be8,#2449cf);color:white;padding:24px 28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}.hero:after{content:"";position:absolute;right:-50px;top:-70px;width:250px;height:250px;background:rgba(255,255,255,.12);border-radius:50%}.hero h2{font-size:24px;margin:0 0 6px}.hero p{margin:0;color:#e7eeff;font-weight:800}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:18px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px;display:flex;gap:14px;align-items:center}.ico{width:46px;height:46px;border-radius:15px;background:var(--soft);display:grid;place-items:center}.stat small{color:var(--muted);font-weight:900}.stat strong{display:block;font-size:28px}.grid{display:grid;grid-template-columns:430px 1fr;gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px}.card h3{font-size:21px;margin:0 0 5px}.card p{margin:0 0 15px;color:var(--muted);font-weight:750}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.full{grid-column:1/-1}.field label{display:block;font-size:13px;font-weight:900;color:#334155;margin-bottom:6px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--text);font-size:14px}input,select{height:43px;padding:0 12px}textarea{min-height:86px;padding:12px;resize:vertical}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(49,91,232,.12)}.search-result,.appointment-list{display:flex;flex-direction:column;gap:10px;margin:12px 0}.search-result{max-height:210px;overflow:auto}.patient-item,.appt{border:1px solid var(--line);background:#f8fbff;border-radius:16px;padding:13px;cursor:pointer}.patient-item:hover,.patient-item.active{border-color:var(--blue);background:var(--soft)}.patient-item b,.appt b{display:block}.patient-item span,.appt span{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-top:3px}.selected{border:1px solid #bfdbfe;background:#eff6ff;border-radius:16px;padding:14px;margin:12px 0;font-weight:800}.filters{display:grid;grid-template-columns:1fr 170px 170px;gap:10px;margin-bottom:12px}.empty{border:1px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:#92a0b6;font-weight:900;background:#fbfdff}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.badge{border-radius:999px;padding:5px 10px;font-size:12px;font-weight:950}.b-blue{background:#dbeafe;color:#1d4ed8}.b-green{background:#dcfce7;color:#15803d}.b-red{background:#fee2e2;color:#b91c1c}.b-yellow{background:#fef3c7;color:#a16207}.b-gray{background:#e5e7eb;color:#4b5563}.appt-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.appt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.small{min-height:34px;border-radius:11px;padding:0 10px;font-size:12px}.debug{margin-top:10px;color:#64748b;font-size:12px;font-weight:700}.toast{position:fixed;right:20px;bottom:20px;background:#10213f;color:#fff;padding:14px 18px;border-radius:14px;box-shadow:var(--shadow);font-weight:900;display:none;z-index:50}.toast.show{display:block}body.dark-mode{--bg:#0f172a;--card:#172033;--text:#f8fafc;--muted:#a8b5ca;--line:#26344d;--soft:#1e293b;background:#0f172a}.dark-mode .side,.dark-mode .card,.dark-mode .stat{background:#172033}.dark-mode input,.dark-mode select,.dark-mode textarea{background:#0f172a;color:#fff;border-color:#334155}.dark-mode .patient-item,.dark-mode .appt,.dark-mode .empty{background:#111c2e}.dark-mode .org{background:#111c2e}@media(max-width:1200px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:820px){.app{display:block}.side{position:relative;width:100%;height:auto}.main{padding:18px}.stats,.form-grid,.filters{grid-template-columns:1fr}.top{display:block}.actions{margin-top:12px}}
 </style>
+
+<!-- DR MOBILE ONLY APP SHELL PATCH START -->
+<style id="dr-mobile-only-app-shell">
+  .dr-mobile-bottom-nav,
+  .dr-mobile-more-overlay,
+  .dr-mobile-more-sheet {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    html,
+    body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden !important;
+    }
+
+    body {
+      padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+    }
+
+    /* Hide only the desktop sidebar on mobile. Desktop rules above 900px stay untouched. */
+    aside.sidebar,
+    aside.side,
+    .sidebar,
+    .side {
+      display: none !important;
+    }
+
+    .app,
+    .layout,
+    .app-layout {
+      display: block !important;
+      min-height: 100vh !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    main,
+    .main,
+    .main-content,
+    .content,
+    .page-content {
+      margin-left: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 20px 18px 112px !important;
+    }
+
+    .top,
+    .topbar,
+    .page-head,
+    .page-header {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 12px !important;
+      margin-bottom: 16px !important;
+    }
+
+    .top-actions,
+    .top-tools,
+    .actions {
+      width: 100% !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 10px !important;
+      justify-content: stretch !important;
+      align-items: stretch !important;
+    }
+
+    .top-actions > *,
+    .top-tools > *,
+    .actions > * {
+      min-width: 0 !important;
+    }
+
+    .top-actions .btn,
+    .actions .btn,
+    .top-actions a,
+    .actions a,
+    .top-actions button,
+    .actions button {
+      flex: 1 1 calc(50% - 6px) !important;
+      min-height: 46px !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+
+    select.lang,
+    .lang,
+    .select,
+    .language-select,
+    #languageSelect,
+    #langSelect {
+      width: 100% !important;
+      min-height: 46px !important;
+      border-radius: 16px !important;
+      font-size: 15px !important;
+    }
+
+    h1,
+    .title,
+    .page-head h1,
+    .page-header h1 {
+      font-size: clamp(26px, 7.2vw, 34px) !important;
+      line-height: 1.18 !important;
+      letter-spacing: -0.02em !important;
+    }
+
+    h2,
+    .hero h2,
+    .hero h3 {
+      font-size: clamp(20px, 5.7vw, 27px) !important;
+      line-height: 1.28 !important;
+    }
+
+    .sub,
+    .subtitle,
+    .page-head p,
+    .page-header p,
+    .hero p,
+    .card-desc,
+    .panel-desc {
+      font-size: 14px !important;
+      line-height: 1.65 !important;
+    }
+
+    .hero {
+      border-radius: 24px !important;
+      padding: 22px 20px !important;
+      margin: 14px 0 16px !important;
+      min-height: 0 !important;
+    }
+
+    .hero:after,
+    .hero-icon,
+    .hero-art {
+      display: none !important;
+    }
+
+    .stats,
+    .summary-grid,
+    .grid4,
+    .quick-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 12px !important;
+    }
+
+    .grid,
+    .grid2,
+    .grid3,
+    .content-grid,
+    .form-grid,
+    .info-grid,
+    .detail-grid,
+    .filters,
+    .patient-summary,
+    .grad-grid {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+
+    .card,
+    .panel,
+    .stat,
+    .summary-card,
+    .quick-card,
+    .info,
+    .info-box,
+    .status-item,
+    .guide-item,
+    .report-item,
+    .appt,
+    .patient-item,
+    .row {
+      border-radius: 20px !important;
+      max-width: 100% !important;
+    }
+
+    .card,
+    .panel {
+      padding: 18px !important;
+    }
+
+    .stat,
+    .summary-card {
+      padding: 14px !important;
+      gap: 10px !important;
+      min-width: 0 !important;
+    }
+
+    .stat strong,
+    .summary-card strong,
+    .num {
+      font-size: 24px !important;
+      line-height: 1.05 !important;
+    }
+
+    .stat small,
+    .summary-card p,
+    .stat span {
+      font-size: 12px !important;
+      line-height: 1.25 !important;
+    }
+
+    .ico,
+    .icon,
+    .stat-icon,
+    .summary-icon {
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 16px !important;
+      flex: 0 0 44px !important;
+    }
+
+    input,
+    select,
+    textarea,
+    button,
+    .btn,
+    .primary-btn,
+    .secondary-btn {
+      font-size: 15px !important;
+    }
+
+    input,
+    select {
+      min-height: 46px !important;
+    }
+
+    textarea {
+      min-height: 104px !important;
+    }
+
+    .searchbar {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+
+    .searchbar input,
+    .searchbar button,
+    .btn,
+    .primary-btn,
+    .secondary-btn {
+      width: 100% !important;
+      min-height: 46px !important;
+      border-radius: 16px !important;
+    }
+
+    .action-row,
+    .btn-row {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+      justify-content: stretch !important;
+    }
+
+    .list,
+    .appointment-list,
+    .search-result,
+    .patient-suggestions {
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+    .table-wrap {
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      border-radius: 20px !important;
+    }
+
+    .patient-table {
+      min-width: 760px !important;
+    }
+
+    /* Report document/search page */
+    .paperbox,
+    #paperContainer {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    #reportList .row,
+    .report-item,
+    .appt,
+    .row {
+      align-items: stretch !important;
+    }
+
+    .dr-mobile-bottom-nav {
+      display: grid !important;
+      grid-template-columns: repeat(5, 1fr) !important;
+      position: fixed !important;
+      left: 12px !important;
+      right: 12px !important;
+      bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+      height: 72px !important;
+      z-index: 99990 !important;
+      background: rgba(255, 255, 255, 0.96) !important;
+      border: 1px solid rgba(219, 231, 245, 0.98) !important;
+      border-radius: 26px !important;
+      box-shadow: 0 16px 44px rgba(15, 23, 42, 0.18) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      overflow: visible !important;
+    }
+
+    .dr-mobile-nav-item {
+      border: 0 !important;
+      background: transparent !important;
+      color: #64748b !important;
+      font-family: inherit !important;
+      font-weight: 950 !important;
+      font-size: 11px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 4px !important;
+      text-decoration: none !important;
+      cursor: pointer !important;
+      min-width: 0 !important;
+      padding: 0 !important;
+      line-height: 1.12 !important;
+    }
+
+    .dr-mobile-nav-item .dr-mobile-ico {
+      font-size: 22px !important;
+      line-height: 1 !important;
+    }
+
+    .dr-mobile-nav-item.active {
+      color: #1d4ed8 !important;
+    }
+
+    .dr-mobile-nav-item.primary {
+      transform: translateY(-13px) !important;
+    }
+
+    .dr-mobile-nav-item.primary .dr-mobile-ico {
+      width: 56px !important;
+      height: 56px !important;
+      border-radius: 21px !important;
+      display: grid !important;
+      place-items: center !important;
+      background: linear-gradient(135deg, #2563eb, #38bdf8) !important;
+      color: white !important;
+      box-shadow: 0 13px 28px rgba(37, 99, 235, 0.34) !important;
+      font-size: 25px !important;
+    }
+
+    .dr-mobile-more-overlay {
+      display: none;
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 99991 !important;
+      background: rgba(15, 23, 42, 0.46) !important;
+      backdrop-filter: blur(3px) !important;
+      -webkit-backdrop-filter: blur(3px) !important;
+    }
+
+    .dr-mobile-more-sheet {
+      display: block !important;
+      position: fixed !important;
+      left: 12px !important;
+      right: 12px !important;
+      bottom: calc(94px + env(safe-area-inset-bottom)) !important;
+      z-index: 99992 !important;
+      background: #ffffff !important;
+      border: 1px solid #dbe7f5 !important;
+      border-radius: 26px !important;
+      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.26) !important;
+      padding: 16px !important;
+      transform: translateY(140%) !important;
+      transition: transform 0.25s ease !important;
+    }
+
+    body.dr-mobile-more-open .dr-mobile-more-overlay {
+      display: block !important;
+    }
+
+    body.dr-mobile-more-open .dr-mobile-more-sheet {
+      transform: translateY(0) !important;
+    }
+
+    body.dr-mobile-more-open {
+      overflow: hidden !important;
+    }
+
+    .dr-mobile-more-title {
+      font-weight: 1000 !important;
+      color: #0f172a !important;
+      font-size: 19px !important;
+      padding: 4px 6px 14px !important;
+    }
+
+    .dr-mobile-more-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+    }
+
+    .dr-mobile-more-link,
+    .dr-mobile-more-logout {
+      border: 1px solid #e5edf8 !important;
+      background: #f8fbff !important;
+      color: #17345d !important;
+      border-radius: 17px !important;
+      padding: 13px 12px !important;
+      text-decoration: none !important;
+      font-weight: 950 !important;
+      font-size: 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      cursor: pointer !important;
+      font-family: inherit !important;
+      min-height: 54px !important;
+    }
+
+    .dr-mobile-more-logout {
+      background: #fff5f5 !important;
+      color: #dc2626 !important;
+      border-color: #fecaca !important;
+    }
+  }
+
+  @media (min-width: 901px) {
+    .dr-mobile-bottom-nav,
+    .dr-mobile-more-overlay,
+    .dr-mobile-more-sheet {
+      display: none !important;
+    }
+  }
+
+  html[data-theme="dark"] .dr-mobile-bottom-nav,
+  body.dark-mode .dr-mobile-bottom-nav,
+  body.dark .dr-mobile-bottom-nav {
+    background: rgba(17, 24, 39, 0.96) !important;
+    border-color: #26344d !important;
+  }
+  html[data-theme="dark"] .dr-mobile-nav-item,
+  body.dark-mode .dr-mobile-nav-item,
+  body.dark .dr-mobile-nav-item {
+    color: #cbd5e1 !important;
+  }
+  html[data-theme="dark"] .dr-mobile-nav-item.active,
+  body.dark-mode .dr-mobile-nav-item.active,
+  body.dark .dr-mobile-nav-item.active {
+    color: #93c5fd !important;
+  }
+  html[data-theme="dark"] .dr-mobile-more-sheet,
+  body.dark-mode .dr-mobile-more-sheet,
+  body.dark .dr-mobile-more-sheet {
+    background: #172033 !important;
+    border-color: #26344d !important;
+  }
+  html[data-theme="dark"] .dr-mobile-more-title,
+  body.dark-mode .dr-mobile-more-title,
+  body.dark .dr-mobile-more-title {
+    color: #f8fafc !important;
+  }
+  html[data-theme="dark"] .dr-mobile-more-link,
+  body.dark-mode .dr-mobile-more-link,
+  body.dark .dr-mobile-more-link {
+    background: #111a2c !important;
+    color: #e5eefb !important;
+    border-color: #27364f !important;
+  }
+</style>
+<!-- DR MOBILE ONLY APP SHELL PATCH END -->
+
 </head>
 <body>
 <div class="app">
@@ -63,5 +541,96 @@ function resetForm(){editingId=null;selectedPatient=null;document.getElementById
 async function logout(){try{await db.auth.signOut()}catch(e){}location.href="index.html"}
 document.addEventListener("DOMContentLoaded",init);
 </script>
+
+<!-- DR MOBILE ONLY APP SHELL SCRIPT START -->
+<script id="dr-mobile-only-app-shell-script">
+(function(){
+  function page(){ return (location.pathname.split('/').pop() || 'dashboard.html').toLowerCase(); }
+  function isMobile(){ return window.matchMedia && window.matchMedia('(max-width: 900px)').matches; }
+  function lang(){
+    const keys = ['dr_lang','dr_language','language','site_language','dr_dashboard_language','app_language','app_lang'];
+    for(const k of keys){
+      const v = (localStorage.getItem(k) || '').toLowerCase();
+      if(v.startsWith('en')) return 'en';
+      if(v.startsWith('th')) return 'th';
+    }
+    return 'th';
+  }
+  function text(th,en){ return lang()==='en' ? en : th; }
+  function closeMore(){ document.body.classList.remove('dr-mobile-more-open'); }
+  function openMore(){ document.body.classList.add('dr-mobile-more-open'); }
+  function active(keys){ return keys.includes(page()) ? 'active' : ''; }
+  function moreActive(){
+    return ['user.html','appointment-followup.html','patient-transfer.html','knowledge-dr.html','patient-history.html','screening-history.html','settings.html'].includes(page()) ? 'active' : '';
+  }
+  function go(url){ closeMore(); location.href = url; }
+  async function logout(){
+    try{
+      if(window.db && window.db.auth) await window.db.auth.signOut();
+      else if(window.sb && window.sb.auth) await window.sb.auth.signOut();
+      else if(window.supabaseClient && window.supabaseClient.auth) await window.supabaseClient.auth.signOut();
+      else if(window.supabase && window.supabase.auth) await window.supabase.auth.signOut();
+    }catch(e){}
+    location.href = 'index.html';
+  }
+  function build(){
+    if(document.querySelector('.dr-mobile-bottom-nav')) return;
+    const nav = document.createElement('nav');
+    nav.className = 'dr-mobile-bottom-nav';
+    nav.innerHTML = `
+      <button type="button" class="dr-mobile-nav-item ${active(['dashboard.html'])}" data-go="dashboard.html"><span class="dr-mobile-ico">🏠</span><span>${text('หน้าหลัก','Home')}</span></button>
+      <button type="button" class="dr-mobile-nav-item ${active(['patients.html','create-patient.html'])}" data-go="patients.html"><span class="dr-mobile-ico">👥</span><span>${text('ผู้ป่วย','Patients')}</span></button>
+      <button type="button" class="dr-mobile-nav-item primary ${active(['retina-analysis.html'])}" data-go="retina-analysis.html"><span class="dr-mobile-ico">🔬</span><span>${text('ตรวจ','Analyze')}</span></button>
+      <button type="button" class="dr-mobile-nav-item ${active(['retina-report-new.html'])}" data-go="retina-report-new.html"><span class="dr-mobile-ico">📄</span><span>${text('รายงาน','Report')}</span></button>
+      <button type="button" class="dr-mobile-nav-item ${moreActive()}" data-more="1"><span class="dr-mobile-ico">☰</span><span>${text('เพิ่มเติม','More')}</span></button>`;
+    document.body.appendChild(nav);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'dr-mobile-more-overlay';
+    overlay.addEventListener('click', closeMore);
+    document.body.appendChild(overlay);
+
+    const sheet = document.createElement('div');
+    sheet.className = 'dr-mobile-more-sheet';
+    sheet.innerHTML = `
+      <div class="dr-mobile-more-title">${text('เมนูเพิ่มเติม','More Menu')}</div>
+      <div class="dr-mobile-more-grid">
+        <a class="dr-mobile-more-link" href="user.html">👤 ${text('บัญชีผู้ใช้','Account')}</a>
+        <a class="dr-mobile-more-link" href="create-patient.html">➕ ${text('สร้างผู้ป่วย','New Patient')}</a>
+        <a class="dr-mobile-more-link" href="appointment-followup.html">📅 ${text('นัดหมาย','Appointment')}</a>
+        <a class="dr-mobile-more-link" href="patient-transfer.html">🔁 ${text('โอนย้าย','Transfer')}</a>
+        <a class="dr-mobile-more-link" href="screening-history.html">🕘 ${text('ประวัติ','History')}</a>
+        <a class="dr-mobile-more-link" href="knowledge-dr.html">💡 ${text('ความรู้','Knowledge')}</a>
+        <a class="dr-mobile-more-link" href="settings.html">⚙️ ${text('ตั้งค่า','Settings')}</a>
+        <button class="dr-mobile-more-logout" type="button" id="drMobileLogout">🚪 ${text('ออกจากระบบ','Logout')}</button>
+      </div>`;
+    document.body.appendChild(sheet);
+
+    nav.addEventListener('click', function(e){
+      const btn = e.target.closest('.dr-mobile-nav-item');
+      if(!btn) return;
+      if(btn.dataset.more) return openMore();
+      if(btn.dataset.go) return go(btn.dataset.go);
+    });
+    sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMore));
+    const out = sheet.querySelector('#drMobileLogout');
+    if(out) out.addEventListener('click', logout);
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMore(); });
+  }
+  function refreshLabels(){
+    document.querySelector('.dr-mobile-bottom-nav')?.remove();
+    document.querySelector('.dr-mobile-more-overlay')?.remove();
+    document.querySelector('.dr-mobile-more-sheet')?.remove();
+    if(isMobile()) build();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ if(isMobile()) build(); });
+  else if(isMobile()) build();
+  window.addEventListener('resize', function(){ if(isMobile()) build(); });
+  window.addEventListener('storage', function(e){ if(['dr_lang','dr_language','language','site_language','dr_dashboard_language','app_language','app_lang'].includes(e.key)) refreshLabels(); });
+  document.addEventListener('dr:language-applied', refreshLabels);
+})();
+</script>
+<!-- DR MOBILE ONLY APP SHELL SCRIPT END -->
+
 </body>
 </html>
