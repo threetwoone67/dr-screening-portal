@@ -91,6 +91,92 @@ body.dark-mode .desc {
 </style>
 <!-- DR THEME SYNC PATCH END -->
 
+
+<!-- USER SIDEBAR MATCH DASHBOARD START -->
+<style id="user-sidebar-match-dashboard">
+  /* Match sidebar sizing/spacing with dashboard.html only */
+  .app-layout{display:flex!important;min-height:100vh!important;background:var(--bg)!important}
+  .sidebar{
+    width:270px!important;
+    background:#fff!important;
+    border-right:1px solid var(--line)!important;
+    padding:24px 18px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    gap:18px!important;
+    justify-content:flex-start!important;
+    position:fixed!important;
+    left:0!important;top:0!important;bottom:0!important;
+    height:100vh!important;
+    box-shadow:10px 0 40px rgba(15,39,72,.04)!important;
+    overflow:auto!important;
+    z-index:10!important;
+  }
+  .main-content{margin-left:270px!important;width:calc(100% - 270px)!important}
+
+  .logo-box{
+    display:flex!important;align-items:center!important;gap:12px!important;
+    padding:0 0 18px!important;
+    border-bottom:1px solid var(--line)!important;
+    margin:0!important;
+  }
+  .logo-icon{
+    width:48px!important;height:48px!important;border-radius:16px!important;
+    background:linear-gradient(135deg,#eff6ff,#fff)!important;
+    border:1px solid var(--line)!important;
+    display:grid!important;place-items:center!important;
+    box-shadow:none!important;overflow:hidden!important;flex:0 0 48px!important;
+  }
+  .logo-icon img{width:48px!important;height:48px!important;object-fit:cover!important;display:block!important}
+  .logo-text h2{font-size:15px!important;line-height:1.15!important;color:#1750c8!important;font-weight:900!important;margin:0!important}
+  .logo-text p{font-size:11px!important;color:var(--muted)!important;margin-top:3px!important;font-weight:700!important}
+
+  .nav-menu{display:flex!important;flex-direction:column!important;gap:7px!important;margin-top:0!important}
+  .nav-label{font-size:11px!important;color:#9aa8bd!important;font-weight:900!important;text-transform:uppercase!important;margin:8px 12px 2px!important;letter-spacing:0!important}
+  .nav-item,.nav-sub-item{
+    display:flex!important;align-items:center!important;gap:11px!important;
+    padding:12px 14px!important;border-radius:16px!important;
+    color:#516176!important;text-decoration:none!important;
+    font-weight:800!important;font-size:14px!important;transition:.18s!important;
+    background:transparent!important;box-shadow:none!important;
+  }
+  .nav-item span.ico{font-size:18px!important;width:22px!important;text-align:center!important;flex-shrink:0!important}
+  .nav-item:hover,.nav-sub-item:hover{background:#f2f7ff!important;color:var(--primary)!important}
+  .nav-item.active,.nav-sub-item.active{background:linear-gradient(135deg,var(--primary),var(--primary2))!important;color:#fff!important;box-shadow:0 14px 28px rgba(47,91,231,.22)!important}
+  .nav-sub-item{margin-left:10px!important;padding-left:14px!important;font-size:13px!important;background:transparent!important}
+
+  .sidebar-bottom{margin-top:auto!important;display:flex!important;flex-direction:column!important;gap:12px!important;padding-top:18px!important}
+  .hospital-card{
+    border:1px solid var(--line)!important;background:#f8fbff!important;border-radius:18px!important;
+    padding:14px!important;display:flex!important;gap:12px!important;align-items:center!important;
+    font-size:12px!important;color:var(--muted)!important;line-height:1.45!important;
+  }
+  .hospital-icon{
+    width:42px!important;height:42px!important;border-radius:14px!important;background:#fff!important;
+    border:1px solid var(--line)!important;display:grid!important;place-items:center!important;
+    overflow:hidden!important;flex:0 0 42px!important;
+  }
+  .hospital-icon img{width:36px!important;height:36px!important;object-fit:contain!important;display:block!important}
+  .hospital-card strong{display:block!important;color:var(--text)!important;font-size:13px!important;line-height:1.35!important;margin:0!important}
+  .hospital-card p{color:var(--muted)!important;font-size:12px!important;margin-top:2px!important;line-height:1.35!important}
+  .logout-btn{border:1px solid #fecaca!important;background:#fff!important;color:#dc2626!important;border-radius:16px!important;padding:12px!important;font-weight:900!important;cursor:pointer!important;width:100%!important}
+  .logout-btn:hover{background:#fff5f5!important}
+
+  body.dark-mode .sidebar,body.dark .sidebar,html[data-theme="dark"] .sidebar{background:#172033!important;border-color:#27364f!important}
+  body.dark-mode .hospital-card,body.dark .hospital-card,html[data-theme="dark"] .hospital-card{background:#111a2c!important;border-color:#27364f!important}
+
+  @media(max-width:1200px){
+    .sidebar{width:250px!important}
+    .main-content{margin-left:250px!important;width:calc(100% - 250px)!important}
+  }
+  @media(max-width:800px){
+    .app-layout{display:block!important}
+    .sidebar{position:relative!important;width:100%!important;height:auto!important;bottom:auto!important}
+    .main-content{margin-left:0!important;width:100%!important}
+  }
+</style>
+<!-- USER SIDEBAR MATCH DASHBOARD END -->
+
 </head>
 <body>
 <div class="app-layout">
@@ -158,14 +244,12 @@ body.dark-mode .desc {
         <h3 data-th="ข้อมูลบัญชีที่ใช้งานจริง" data-en="Active Account Details">ข้อมูลบัญชีที่ใช้งานจริง</h3><p class="desc" data-th="ข้อมูลนี้จะถูกใช้แสดงในระบบและรายงาน" data-en="These details are used throughout the system and reports.">ข้อมูลนี้จะถูกใช้แสดงในระบบและรายงาน</p>
         <div class="identity-card"><div class="big-avatar" id="accountAvatar">U</div><div><strong id="accountName">-</strong><small id="accountRole">-</small><small id="accountEmail">-</small></div></div>
         <div class="info-grid">
-          <div class="info-box"><span>User ID</span><strong id="userIdBox">-</strong></div>
           <div class="info-box"><span data-th="เข้าสู่ระบบล่าสุด" data-en="Last sign-in">เข้าสู่ระบบล่าสุด</span><strong id="lastSignInBox">-</strong></div>
           <div class="info-box"><span data-th="ตำแหน่ง" data-en="Position">ตำแหน่ง</span><strong id="positionBox">-</strong></div>
           <div class="info-box"><span data-th="แผนก" data-en="Department">แผนก</span><strong id="departmentBox">-</strong></div>
           <div class="info-box"><span data-th="เบอร์โทร" data-en="Phone">เบอร์โทร</span><strong id="phoneBox">-</strong></div>
           <div class="info-box"><span data-th="ใบประกอบ/รหัส" data-en="License / ID">ใบประกอบ/รหัส</span><strong id="licenseBox">-</strong></div>
         </div>
-        <div class="note" id="syncNote" data-th="เชื่อมกับ Supabase ตาราง profiles และสำรองข้อมูลใน user metadata เพื่อไม่ให้ข้อมูลหายแม้ schema ยังไม่ครบ" data-en="Connected to Supabase profiles and backed up in user metadata so data stays available even if the table schema is incomplete.">เชื่อมกับ Supabase ตาราง profiles และสำรองข้อมูลใน user metadata เพื่อไม่ให้ข้อมูลหายแม้ schema ยังไม่ครบ</div>
       </div>
     </section>
   </main>
@@ -226,7 +310,7 @@ body.dark-mode .desc {
   function showAlert(type,msg){const el=$("alertBox");el.className="alert "+(type==="ok"?"ok":"err");el.textContent=msg;setTimeout(()=>{el.className="alert";el.textContent=""},4200)}
   function getMeta(){return currentUser?.user_metadata||{}}
   function mergedProfile(){const m=getMeta();return {...m,...currentProfile,email:currentUser?.email||currentProfile?.email||m.email}}
-  function renderProfile(){if(!currentUser)return;const p=mergedProfile();const name=p.full_name||p.name||currentUser.email||"User";const role=p.role||"doctor";const org=p.hospital_name||p.organization||ORG;$("topAvatar").textContent=initials(name);$("topName").textContent=name;$("topRole").textContent=roleLabel(role);$("accountAvatar").textContent=initials(name);$("accountName").textContent=name;$("accountRole").textContent=roleLabel(role);$("accountEmail").textContent=currentUser.email||"-";$("statEmail").textContent=currentUser.email||"-";$("statRole").textContent=roleLabel(role);$("statOrg").textContent=org;$("statStatus").textContent=langText("active");$("userIdBox").textContent=currentUser.id||"-";$("lastSignInBox").textContent=fmt(currentUser.last_sign_in_at);$("positionBox").textContent=safe(p.position);$("departmentBox").textContent=safe(p.department||DEPT);$("phoneBox").textContent=safe(p.phone);$("licenseBox").textContent=safe(p.license_no||p.license);}
+  function renderProfile(){if(!currentUser)return;const p=mergedProfile();const name=p.full_name||p.name||currentUser.email||"User";const role=p.role||"doctor";const org=p.hospital_name||p.organization||ORG;$("topAvatar").textContent=initials(name);$("topName").textContent=name;$("topRole").textContent=roleLabel(role);$("accountAvatar").textContent=initials(name);$("accountName").textContent=name;$("accountRole").textContent=roleLabel(role);$("accountEmail").textContent=currentUser.email||"-";$("statEmail").textContent=currentUser.email||"-";$("statRole").textContent=roleLabel(role);$("statOrg").textContent=org;$("statStatus").textContent=langText("active");$("lastSignInBox").textContent=fmt(currentUser.last_sign_in_at);$("positionBox").textContent=safe(p.position);$("departmentBox").textContent=safe(p.department||DEPT);$("phoneBox").textContent=safe(p.phone);$("licenseBox").textContent=safe(p.license_no||p.license);}
   function fillForm(){const p=mergedProfile();$("email").value=currentUser?.email||"";$("role").value=p.role||"doctor";$("fullName").value=p.full_name||p.name||"";$("position").value=p.position||"";$("department").value=p.department||DEPT;$("phone").value=p.phone||"";$("hospital").value=p.hospital_name||p.organization||ORG;$("hospitalCode").value=p.hospital_code||"";$("license").value=p.license_no||p.license||"";renderProfile()}
   async function protect(){const {data,error}=await supabaseClient.auth.getSession();if(error||!data?.session){location.replace("index.html");return false}currentUser=data.session.user;fillForm();return true}
   async function loadProfile(){if(!currentUser)return;const local=JSON.parse(localStorage.getItem("dr_user_profile_"+currentUser.id)||"{}");currentProfile={...local};fillForm();const {data,error}=await supabaseClient.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();if(!error&&data){currentProfile={...local,...data};localStorage.setItem("dr_user_profile_"+currentUser.id,JSON.stringify(currentProfile));fillForm();return}if(error){console.warn("profiles load warning:",error.message);}}

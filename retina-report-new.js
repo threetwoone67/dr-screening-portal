@@ -2,7 +2,8 @@ const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const QR_API = "https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=";
-const WORD_CSS = "\n@page WordSection1{size:595.3pt 841.9pt;margin:32pt 38pt 28pt 38pt}\ndiv.WordSection1{page:WordSection1}\nbody{margin:0;font-family:Arial,\"Noto Sans Thai\",sans-serif;color:#0f172a;font-size:10pt}\ntable{border-collapse:collapse}\n.wTitle{font-size:18pt;font-weight:700;margin-top:4pt}\n.wSub{font-size:9pt;font-weight:700;margin-top:4pt}\n.wOrg{font-size:9pt;font-weight:700;color:#173764;margin-top:5pt}\n.wSmall{font-size:7pt;font-weight:700}\n.wCode{font-size:7.5pt;font-weight:700;word-break:break-word}\n.wTiny{font-size:6.5pt;color:#64748b}\n.wRule{border-top:1.5pt solid #20395f;margin:14pt 0 9pt}\n.wInfo td{width:50%;font-size:9pt;font-weight:700;padding:1.8pt 4pt;vertical-align:top}\n.wInfo b{font-weight:900}\n.wResult{margin-top:9pt;font-size:8.2pt}\n.wResult th{background:#f1f5f9;border:1pt solid #d9e2ef;padding:5pt;text-align:left;font-weight:900}\n.wResult td{border:1pt solid #d9e2ef;padding:5pt;vertical-align:top;font-weight:700}\n.wSummary{margin-top:9pt;border:1pt solid #d9e2ef;background:#f8fafc;padding:8pt;font-size:8.5pt;font-weight:700;line-height:1.2}\n.wSign{margin-top:24pt;font-size:8.5pt;font-weight:700}\n.wSign td{width:50%;padding:3pt 12pt}\n";
+const REPORT_VIEW_URL = "https://dr-screening-portal.onrender.com/report-view.html";
+const WORD_CSS = "\n@page WordSection1{size:595.3pt 841.9pt;margin:32pt 38pt 28pt 38pt}\ndiv.WordSection1{page:WordSection1}\nbody{margin:0;font-family:\"Sarabun\",Arial,sans-serif;color:#0f172a;font-size:10pt}\ntable{border-collapse:collapse}\n.wTitle{font-size:18pt;font-weight:700;margin-top:4pt}\n.wSub{font-size:9pt;font-weight:700;margin-top:4pt}\n.wOrg{font-size:9pt;font-weight:700;color:#173764;margin-top:5pt}\n.wSmall{font-size:7pt;font-weight:700}\n.wCode{font-size:7.5pt;font-weight:700;word-break:break-word}\n.wTiny{font-size:6.5pt;color:#64748b}\n.wRule{border-top:1.5pt solid #20395f;margin:14pt 0 9pt}\n.wInfo td{width:50%;font-size:9pt;font-weight:700;padding:1.8pt 4pt;vertical-align:top}\n.wInfo b{font-weight:900}\n.wResult{margin-top:9pt;font-size:8.2pt}\n.wResult th{background:#f1f5f9;border:1pt solid #d9e2ef;padding:5pt;text-align:left;font-weight:900}\n.wResult td{border:1pt solid #d9e2ef;padding:5pt;vertical-align:top;font-weight:700}\n.wSummary{margin-top:9pt;border:1pt solid #d9e2ef;background:#f8fafc;padding:8pt;font-size:8.5pt;font-weight:700;line-height:1.2}\n.wSign{margin-top:24pt;font-size:8.5pt;font-weight:700}\n.wSign td{width:50%;padding:3pt 12pt}\n";
 const IMAGE_BUCKET = "retina-images";
 
 const dict = {
@@ -267,6 +268,33 @@ function syncLangStorage(){
   ["dr_language","dr_lang","language","site_language","app_language","dr_report_language"].forEach(k=>localStorage.setItem(k, lang));
 }
 
+function isReportViewPage(){
+  return !!(document.body && document.body.getAttribute("data-report-view") === "true");
+}
+function reportViewUrl(reportId){
+  return REPORT_VIEW_URL + "?report_id=" + encodeURIComponent(reportId || "");
+}
+function loginRedirectUrl(){
+  const next = encodeURIComponent(location.pathname.replace(/^\//, "") + location.search);
+  return "index.html?redirect=" + next;
+}
+async function ensureReportViewSession(){
+  if(!isReportViewPage()) return true;
+  try{
+    if(window.__drReportViewSessionReady) await window.__drReportViewSessionReady;
+    const sessionRes = await db.auth.getSession();
+    const session = sessionRes && sessionRes.data ? sessionRes.data.session : null;
+    if(!session){
+      location.replace(loginRedirectUrl());
+      return false;
+    }
+    return true;
+  }catch(e){
+    location.replace(loginRedirectUrl());
+    return false;
+  }
+}
+
 function applyLang(){
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i]").forEach(e => { e.textContent = tr(e.dataset.i); });
@@ -329,6 +357,9 @@ async function loadData(){
   const rid = new URLSearchParams(location.search).get("report_id");
   if(rid){
     await selectReport(rid);
+  } else if(isReportViewPage()){
+    const c = document.getElementById("paperContainer");
+    if(c) c.innerHTML = '<div class="empty">ไม่พบเลขรายงาน / Missing report_id</div>';
   } else {
     renderList();
   }
@@ -396,7 +427,12 @@ async function selectReport(id){
   }
 
   renderList();
-  renderPaper(selected);
+  if(!selected && isReportViewPage()){
+    const c = document.getElementById("paperContainer");
+    if(c) c.innerHTML = '<div class="empty">ไม่พบรายงานนี้ หรือไม่มีสิทธิ์เข้าถึงรายงาน</div>';
+  } else {
+    renderPaper(selected);
+  }
 
   if(selected) {
     await resolveImage(selected);
@@ -406,7 +442,7 @@ async function selectReport(id){
 function paperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
+  const qr = QR_API + encodeURIComponent(reportViewUrl(r.report_id || r.id || ""));
   const note = val(r.result_note || "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.");
   const screening = String(r.severity_result || "").toLowerCase().includes("no") ? "No DR" : "DR";
   const imgBlock = img ? '<img class="fundus" src="' + esc(img) + '" onerror="this.outerHTML=\'<div class=&quot;image-note&quot;>'+esc(tr("noImage"))+'</div>\'">' : '<div style="width:94px;height:86px;border:1px dashed #aaa;display:grid;place-items:center;color:#64748b;font-size:11px">' + esc(tr("noImage")) + '</div>';
@@ -424,7 +460,7 @@ function renderPaper(r){
 function wordPaperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
+  const qr = QR_API + encodeURIComponent(reportViewUrl(r.report_id || r.id || ""));
   const note = val(r.result_note || "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.");
   const screening = String(r.severity_result || "").toLowerCase().includes("no") ? "No DR" : "DR";
   const examiner = examinerName(r);
@@ -517,6 +553,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   applyTheme();
   setupSidebarImages();
   markActiveReportMenu();
+
+  const canOpenReportView = await ensureReportViewSession();
+  if(!canOpenReportView) return;
 
   const langSelector = document.getElementById("langSelect") || document.getElementById("reportLangSelect") || document.getElementById("languageSelect");
   if(langSelector) langSelector.onchange = e => setLang(e.target.value);

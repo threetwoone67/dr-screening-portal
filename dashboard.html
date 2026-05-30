@@ -126,6 +126,7 @@ body.dark-mode textarea {
 const supabaseUrl = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
 const supabaseKey = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
 const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+const IMAGE_BUCKET = 'retina-images';
 const I18N={th:{navHome:'หน้าหลัก',navUser:'บัญชีผู้ใช้',navPatients:'ข้อมูลผู้ป่วย',navScreeningGroup:'การตรวจ',navNewPatient:'สร้างคนไข้ใหม่',navAnalysis:'วิเคราะห์จอประสาทตา',navReport:'รายงานผล',navAppointment:'การนัดหมาย',navTransfer:'โอนย้ายผู้ป่วย',navKnowledge:'เกร็ดความรู้',navHistory:'ประวัติการตรวจ',navSettings:'ตั้งค่า',hospitalName:'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ',hospitalSub:'ระบบตรวจคัดกรองจอประสาทตาเบาหวาน',logout:'ออกจากระบบ',crumb:'หน้าหลัก / ภาพรวมประจำสัปดาห์',subtitle:'สรุปข้อมูลการตรวจคัดกรอง ผู้ป่วย นัดหมาย และผลวิเคราะห์ด้วย AI ในสัปดาห์นี้',heroTitle:'ศูนย์ควบคุมการตรวจคัดกรองประจำสัปดาห์',statPatients:'ผู้ป่วยที่อยู่ในการดูแล',statPatientsSub:'จำนวนผู้ป่วยที่เกี่ยวข้องกับผู้ใช้งานนี้',statScreenWeek:'ตรวจในสัปดาห์นี้',statScreenSub:'รายงานที่บันทึกในสัปดาห์นี้',statAbnormal:'พบความผิดปกติ',statAbnormalSub:'จากผลตรวจทั้งหมด',statTodayAppt:'นัดหมายวันนี้',statTodaySub:'รายการนัดหมายที่ต้องติดตาม',genderTitle:'สถิติเพศผู้ป่วย',genderDesc:'แยกตามเพศของผู้ป่วยในการดูแล',ageTitle:'ช่วงอายุผู้ป่วย',ageDesc:'แจกแจงช่วงอายุของผู้ป่วย',resultTitle:'ผลตรวจประจำสัปดาห์',resultDesc:'สัดส่วนปกติ/ผิดปกติ และระดับความรุนแรง',latestTitle:'เคสล่าสุด',latestDesc:'ดึงจากรายงานล่าสุดใน Supabase',viewAll:'ดูทั้งหมด',calendarTitle:'ปฏิทินนัดหมาย',calendarDesc:'วันที่มีนัดหมายจะแสดงจุดสีส้ม',manageAppt:'จัดการนัดหมาย',todayApptTitle:'นัดตรวจวันนี้ / ใกล้ถึง',loading:'กำลังโหลดข้อมูล...',empty:'ยังไม่มีข้อมูล',doctor:'แพทย์',nurse:'พยาบาล / ผู้ช่วยแพทย์',user:'ผู้ใช้งาน',week:'ข้อมูลประจำสัปดาห์',male:'ชาย',female:'หญิง',unknown:'ไม่ระบุ',normal:'ปกติ / No DR',abnormal:'ผิดปกติ / DR',severity:'ระดับ',report:'รายงาน',date:'วันที่'},en:{navHome:'Home',navUser:'User Account',navPatients:'Patient Information',navScreeningGroup:'Screening',navNewPatient:'Create New Patient',navAnalysis:'Retina Analysis',navReport:'Report',navAppointment:'Appointment',navTransfer:'Patient Transfer',navKnowledge:'Knowledge',navHistory:'Screening History',navSettings:'Settings',hospitalName:"King Mongkut's University of Technology North Bangkok",hospitalSub:'Diabetic Retinopathy Screening System',logout:'Logout',crumb:'Home / Weekly Overview',subtitle:'Weekly overview of screenings, patients, appointments, and AI analysis results.',heroTitle:'Weekly Screening Command Center',statPatients:'Patients under care',statPatientsSub:'Patients associated with this user',statScreenWeek:'Screenings this week',statScreenSub:'Reports saved this week',statAbnormal:'Abnormal findings',statAbnormalSub:'Of all screening reports',statTodayAppt:"Today's appointments",statTodaySub:'Follow-up items scheduled today',genderTitle:'Patient Gender Statistics',genderDesc:'Distribution by patient gender',ageTitle:'Patient Age Range',ageDesc:'Age distribution of patients',resultTitle:'Weekly Screening Results',resultDesc:'Normal/abnormal ratio and severity levels',latestTitle:'Latest Cases',latestDesc:'Latest saved reports from Supabase',viewAll:'View all',calendarTitle:'Appointment Calendar',calendarDesc:'Dates with appointments show an orange dot',manageAppt:'Manage appointments',todayApptTitle:'Today / Upcoming Appointments',loading:'Loading data...',empty:'No data yet',doctor:'Doctor',nurse:'Nurse / Medical Assistant',user:'User',week:'Weekly data',male:'Male',female:'Female',unknown:'Unknown',normal:'Normal / No DR',abnormal:'Abnormal / DR',severity:'Severity',report:'Report',date:'Date'}};
 let lang=localStorage.getItem('dr_language')||localStorage.getItem('site_language')||localStorage.getItem('app_language')||localStorage.getItem('language')||'th'; if(!['th','en'].includes(lang)) lang='th'; let charts={}, calendarDate=new Date(), appointments=[];
 function t(k){return (I18N[lang]&&I18N[lang][k])||I18N.th[k]||k} function syncLangKeys(){localStorage.setItem('dr_language',lang);localStorage.setItem('site_language',lang);localStorage.setItem('app_language',lang);localStorage.setItem('language',lang)} function applyLang(){document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.getAttribute('data-i18n');const span=el.querySelector('span'); if(span) span.textContent=t(key); else el.textContent=t(key)});document.querySelectorAll('[data-th][data-en]').forEach(el=>{el.textContent=lang==='en'?el.getAttribute('data-en'):el.getAttribute('data-th')});const sel=document.getElementById('langSelect'); if(sel) sel.value=lang; if(typeof renderCalendar==='function')renderCalendar(); if(typeof renderAppointments==='function')renderAppointments(); if(typeof renderLatest==='function')renderLatest(window.latestReports||[])}
@@ -133,8 +134,124 @@ function fmtDate(v){if(!v)return '-';try{return new Date(v).toLocaleDateString(l
 async function safeTable(name){try{const {data,error}=await supabaseClient.from(name).select('*').limit(500); if(error){console.warn(name,error.message);return []} return data||[]}catch(e){console.warn(name,e);return[]}}
 async function init(){document.getElementById('langSelect').addEventListener('change',e=>{lang=e.target.value;syncLangKeys();applyLang();if(window.DR_I18N&&window.DR_I18N.setLang){window.DR_I18N.setLang(lang)}loadAll()});document.getElementById('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();location.href='index.html'};document.getElementById('prevMonth').onclick=()=>{calendarDate.setMonth(calendarDate.getMonth()-1);renderCalendar()};document.getElementById('nextMonth').onclick=()=>{calendarDate.setMonth(calendarDate.getMonth()+1);renderCalendar()};applyLang();const {data:{session}}=await supabaseClient.auth.getSession(); if(!session){location.href='index.html';return} await loadAll(session.user)}
 async function loadAll(user){try{const [profiles,patients,reports,appts]=await Promise.all([safeTable('profiles'),safeTable('patients'),safeTable('analysis_reports'),safeTable('appointments')]);appointments=appts;const email=user?.email||'';const profile=profiles.find(p=>String(getVal(p,['email'],'')).toLowerCase()===email.toLowerCase())||profiles[0]||{};const name=getVal(profile,['full_name','name','display_name'],email.split('@')[0]||t('user'));const roleRaw=String(getVal(profile,['role','user_role','position'],'doctor')).toLowerCase();document.getElementById('profileName').textContent=name;document.getElementById('avatarText').textContent=(name||'DR').slice(0,2).toUpperCase();document.getElementById('profileRole').textContent=roleRaw.includes('nurse')||roleRaw.includes('assistant')||roleRaw.includes('ผู้ช่วย')||roleRaw.includes('พยาบาล')?t('nurse'):t('doctor');document.getElementById('welcomeTitle').textContent=(lang==='en'?'Welcome ':'ยินดีต้อนรับ ')+name;const monday=new Date();monday.setDate(monday.getDate()-((monday.getDay()+6)%7));const sunday=new Date(monday);sunday.setDate(monday.getDate()+6);document.getElementById('weekRange').textContent=`📌 ${t('week')} ${monday.toLocaleDateString(lang==='en'?'en-US':'th-TH',{day:'numeric',month:'short',year:'numeric'})} - ${sunday.toLocaleDateString(lang==='en'?'en-US':'th-TH',{day:'numeric',month:'short',year:'numeric'})}`;document.getElementById('patientCount').textContent=patients.length;const weekReports=reports.filter(r=>inThisWeek(getVal(r,['created_at','createdAt','exam_date','visit_date','report_date'],'')));document.getElementById('weekScreenCount').textContent=weekReports.length;const abnormal=reports.filter(r=>!isNormal(r)).length;document.getElementById('abnormalPercent').textContent=reports.length?Math.round(abnormal/reports.length*100)+'%':'0%';document.getElementById('todayApptCount').textContent=appts.filter(a=>new Date(getVal(a,['appointment_date','date','scheduled_at','created_at'],'')).toDateString()===new Date().toDateString()).length;drawCharts(patients,reports);window.latestReports=[...reports].sort((a,b)=>new Date(getVal(b,['created_at','exam_date','report_date'],0))-new Date(getVal(a,['created_at','exam_date','report_date'],0))).slice(0,5);renderLatest(window.latestReports);renderCalendar();renderAppointments()}catch(e){console.error(e)}}
-function drawCharts(patients,reports){Object.values(charts).forEach(c=>c&&c.destroy());const gender={male:0,female:0,unknown:0};patients.forEach(p=>{const g=String(getVal(p,['gender','sex'],'')).toLowerCase(); if(g.includes('ชาย')||g.includes('male')||g==='m')gender.male++; else if(g.includes('หญิง')||g.includes('female')||g==='f')gender.female++; else gender.unknown++});charts.gender=new Chart(document.getElementById('genderChart'),{type:'doughnut',data:{labels:[t('male'),t('female'),t('unknown')],datasets:[{data:[gender.male,gender.female,gender.unknown],backgroundColor:['#5aa7e8','#f87171','#fbbf24'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});const bins={'< 40':0,'40-54':0,'55-64':0,'65-74':0,'≥ 75':0,[t('unknown')]:0};patients.forEach(p=>{const age=Number(getVal(p,['age'],NaN)); if(Number.isNaN(age))bins[t('unknown')]++; else if(age<40)bins['< 40']++; else if(age<55)bins['40-54']++; else if(age<65)bins['55-64']++; else if(age<75)bins['65-74']++; else bins['≥ 75']++});charts.age=new Chart(document.getElementById('ageChart'),{type:'bar',data:{labels:Object.keys(bins),datasets:[{data:Object.values(bins),backgroundColor:'#93c5fd',borderRadius:12}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});const sev={normal:0,mild:0,moderate:0,severe:0,pdr:0};reports.forEach(r=>{const s=String(getVal(r,['severity_result','result','diagnosis','severity_label'],'')).toLowerCase();const lv=Number(getVal(r,['severity_level','severity','dr_level','level'],NaN)); if(isNormal(r))sev.normal++; else if(s.includes('mild')||lv===1)sev.mild++; else if(s.includes('moderate')||lv===2)sev.moderate++; else if(s.includes('severe')||lv===3)sev.severe++; else sev.pdr++});charts.sev=new Chart(document.getElementById('severityChart'),{type:'polarArea',data:{labels:[t('normal'),'Mild','Moderate','Severe','PDR'],datasets:[{data:[sev.normal,sev.mild,sev.moderate,sev.severe,sev.pdr],backgroundColor:['#60a5fa','#fb7185','#fb923c','#fbbf24','#8b5cf6']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}})}
-function renderLatest(list){const el=document.getElementById('latestCases');if(!list||!list.length){el.innerHTML=`<div class="empty">${t('empty')}</div>`;return}el.innerHTML=list.map(r=>{const img=getVal(r,['image_url','original_image_url','image_data','image_path'],'');const name=getVal(r,['patient_name','full_name','name'],'-');const code=getVal(r,['patient_code','hn','patient_id'],'-');const result=getVal(r,['severity_result','diagnosis','result'],'-');const rep=getVal(r,['report_id','id'],'');return `<div class="case-item"><img class="thumb" src="${img||'logo-new.jpg'}" onerror="this.src='logo-new.jpg'"><div><strong>${name}</strong><p style="color:#66758d;font-weight:800;font-size:12px">${code} • ${fmtDate(getVal(r,['created_at','exam_date','report_date'],''))}</p><span class="badge ${isNormal(r)?'ok':'danger'}">${result}</span></div><button class="btn secondary" onclick="location.href='retina-report-new.html?report_id=${encodeURIComponent(rep)}'">›</button></div>`}).join('')}
+function drawCharts(patients,reports){Object.values(charts).forEach(c=>c&&c.destroy());const gender={male:0,female:0,unknown:0};patients.forEach(p=>{const g=String(getVal(p,['gender','sex'],'')).toLowerCase(); if(g.includes('ชาย')||g.includes('male')||g==='m')gender.male++; else if(g.includes('หญิง')||g.includes('female')||g==='f')gender.female++; else gender.unknown++});charts.gender=new Chart(document.getElementById('genderChart'),{type:'doughnut',data:{labels:[t('male'),t('female'),t('unknown')],datasets:[{data:[gender.male,gender.female,gender.unknown],backgroundColor:['#5aa7e8','#f87171','#fbbf24'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});const bins={'< 40':0,'40-54':0,'55-64':0,'65-74':0,'≥ 75':0,[t('unknown')]:0};patients.forEach(p=>{const age=Number(getVal(p,['age'],NaN)); if(Number.isNaN(age))bins[t('unknown')]++; else if(age<40)bins['< 40']++; else if(age<55)bins['40-54']++; else if(age<65)bins['55-64']++; else if(age<75)bins['65-74']++; else bins['≥ 75']++});charts.age=new Chart(document.getElementById('ageChart'),{type:'bar',data:{labels:Object.keys(bins),datasets:[{data:Object.values(bins),backgroundColor:'#93c5fd',borderRadius:12}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});const sev={normal:0,mild:0,moderate:0,severe:0,pdr:0};reports.forEach(r=>{const s=String(getVal(r,['severity_result','result','diagnosis','severity_label'],'')).toLowerCase();const lv=Number(getVal(r,['severity_level','severity','dr_level','level'],NaN)); if(isNormal(r))sev.normal++; else if(s.includes('mild')||lv===1)sev.mild++; else if(s.includes('moderate')||lv===2)sev.moderate++; else if(s.includes('severe')||lv===3)sev.severe++; else sev.pdr++});charts.sev=new Chart(document.getElementById('severityChart'),{type:'doughnut',data:{labels:[t('normal'),'Mild','Moderate','Severe','PDR'],datasets:[{data:[sev.normal,sev.mild,sev.moderate,sev.severe,sev.pdr],backgroundColor:['#60a5fa','#fb7185','#fb923c','#fbbf24','#8b5cf6']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}})}
+function publicStorageUrl(path){
+  if(!path) return '';
+  const v = String(path).trim();
+  if(!v || v === '-' || v === 'null' || v === 'undefined') return '';
+  if(v.startsWith('data:')) return '';
+  if(v.startsWith('http://') || v.startsWith('https://')) return v;
+  let key = v.replace(/^\/+/, '');
+  if(key.startsWith(IMAGE_BUCKET + '/')) key = key.slice(IMAGE_BUCKET.length + 1);
+  return supabaseUrl + '/storage/v1/object/public/' + IMAGE_BUCKET + '/' + encodeURI(key).replace(/%2F/g,'/');
+}
+function parseMaybeJson(v){
+  if(!v || typeof v !== 'string') return v;
+  const t = v.trim();
+  if(!(t.startsWith('{') || t.startsWith('['))) return v;
+  try{return JSON.parse(t)}catch(e){return v}
+}
+function deepFindImage(obj){
+  obj = parseMaybeJson(obj);
+  if(!obj) return '';
+  if(typeof obj === 'string'){
+    if(/\.(jpg|jpeg|png|webp)(\?|$)/i.test(obj) || obj.includes('/storage/v1/object/')) return obj;
+    return '';
+  }
+  if(Array.isArray(obj)){
+    for(const it of obj){ const found = deepFindImage(it); if(found) return found; }
+    return '';
+  }
+  if(typeof obj === 'object'){
+    const preferred = [
+      'image_url','original_image_url','image_public_url','fundus_image_url','retina_image_url',
+      'storage_url','file_url','original_url','image_path','original_image_path','storage_path','file_path','image_storage_path','url'
+    ];
+    for(const k of preferred){ if(obj[k]){ const found = deepFindImage(obj[k]) || obj[k]; if(found) return found; } }
+    for(const [k,v] of Object.entries(obj)){
+      const lk = k.toLowerCase();
+      if((lk.includes('image') || lk.includes('fundus') || lk.includes('photo')) && !lk.includes('heatmap')){
+        const found = deepFindImage(v) || v;
+        if(found) return found;
+      }
+    }
+    for(const v of Object.values(obj)){ const found = deepFindImage(v); if(found) return found; }
+  }
+  return '';
+}
+function getReportImage(r){
+  const direct = deepFindImage({
+    image_url:r.image_url,
+    original_image_url:r.original_image_url,
+    image_public_url:r.image_public_url,
+    fundus_image_url:r.fundus_image_url,
+    retina_image_url:r.retina_image_url,
+    storage_url:r.storage_url,
+    file_url:r.file_url,
+    original_url:r.original_url,
+    image_path:r.image_path,
+    original_image_path:r.original_image_path,
+    storage_path:r.storage_path,
+    file_path:r.file_path,
+    image_storage_path:r.image_storage_path,
+    results:r.results,
+    result:r.result,
+    images:r.images,
+    image_urls:r.image_urls
+  });
+  return direct ? publicStorageUrl(direct) : '';
+}
+async function firstImageRecursive(folder, depth=0){
+  if(!folder || depth > 3) return '';
+  try{
+    const clean = String(folder).replace(/^\/+|\/+$/g,'');
+    const res = await supabaseClient.storage.from(IMAGE_BUCKET).list(clean, {limit:100, offset:0, sortBy:{column:'created_at', order:'desc'}});
+    if(res.error || !res.data) return '';
+    const img = res.data.find(f => f && f.name && /\.(jpg|jpeg|png|webp)$/i.test(f.name));
+    if(img) return publicStorageUrl(clean + '/' + img.name);
+    const subs = res.data.filter(f => f && f.name && !/\.(jpg|jpeg|png|webp)$/i.test(f.name));
+    for(const sub of subs){
+      const found = await firstImageRecursive(clean + '/' + sub.name, depth + 1);
+      if(found) return found;
+    }
+  }catch(e){}
+  return '';
+}
+async function resolveDashboardImage(r){
+  const direct = getReportImage(r);
+  if(direct) return direct;
+  const code = String(getVal(r,['patient_code','hn','patient_hn','patient_id'], '') || '').trim();
+  const rid = String(getVal(r,['report_id','id'], '') || '').trim();
+  const folders = [];
+  if(code && rid) folders.push(code + '/' + rid);
+  if(rid && code) folders.push(rid + '/' + code);
+  if(code) folders.push(code);
+  if(rid) folders.push(rid);
+  for(const f of folders){
+    const url = await firstImageRecursive(f,0);
+    if(url) return url;
+  }
+  return '';
+}
+function renderLatest(list){
+  const el=document.getElementById('latestCases');
+  if(!list||!list.length){el.innerHTML=`<div class="empty">${t('empty')}</div>`;return}
+  el.innerHTML=list.map((r,i)=>{
+    const img=getReportImage(r) || 'logo-new.jpg';
+    const name=getVal(r,['patient_name','full_name','name'],'-');
+    const code=getVal(r,['patient_code','hn','patient_id'],'-');
+    const result=getVal(r,['severity_result','diagnosis','result'],'-');
+    const rep=getVal(r,['report_id','id'],'');
+    return `<div class="case-item"><img class="thumb" data-latest-img="${i}" src="${img}" onerror="this.src='logo-new.jpg'"><div><strong>${name}</strong><p style="color:#66758d;font-weight:800;font-size:12px">${code} • ${fmtDate(getVal(r,['created_at','exam_date','report_date'],''))}</p><span class="badge ${isNormal(r)?'ok':'danger'}">${result}</span></div><button class="btn secondary" onclick="location.href='retina-report-new.html?report_id=${encodeURIComponent(rep)}'">›</button></div>`
+  }).join('');
+  list.forEach(async (r,i)=>{
+    const url = await resolveDashboardImage(r);
+    if(url){
+      const imgEl = el.querySelector(`[data-latest-img="${i}"]`);
+      if(imgEl) imgEl.src = url;
+    }
+  });
+}
 function renderCalendar(){const grid=document.getElementById('calendarGrid');const monthName=calendarDate.toLocaleDateString(lang==='en'?'en-US':'th-TH',{month:'long',year:'numeric'});document.getElementById('calMonth').textContent=monthName;const dows=lang==='en'?['M','T','W','T','F','S','S']:['จ','อ','พ','พฤ','ศ','ส','อา'];let html=dows.map(d=>`<div class="dow">${d}</div>`).join('');const y=calendarDate.getFullYear(),m=calendarDate.getMonth();const first=new Date(y,m,1);const offset=(first.getDay()+6)%7;const days=new Date(y,m+1,0).getDate();for(let i=0;i<offset;i++)html+='<div class="day muted"></div>';for(let day=1;day<=days;day++){const d=new Date(y,m,day);const today=d.toDateString()===new Date().toDateString();const has=appointments.some(a=>new Date(getVal(a,['appointment_date','date','scheduled_at','created_at'],'')).toDateString()===d.toDateString());html+=`<div class="day ${today?'today':''} ${has?'has':''}">${day}</div>`}grid.innerHTML=html}
 function renderAppointments(){const el=document.getElementById('apptList');const now=new Date();const upcoming=appointments.filter(a=>{const d=new Date(getVal(a,['appointment_date','date','scheduled_at','created_at'],''));return !isNaN(d)&&d>=new Date(now.getFullYear(),now.getMonth(),now.getDate())}).sort((a,b)=>new Date(getVal(a,['appointment_date','date','scheduled_at','created_at'],''))-new Date(getVal(b,['appointment_date','date','scheduled_at','created_at'],''))).slice(0,4);if(!upcoming.length){el.innerHTML=`<div class="empty">${t('empty')}</div>`;return}el.innerHTML=upcoming.map(a=>`<div class="appt-item" style="grid-template-columns:48px 1fr auto"><div class="stat-icon" style="width:48px;height:48px">📅</div><div><strong>${getVal(a,['patient_name','full_name','patient_code','patient_id'],'-')}</strong><p style="font-size:12px;color:#66758d;font-weight:800">${fmtDate(getVal(a,['appointment_date','date','scheduled_at','created_at'],''))}</p></div><span class="badge warn">${getVal(a,['status','urgency','priority'],'Follow-up')}</span></div>`).join('')}
 document.addEventListener('dr:language-applied', function(e){ if(e.detail && e.detail.lang && e.detail.lang!==lang){ lang=e.detail.lang; applyLang(); } });
@@ -249,14 +366,7 @@ if(window.supabase){
 <script src="settings-global.js"></script>
 <script>
 function applyTheme() {
-    const theme =
-        localStorage.getItem("dr_theme") ||
-        localStorage.getItem("theme") ||
-        localStorage.getItem("dr_dashboard_theme") ||
-        localStorage.getItem("site_theme") ||
-        "light";
-
-    document.documentElement.setAttribute("data-theme", theme);
+    const theme = localStorage.getItem("theme") || "light";
 
     if (theme === "dark") {
         document.body.classList.add("dark-mode");
@@ -266,9 +376,6 @@ function applyTheme() {
 }
 
 applyTheme();
-
-window.addEventListener("storage", applyTheme);
-window.addEventListener("focus", applyTheme);
 </script>
 
 </body>

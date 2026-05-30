@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Report Document | DR Screening Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (function(){
+      const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
+      const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
+      function loginRedirectUrl(){
+        const next = encodeURIComponent(location.pathname.replace(/^\//, "") + location.search);
+        return "index.html?redirect=" + next;
+      }
+      window.__drReportViewSessionReady = (async function(){
+        try{
+          if(!window.supabase){
+            location.replace(loginRedirectUrl());
+            return false;
+          }
+          const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+          const sessionRes = await client.auth.getSession();
+          const session = sessionRes && sessionRes.data ? sessionRes.data.session : null;
+          if(!session){
+            location.replace(loginRedirectUrl());
+            return false;
+          }
+          return true;
+        }catch(e){
+          location.replace(loginRedirectUrl());
+          return false;
+        }
+      })();
+    })();
+  </script>
+  <link rel="stylesheet" href="report-style.css?v=15">
+  <style>
+    body{background:#f4f7fd;margin:0;font-family:var(--font-main,'Sarabun',Arial,sans-serif)!important}
+    .reportOnlyWrap{min-height:100vh;padding:24px;display:flex;justify-content:center;align-items:flex-start}
+    .reportOnlyBox{width:100%;max-width:940px}
+    .reportOnlyNotice{background:#fff;border:1px solid #e5edf8;border-radius:16px;padding:14px 16px;margin-bottom:16px;color:#64748b;font-weight:800;box-shadow:0 10px 30px rgba(24,44,92,.06)}
+    .paperbox{background:transparent;border:0;box-shadow:none;padding:0}
+    .paper{margin:0 auto}
+    .empty{background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:#64748b;font-weight:800}
+    @media print{.reportOnlyNotice{display:none}.reportOnlyWrap{padding:0;background:#fff}.paper{box-shadow:none}}
+  </style>
+</head>
+<body data-report-view="true">
+  <div class="reportOnlyWrap">
+    <div class="reportOnlyBox">
+      <div class="reportOnlyNotice">เอกสารรายงานผลการตรวจจอประสาทตา</div>
+      <div class="paperbox">
+        <div id="paperContainer"><div class="empty">กำลังโหลดรายงาน...</div></div>
+      </div>
+    </div>
+  </div>
+  <script src="retina-report-new.js?v=18" defer></script>
+</body>
+</html>

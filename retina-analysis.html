@@ -4,19 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>วิเคราะห์จอประสาทตา | DR Screening Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg:#f4f7fd; --card:#ffffff; --text:#10213f; --muted:#64748b; --line:#e5edf8;
       --blue:#315be8; --blue2:#2145c7; --soft:#eef4ff; --danger:#ef4444; --success:#16a34a;
-      --warning:#f59e0b; --purple:#6d28d9; --shadow:0 20px 45px rgba(24,44,92,.08); --radius:22px;
+      --warning:#f59e0b; --purple:#6d28d9; --shadow:0 20px 45px rgba(24,44,92,.08); --radius:22px; --font-main:'Sarabun',Arial,sans-serif;
     }
     [data-theme="dark"] {
       --bg:#0f172a; --card:#172033; --text:#f8fafc; --muted:#a8b3c7; --line:#26354f;
       --blue:#5b7cff; --blue2:#4163e5; --soft:#1e2b45; --shadow:0 20px 45px rgba(0,0,0,.28);
     }
     *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-main)!important}
     a{text-decoration:none;color:inherit} button,input,select,textarea{font:inherit}
     .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}
     .sidebar{background:var(--card);border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:18px}
@@ -30,7 +33,7 @@
     .logout{border:1px solid #fecaca;color:#dc2626;background:#fff;border-radius:14px;padding:12px;font-weight:900;cursor:pointer} [data-theme="dark"] .logout{background:#172033}
     .main{padding:26px 32px 40px;max-width:1680px;width:100%;margin:0 auto}
     .topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:16px}
-    .breadcrumb{font-size:13px;color:var(--blue);font-weight:900;margin-bottom:8px} h2{font-size:30px;margin:0 0 8px} .subtitle{margin:0;color:var(--muted);font-weight:750}
+    .breadcrumb{font-size:13px;color:var(--blue);font-weight:900;margin-bottom:8px} h2{font-size:31px;line-height:1.1;font-weight:900;letter-spacing:-.4px;margin:0 0 8px} .subtitle{margin:0;color:var(--muted);font-weight:700;font-size:16px}
     .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     .lang{height:46px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:0 38px 0 14px;font-weight:900;min-width:116px}
     .top-btn,.btn{border:0;border-radius:14px;padding:0 18px;height:46px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
@@ -76,59 +79,6 @@
 
     @media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.grid,.stats{grid-template-columns:1fr}.main{padding:18px}.patient-details,.grad-grid,.result-grid{grid-template-columns:1fr}.topbar{flex-direction:column}}
   </style>
-
-<!-- DR THEME SYNC PATCH START -->
-<style id="dr-theme-sync-style">
-html[data-theme="dark"], body.dark-mode, body.dark {
-  color-scheme: dark;
-}
-html[data-theme="dark"] body,
-body.dark-mode,
-body.dark {
-  background: var(--bg, #0f172a) !important;
-  color: var(--text, #e5eefb) !important;
-}
-html[data-theme="dark"] .sidebar,
-html[data-theme="dark"] .card,
-html[data-theme="dark"] .topbar,
-html[data-theme="dark"] .main,
-html[data-theme="dark"] .main-content,
-html[data-theme="dark"] .content,
-html[data-theme="dark"] .userbox,
-html[data-theme="dark"] .user-pill,
-html[data-theme="dark"] .hospital-card,
-body.dark-mode .sidebar,
-body.dark-mode .card,
-body.dark-mode .topbar,
-body.dark-mode .main,
-body.dark-mode .main-content,
-body.dark-mode .content,
-body.dark-mode .userbox,
-body.dark-mode .user-pill,
-body.dark-mode .hospital-card {
-  background: var(--card, #172033) !important;
-  color: var(--text, #e5eefb) !important;
-  border-color: var(--line, #27364f) !important;
-}
-html[data-theme="dark"] input,
-html[data-theme="dark"] select,
-html[data-theme="dark"] textarea,
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea {
-  background: var(--soft, #111a2c) !important;
-  color: var(--text, #e5eefb) !important;
-  border-color: var(--line, #27364f) !important;
-}
-html[data-theme="dark"] .muted,
-html[data-theme="dark"] .desc,
-body.dark-mode .muted,
-body.dark-mode .desc {
-  color: var(--muted, #9fb0c7) !important;
-}
-</style>
-<!-- DR THEME SYNC PATCH END -->
-
 </head>
 <body>
 <div class="app">
@@ -254,7 +204,7 @@ body.dark-mode .desc {
 <script>
   const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
   const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
-  const API_URL = "https://dr-screening-portal.onrender.com/predict";
+  const API_URL = "http://127.0.0.1:8000/predict";
   const BUCKET = "retina-images";
   const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -300,19 +250,44 @@ body.dark-mode .desc {
     return v.startsWith("en") ? "en" : "th";
   }
   function getSavedLang(){
-    return normalizeLang(
+    // อ่านค่าภาษาจาก key กลางหลายรูปแบบ เพื่อให้ลิงก์กับ Settings และหน้าอื่นได้จริง
+    const direct =
       localStorage.getItem("dr_lang") ||
       localStorage.getItem("dr_language") ||
       localStorage.getItem("language") ||
       localStorage.getItem("app_lang") ||
       localStorage.getItem("site_lang") ||
-      "th"
-    );
+      localStorage.getItem("selectedLanguage") ||
+      localStorage.getItem("currentLanguage") ||
+      localStorage.getItem("appLanguage") ||
+      localStorage.getItem("DR_LANG");
+
+    if (direct) return normalizeLang(direct);
+
+    // เผื่อหน้า Settings เก็บเป็น object เช่น { language: "en", theme: "dark" }
+    const objectKeys = ["dr_settings", "settings", "app_settings", "user_settings"];
+    for (const k of objectKeys) {
+      try {
+        const raw = localStorage.getItem(k);
+        if (!raw) continue;
+        const obj = JSON.parse(raw);
+        const v = obj.lang || obj.language || obj.selectedLanguage || obj.currentLanguage;
+        if (v) return normalizeLang(v);
+      } catch (e) {}
+    }
+
+    return "th";
   }
   let lang = getSavedLang();
-  let patients = [], reports = [], selectedPatient = null, images = [], currentImageIndex = 0, aiResult = null, stream = null, facingMode = "environment";
+  let patients = [], reports = [], selectedPatient = null, images = [], currentImageIndex = 0, aiResult = null, stream = null, facingMode = "environment", currentCameraDeviceId = null;
 
-  function t(k){ return (I18N[lang] && I18N[lang][k]) || I18N.th[k] || k; }
+  function t(k){
+    // ใช้คำแปลในหน้านี้เป็นหลัก และรองรับกรณีโปรเจกต์มี language.js กลางด้วย
+    if (I18N[lang] && I18N[lang][k]) return I18N[lang][k];
+    if (window.translations && window.translations[lang] && window.translations[lang][k]) return window.translations[lang][k];
+    if (window.i18n && window.i18n[lang] && window.i18n[lang][k]) return window.i18n[lang][k];
+    return (I18N.th && I18N.th[k]) || k;
+  }
   function applyLang(){
     lang = getSavedLang();
     document.documentElement.lang = lang;
@@ -331,11 +306,25 @@ body.dark-mode .desc {
   }
   function setLang(v){
     lang = normalizeLang(v);
+
+    // บันทึกหลาย key เพื่อให้ทุกหน้าที่ใช้ชื่อ key ต่างกันอ่านภาษาเดียวกันได้
     localStorage.setItem("dr_lang", lang);
     localStorage.setItem("dr_language", lang);
     localStorage.setItem("language", lang);
     localStorage.setItem("app_lang", lang);
     localStorage.setItem("site_lang", lang);
+    localStorage.setItem("selectedLanguage", lang);
+    localStorage.setItem("currentLanguage", lang);
+    localStorage.setItem("appLanguage", lang);
+
+    try {
+      const raw = localStorage.getItem("dr_settings");
+      const obj = raw ? JSON.parse(raw) : {};
+      obj.lang = lang;
+      obj.language = lang;
+      localStorage.setItem("dr_settings", JSON.stringify(obj));
+    } catch (e) {}
+
     applyLang();
   }
   function applyTheme(){
@@ -459,8 +448,95 @@ body.dark-mode .desc {
     resetAnalysisState(); renderImages();
   };
 
-  async function openCamera(){ try{ if(stream)stream.getTracks().forEach(t=>t.stop()); stream=await navigator.mediaDevices.getUserMedia({video:{facingMode},audio:false}); document.getElementById("cameraVideo").srcObject=stream; document.getElementById("cameraModal").classList.add("show"); }catch(e){ alert(t("cameraError")+"\n"+e.message); } }
-  function closeCamera(){ if(stream)stream.getTracks().forEach(t=>t.stop()); stream=null; document.getElementById("cameraModal").classList.remove("show"); }
+  function stopCameraStream(){
+    if(stream) stream.getTracks().forEach(track=>track.stop());
+    stream = null;
+  }
+
+  async function getPreferredCameraDeviceId(mode){
+    try{
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videos = devices.filter(d => d.kind === "videoinput");
+      if(!videos.length) return null;
+
+      const isBack = label => /(back|rear|environment|ด้านหลัง|หลัง)/i.test(label);
+      const isFront = label => /(front|user|face|ด้านหน้า|หน้า)/i.test(label);
+      const isUltraWide = label => /(ultra|0\.5|0,5|wide angle|ultrawide|เลนส์กว้าง|กว้างพิเศษ)/i.test(label);
+      const isMainBack = label => /(back camera|rear camera|main|wide|1x|standard|กล้องหลัง|กล้องหลัก)/i.test(label) && !isUltraWide(label);
+
+      if(mode === "user"){
+        return (videos.find(d => isFront(d.label || "")) || videos.find(d => !isBack(d.label || "")) || videos[0]).deviceId;
+      }
+
+      // iPhone/มือถือหลายเลนส์: เลือกกล้องหลังตัวหลัก 1x และหลีกเลี่ยง Ultra Wide 0.5x
+      const backCameras = videos.filter(d => isBack(d.label || ""));
+      const candidates = backCameras.length ? backCameras : videos;
+      return (
+        candidates.find(d => isMainBack(d.label || "")) ||
+        candidates.find(d => !isUltraWide(d.label || "")) ||
+        candidates[0]
+      ).deviceId;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function buildCameraConstraints(deviceId){
+    const video = {
+      width: { ideal: 1920 },
+      height: { ideal: 1080 },
+      aspectRatio: { ideal: 16 / 9 },
+      frameRate: { ideal: 30 },
+      zoom: { ideal: 1 },
+      advanced: [
+        { zoom: 1 },
+        { focusMode: "continuous" }
+      ]
+    };
+
+    if(deviceId){
+      video.deviceId = { exact: deviceId };
+    }else{
+      video.facingMode = { ideal: facingMode };
+    }
+
+    return { video, audio: false };
+  }
+
+  async function openCamera(){
+    try{
+      stopCameraStream();
+
+      // ขอ permission แบบ facingMode ก่อน เพื่อให้ iPhone/Chrome แสดง label ของกล้องได้
+      let deviceId = await getPreferredCameraDeviceId(facingMode);
+
+      try{
+        stream = await navigator.mediaDevices.getUserMedia(buildCameraConstraints(deviceId));
+      }catch(firstError){
+        // fallback: ถ้า deviceId exact ใช้ไม่ได้ ให้ใช้ facingMode แต่ยังตั้ง 1x และความละเอียดสูง
+        stream = await navigator.mediaDevices.getUserMedia(buildCameraConstraints(null));
+      }
+
+      currentCameraDeviceId = deviceId || null;
+
+      const track = stream.getVideoTracks()[0];
+      if(track && track.applyConstraints){
+        try{
+          await track.applyConstraints({
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            advanced: [{ zoom: 1 }, { focusMode: "continuous" }]
+          });
+        }catch(e){}
+      }
+
+      document.getElementById("cameraVideo").srcObject = stream;
+      document.getElementById("cameraModal").classList.add("show");
+    }catch(e){
+      alert(t("cameraError") + "\n" + e.message);
+    }
+  }
+  function closeCamera(){ stopCameraStream(); document.getElementById("cameraModal").classList.remove("show"); }
   function capturePhoto(){ const v=document.getElementById("cameraVideo"), c=document.getElementById("cameraCanvas"); c.width=v.videoWidth||1280; c.height=v.videoHeight||720; c.getContext("2d").drawImage(v,0,0,c.width,c.height); c.toBlob(blob=>{ addFiles([new File([blob],`camera_${Date.now()}.jpg`,{type:"image/jpeg"})]); closeCamera(); },"image/jpeg",0.92); }
 
   async function analyzeReal(){
@@ -474,11 +550,8 @@ body.dark-mode .desc {
       if(!res.ok) throw new Error("API "+res.status);
       aiResult=await res.json();
       renderAIResult();
-   document.getElementById("statAnalysis").textContent="1";
-}catch(err){
-  console.error(err);
-  document.getElementById("resultBox").innerHTML=`<h3>${t("apiFail")}</h3><p>AI Server ไม่พร้อมใช้งาน กรุณาลองใหม่อีกครั้ง</p>`;
-}
+      document.getElementById("statAnalysis").textContent="1";
+    }catch(err){ console.error(err); document.getElementById("resultBox").innerHTML=`<h3>${t("apiFail")}</h3><p>${err.message}</p><p style="color:var(--muted)">ให้รัน: uvicorn app:app --host 127.0.0.1 --port 8000 --reload</p>`; }
   }
 
   function renderAIResult(){
@@ -592,13 +665,24 @@ body.dark-mode .desc {
     if (["dr_theme","theme"].includes(e.key)) applyTheme();
   });
   window.addEventListener("focus", () => { applyTheme(); applyLang(); });
+
+  // กรณีผู้ใช้เปลี่ยนภาษาจากหน้า Settings/หน้าอื่น แล้วกลับมาหน้านี้โดยไม่ reload
+  // ให้ตรวจ key กลางซ้ำอัตโนมัติ เพื่อ sync ภาษาแบบทันที
+  let lastLangValue = getSavedLang();
+  setInterval(() => {
+    const latest = getSavedLang();
+    if (latest !== lastLangValue) {
+      lastLangValue = latest;
+      applyLang();
+    }
+  }, 600);
   document.getElementById("patientSearch").oninput=renderPatients;
   document.getElementById("pickBtn").onclick=()=>document.getElementById("fileInput").click();
   document.getElementById("fileInput").onchange=e=>addFiles(e.target.files);
   document.getElementById("cameraBtn").onclick=openCamera;
   document.getElementById("closeCamera").onclick=closeCamera;
   document.getElementById("captureBtn").onclick=capturePhoto;
-  document.getElementById("switchCamera").onclick=()=>{ facingMode=facingMode==="environment"?"user":"environment"; openCamera(); };
+  document.getElementById("switchCamera").onclick=()=>{ facingMode = facingMode === "environment" ? "user" : "environment"; currentCameraDeviceId = null; openCamera(); };
   document.getElementById("deleteCurrentBtn").onclick=()=>deleteImage(currentImageIndex);
   document.getElementById("clearBtn").onclick=()=>{ images.forEach(im=>URL.revokeObjectURL(im.url)); images=[]; currentImageIndex=0; resetAnalysisState(); renderImages(); };
   document.getElementById("analyzeBtn").onclick=analyzeReal;
@@ -616,59 +700,5 @@ body.dark-mode .desc {
     renderImages();
   })();
 </script>
-
-<!-- DR THEME SYNC PATCH START -->
-<script id="dr-theme-sync-script">
-(function(){
-  const THEME_KEYS = ["dr_theme", "theme", "dr_dashboard_theme", "site_theme", "app_theme"];
-  function normalizeTheme(value){
-    return String(value || "light").toLowerCase() === "dark" ? "dark" : "light";
-  }
-  function getSavedTheme(){
-    for(const key of THEME_KEYS){
-      const value = localStorage.getItem(key);
-      if(value) return normalizeTheme(value);
-    }
-    return "light";
-  }
-  function saveTheme(theme){
-    theme = normalizeTheme(theme);
-    THEME_KEYS.forEach(key => localStorage.setItem(key, theme));
-    return theme;
-  }
-  function applyDoctorTheme(theme){
-    theme = normalizeTheme(theme || getSavedTheme());
-    document.documentElement.setAttribute("data-theme", theme);
-    document.body.classList.toggle("dark", theme === "dark");
-    document.body.classList.toggle("dark-mode", theme === "dark");
-    document.body.classList.toggle("light-mode", theme !== "dark");
-    return theme;
-  }
-  window.getDoctorTheme = getSavedTheme;
-  window.setDoctorTheme = function(theme){
-    theme = saveTheme(theme);
-    applyDoctorTheme(theme);
-    window.dispatchEvent(new CustomEvent("dr:theme-changed", {detail:{theme}}));
-    document.dispatchEvent(new CustomEvent("dr:theme-applied", {detail:{theme}}));
-    return theme;
-  };
-  window.toggleDoctorTheme = function(){
-    return window.setDoctorTheme(getSavedTheme() === "dark" ? "light" : "dark");
-  };
-  window.applyTheme = function(){ return applyDoctorTheme(getSavedTheme()); };
-  window.applyDoctorTheme = window.applyTheme;
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", window.applyTheme);
-  }else{
-    window.applyTheme();
-  }
-  window.addEventListener("storage", function(e){
-    if(!e.key || THEME_KEYS.includes(e.key)) window.applyTheme();
-  });
-  window.addEventListener("focus", window.applyTheme);
-})();
-</script>
-<!-- DR THEME SYNC PATCH END -->
-
 </body>
 </html>
