@@ -610,10 +610,16 @@ async function selectReport(id){
     renderPaper(selected);
   }
 }
+function publicReportUrl(reportId){
+  const u = new URL("report-view.html", window.location.href);
+  u.search = "?report_id=" + encodeURIComponent(reportId || "");
+  return u.href;
+}
+
 function paperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
+  const qr = QR_API + encodeURIComponent(publicReportUrl(r.report_id || r.id || ""));
   const note = val(r.result_note || "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.");
   const screening = String(r.severity_result || "").toLowerCase().includes("no") ? "No DR" : "DR";
   const imgBlock = img ? '<img class="fundus" src="' + esc(img) + '" onerror="this.outerHTML=\'<div class=&quot;image-note&quot;>'+esc(tr("noImage"))+'</div>\'">' : '<div style="width:94px;height:86px;border:1px dashed #aaa;display:grid;place-items:center;color:#64748b;font-size:11px">' + esc(tr("noImage")) + '</div>';
@@ -655,7 +661,7 @@ async function waitForPaperImages(){
 async function wordPaperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
+  const qr = QR_API + encodeURIComponent(publicReportUrl(r.report_id || r.id || ""));
   const note = val(r.result_note || "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.");
   const screening = String(r.severity_result || "").toLowerCase().includes("no") ? "No DR" : "DR";
   const examiner = examinerName(r);

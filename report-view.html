@@ -5,30 +5,132 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Report Document | DR Screening Portal</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="report-style.css?v=15">
+  <link rel="stylesheet" href="report-style.css?v=mobilepdf1">
   <style>
-    body{background:#f4f7fd;margin:0;font-family:var(--font-main,'Sarabun',Arial,sans-serif)!important}
-    .reportOnlyWrap{min-height:100vh;padding:18px 10px;display:flex;justify-content:center;align-items:flex-start}
-    .reportOnlyBox{width:100%;max-width:940px}
-    .reportOnlyNotice{background:#fff;border:1px solid #e5edf8;border-radius:16px;padding:12px 14px;margin-bottom:14px;color:#64748b;font-weight:800;box-shadow:0 10px 30px rgba(24,44,92,.06)}
-    .paperbox{background:transparent;border:0;box-shadow:none;padding:0}
-    .paper{margin:0 auto;max-width:100%;overflow:hidden}
-    .empty{background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:#64748b;font-weight:800}
-    #drSidebarHost,.dr-sidebar,.sidebar,aside.sidebar,.side-bar,.app-sidebar,.left-sidebar,.mobile-sidebar-toggle,.mobile-sidebar-overlay{display:none!important}
-    body.has-dr-sidebar{padding-left:0!important}
-    @media(max-width:768px){.reportOnlyWrap{padding:10px 4px}.reportOnlyNotice{font-size:13px;margin:0 8px 10px}.paper{transform-origin:top center}}
-    @media print{.reportOnlyNotice{display:none}.reportOnlyWrap{padding:0;background:#fff}.paper{box-shadow:none}}
+    body{
+      background:#f4f7fd;
+      margin:0;
+      font-family:var(--font-main,'Sarabun',Arial,sans-serif)!important;
+      color:#0f172a;
+    }
+    .reportOnlyWrap{
+      min-height:100vh;
+      padding:18px 10px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+    .reportOnlyBox{
+      width:100%;
+      max-width:940px;
+    }
+    .paperbox{
+      background:transparent!important;
+      border:0!important;
+      box-shadow:none!important;
+      padding:0!important;
+      border-radius:0!important;
+    }
+    #paperContainer{
+      width:100%;
+      overflow:hidden;
+    }
+    .paper{
+      margin:0 auto!important;
+      overflow:hidden;
+      box-shadow:0 18px 44px rgba(15,23,42,.08);
+    }
+    .empty{
+      background:#fff;
+      border:1px dashed #cbd5e1;
+      border-radius:16px;
+      padding:28px;
+      text-align:center;
+      color:#64748b;
+      font-weight:800;
+    }
+    .publicOnlyNote{
+      max-width:794px;
+      margin:0 auto 10px;
+      color:#64748b;
+      font-size:12px;
+      font-weight:800;
+      text-align:center;
+    }
+    .staffOpenSystem{
+      display:none;
+      max-width:794px;
+      margin:0 auto 10px;
+      text-align:right;
+    }
+    .staffOpenSystem a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:38px;
+      padding:0 14px;
+      border-radius:12px;
+      background:#315be8;
+      color:#fff;
+      font-weight:900;
+      text-decoration:none;
+      box-shadow:0 10px 22px rgba(49,91,232,.18);
+    }
+    body.logged-in .staffOpenSystem{display:block;}
+    #drSidebarHost,.dr-sidebar,.sidebar,aside.sidebar,.side-bar,.app-sidebar,.left-sidebar,.mobile-sidebar-toggle,.mobile-sidebar-overlay,
+    .dr-report-mobile-bottom-nav,.dr-report-mobile-more-overlay,.dr-report-mobile-more-sheet,.mobile-bottom-nav,.bottom-nav,.actions,.top,.stats,.card,.side{
+      display:none!important;
+    }
+    body.has-dr-sidebar{padding-left:0!important;}
+    @media(max-width:768px){
+      .reportOnlyWrap{padding:10px 4px;}
+      .publicOnlyNote{display:none;}
+      .paper{transform-origin:top center;box-shadow:none;}
+    }
+    @media print{
+      .publicOnlyNote,.staffOpenSystem{display:none!important;}
+      .reportOnlyWrap{padding:0;background:#fff;}
+      .paper{box-shadow:none!important;}
+    }
   </style>
 </head>
 <body data-report-view="true">
   <div class="reportOnlyWrap">
     <div class="reportOnlyBox">
-      <div class="reportOnlyNotice">เอกสารรายงานผลการตรวจจอประสาทตา</div>
+      <div class="staffOpenSystem"><a id="openSystemReport" href="retina-report-new.html">เปิดในระบบ</a></div>
+      <div class="publicOnlyNote">เอกสารรายงานผลการตรวจจอประสาทตา</div>
       <div class="paperbox">
         <div id="paperContainer"><div class="empty">กำลังโหลดรายงาน...</div></div>
       </div>
     </div>
   </div>
-  <script src="retina-report-new.js?v=21" defer></script>
+  <script src="retina-report-new.js?v=qr_public_report_only_43" defer></script>
+  <script>
+    (function(){
+      function getReportId(){
+        return new URLSearchParams(location.search).get('report_id') || '';
+      }
+      function updateSystemLink(){
+        var link = document.getElementById('openSystemReport');
+        if(!link) return;
+        var id = getReportId();
+        link.href = 'retina-report-new.html' + (id ? ('?report_id=' + encodeURIComponent(id)) : '');
+      }
+      function markLoggedInIfSession(){
+        updateSystemLink();
+        try{
+          if(!window.supabase) return;
+          var client = window.supabase.createClient('https://pncgbphbcmtlzrmwnhcy.supabase.co','sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K');
+          client.auth.getSession().then(function(res){
+            if(res && res.data && res.data.session){
+              document.body.classList.add('logged-in');
+            }
+          }).catch(function(){});
+        }catch(e){}
+      }
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', markLoggedInIfSession);
+      else markLoggedInIfSession();
+    })();
+  </script>
 </body>
 </html>
