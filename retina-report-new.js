@@ -268,31 +268,8 @@ function syncLangStorage(){
   ["dr_language","dr_lang","language","site_language","app_language","dr_report_language"].forEach(k=>localStorage.setItem(k, lang));
 }
 
-function isReportViewPage(){
-  return !!(document.body && document.body.getAttribute("data-report-view") === "true");
-}
 function reportViewUrl(reportId){
   return REPORT_VIEW_URL + "?report_id=" + encodeURIComponent(reportId || "");
-}
-function loginRedirectUrl(){
-  const next = encodeURIComponent(location.pathname.replace(/^\//, "") + location.search);
-  return "index.html?redirect=" + next;
-}
-async function ensureReportViewSession(){
-  if(!isReportViewPage()) return true;
-  try{
-    if(window.__drReportViewSessionReady) await window.__drReportViewSessionReady;
-    const sessionRes = await db.auth.getSession();
-    const session = sessionRes && sessionRes.data ? sessionRes.data.session : null;
-    if(!session){
-      location.replace(loginRedirectUrl());
-      return false;
-    }
-    return true;
-  }catch(e){
-    location.replace(loginRedirectUrl());
-    return false;
-  }
 }
 
 function applyLang(){
@@ -357,9 +334,6 @@ async function loadData(){
   const rid = new URLSearchParams(location.search).get("report_id");
   if(rid){
     await selectReport(rid);
-  } else if(isReportViewPage()){
-    const c = document.getElementById("paperContainer");
-    if(c) c.innerHTML = '<div class="empty">ไม่พบเลขรายงาน / Missing report_id</div>';
   } else {
     renderList();
   }
@@ -427,12 +401,7 @@ async function selectReport(id){
   }
 
   renderList();
-  if(!selected && isReportViewPage()){
-    const c = document.getElementById("paperContainer");
-    if(c) c.innerHTML = '<div class="empty">ไม่พบรายงานนี้ หรือไม่มีสิทธิ์เข้าถึงรายงาน</div>';
-  } else {
-    renderPaper(selected);
-  }
+  renderPaper(selected);
 
   if(selected) {
     await resolveImage(selected);
@@ -553,9 +522,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   applyTheme();
   setupSidebarImages();
   markActiveReportMenu();
-
-  const canOpenReportView = await ensureReportViewSession();
-  if(!canOpenReportView) return;
 
   const langSelector = document.getElementById("langSelect") || document.getElementById("reportLangSelect") || document.getElementById("languageSelect");
   if(langSelector) langSelector.onchange = e => setLang(e.target.value);
