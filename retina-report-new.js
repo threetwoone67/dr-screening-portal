@@ -2,188 +2,7 @@ const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const QR_API = "https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=";
-const WORD_CSS = `
-@page WordSection1{
-  size:595.3pt 841.9pt;
-  margin:28pt 34pt 26pt 34pt;
-}
-div.WordSection1{
-  page:WordSection1;
-  width:527pt;
-  margin:0 auto;
-}
-body{
-  margin:0;
-  background:#ffffff;
-  color:#0f172a;
-  font-family:"Sarabun","Noto Sans Thai",Arial,sans-serif;
-  font-size:8.7pt;
-  line-height:1.22;
-}
-table{
-  border-collapse:collapse;
-  mso-table-lspace:0pt;
-  mso-table-rspace:0pt;
-}
-.wHead{
-  width:100%;
-  table-layout:fixed;
-  border-bottom:1.6pt solid #20395f;
-  margin:0 0 8pt 0;
-}
-.wHead td{
-  border:0;
-  padding:0 0 8pt 0;
-  vertical-align:top;
-}
-.wLogoCell{width:62pt;text-align:left;}
-.wLogo{
-  width:46pt!important;
-  height:46pt!important;
-  max-width:46pt!important;
-  max-height:46pt!important;
-  object-fit:contain;
-  display:block;
-}
-.wTitleCell{
-  text-align:center;
-  padding:0 8pt!important;
-  width:315pt;
-}
-.wTitle{
-  font-size:16pt;
-  font-weight:900;
-  line-height:1.08;
-  margin:0 0 2pt 0;
-}
-.wSub{
-  font-size:8pt;
-  font-weight:800;
-  line-height:1.18;
-  margin:2pt 0;
-}
-.wOrg{
-  font-size:7.8pt;
-  font-weight:900;
-  color:#173764;
-  line-height:1.18;
-  margin:2pt 0 0 0;
-}
-.wQrCell{
-  width:92pt;
-  text-align:right;
-  vertical-align:top;
-}
-.wSmall{
-  font-size:6.5pt;
-  font-weight:900;
-  line-height:1.1;
-}
-.wCode{
-  font-size:7pt;
-  font-weight:900;
-  line-height:1.12;
-  word-break:break-word;
-}
-.wTiny{
-  font-size:6pt;
-  color:#64748b;
-  font-weight:800;
-  line-height:1.1;
-}
-.wQr{
-  width:60pt!important;
-  height:60pt!important;
-  max-width:60pt!important;
-  max-height:60pt!important;
-  object-fit:contain;
-  display:inline-block;
-  margin-top:2pt;
-}
-.wInfo{
-  width:100%;
-  table-layout:fixed;
-  margin:6pt 0 8pt 0;
-}
-.wInfo td{
-  width:50%;
-  font-size:8.2pt;
-  font-weight:750;
-  padding:1.4pt 4pt;
-  vertical-align:top;
-  line-height:1.18;
-}
-.wInfo b{font-weight:900;}
-.wResult{
-  width:100%;
-  table-layout:fixed;
-  margin-top:7pt;
-  font-size:7.2pt;
-  line-height:1.16;
-}
-.wResult th{
-  background:#f1f5f9;
-  border:1pt solid #d9e2ef;
-  padding:3.8pt 4pt;
-  text-align:left;
-  font-weight:900;
-}
-.wResult td{
-  border:1pt solid #d9e2ef;
-  padding:4pt;
-  vertical-align:top;
-  font-weight:750;
-}
-.wResult .cImg{width:90pt;}
-.wResult .cResult{width:75pt;}
-.wResult .cConf{width:70pt;}
-.wResult .cScreen{width:48pt;}
-.wFundus{
-  width:76pt!important;
-  height:70pt!important;
-  max-width:76pt!important;
-  max-height:70pt!important;
-  object-fit:cover;
-  background:#020617;
-  display:block;
-  border-radius:5pt;
-}
-.wCaption{
-  font-size:6.6pt;
-  margin-top:3pt;
-  font-weight:800;
-}
-.wSummary{
-  margin-top:8pt;
-  border:1pt solid #d9e2ef;
-  background:#f8fafc;
-  padding:7pt;
-  font-size:7.6pt;
-  font-weight:750;
-  line-height:1.22;
-  border-radius:7pt;
-}
-.wSummary b{font-weight:900;}
-.wSummary p{margin:2.4pt 0;}
-.wSign{
-  width:100%;
-  table-layout:fixed;
-  margin-top:18pt;
-  font-size:7.5pt;
-  font-weight:750;
-}
-.wSign td{
-  width:50%;
-  padding:0 18pt;
-  text-align:center;
-  vertical-align:top;
-}
-.wLine{
-  border-top:1pt dotted #0f2b4c;
-  height:7pt;
-  margin-bottom:2pt;
-}
-`;
+const WORD_CSS = "\n@page WordSection1{size:595.3pt 841.9pt;margin:32pt 38pt 28pt 38pt}\ndiv.WordSection1{page:WordSection1}\nbody{margin:0;font-family:\"Sarabun\",Arial,sans-serif;color:#0f172a;font-size:10pt}\ntable{border-collapse:collapse}\n.wTitle{font-size:18pt;font-weight:700;margin-top:4pt}\n.wSub{font-size:9pt;font-weight:700;margin-top:4pt}\n.wOrg{font-size:9pt;font-weight:700;color:#173764;margin-top:5pt}\n.wSmall{font-size:7pt;font-weight:700}\n.wCode{font-size:7.5pt;font-weight:700;word-break:break-word}\n.wTiny{font-size:6.5pt;color:#64748b}\n.wRule{border-top:1.5pt solid #20395f;margin:14pt 0 9pt}\n.wInfo td{width:50%;font-size:9pt;font-weight:700;padding:1.8pt 4pt;vertical-align:top}\n.wInfo b{font-weight:900}\n.wResult{margin-top:9pt;font-size:8.2pt}\n.wResult th{background:#f1f5f9;border:1pt solid #d9e2ef;padding:5pt;text-align:left;font-weight:900}\n.wResult td{border:1pt solid #d9e2ef;padding:5pt;vertical-align:top;font-weight:700}\n.wSummary{margin-top:9pt;border:1pt solid #d9e2ef;background:#f8fafc;padding:8pt;font-size:8.5pt;font-weight:700;line-height:1.2}\n.wSign{margin-top:24pt;font-size:8.5pt;font-weight:700}\n.wSign td{width:50%;padding:3pt 12pt}\n";
 const IMAGE_BUCKET = "retina-images";
 
 const dict = {
@@ -478,23 +297,64 @@ function examinerName(r){
   return r.doctor_name || r.created_by_name || currentProfile.full_name || currentProfile.name || currentProfile.display_name || currentProfile.email || "-";
 }
 
-async function queryReportsAndPatients(){
-  return await Promise.allSettled([
+function finalSeverityOf(r){
+  return reportValue(r, ["final_severity_result","doctor_severity_result","reviewed_severity_result","severity_result","result","diagnosis"], "-");
+}
+function aiSeverityOf(r){
+  return reportValue(r, ["ai_severity_result","severity_result","result","diagnosis"], "-");
+}
+function finalBinaryOf(r){
+  const v = reportValue(r, ["final_binary_result","doctor_binary_result","reviewed_binary_result","binary_result","screening_result"], "");
+  if(v) return String(v);
+  const s = String(finalSeverityOf(r) || "").toLowerCase();
+  return s.includes("no") ? "No DR" : "DR";
+}
+function doctorNoteOf(r){
+  return reportValue(r, ["doctor_note","review_note","clinician_note","doctor_comment","reviewer_note"], "");
+}
+function reportNoteOf(r){
+  const doctorNote = doctorNoteOf(r);
+  const aiNote = reportValue(r, ["result_note","note","ai_note"], "");
+  const aiSeverity = aiSeverityOf(r);
+  const finalSeverity = finalSeverityOf(r);
+  const isOverride = Boolean(r && (r.is_doctor_override || r.final_severity_result || r.final_binary_result || doctorNote));
+  const parts = [];
+
+  if(doctorNote && doctorNote !== "-") {
+    parts.push((lang === "th" ? "หมายเหตุผู้ตรวจ: " : "Doctor note: ") + doctorNote);
+  }
+
+  if(isOverride && aiSeverity && aiSeverity !== "-" && String(aiSeverity) !== String(finalSeverity)) {
+    parts.push((lang === "th" ? "ผล AI เดิม: " : "Original AI result: ") + aiSeverity);
+  }
+
+  if(aiNote && aiNote !== "-" && aiNote !== doctorNote) {
+    parts.push((lang === "th" ? "หมายเหตุ AI: " : "AI note: ") + aiNote);
+  }
+
+  if(parts.length) return parts.join(" | ");
+  return "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.";
+}
+function summaryLeadOf(r){
+  const finalSeverity = finalSeverityOf(r);
+  const isReviewed = Boolean(r && (r.final_severity_result || r.final_binary_result || r.doctor_note || r.is_doctor_override));
+  return (isReviewed
+    ? (lang === "th" ? "ผลยืนยันโดยผู้ตรวจ: " : "Final result confirmed by examiner: ")
+    : (lang === "th" ? "ผลการคัดกรองโดย AI พบว่า: " : "AI screening result: ")) + sev(finalSeverity);
+}
+async function loadData(){
+  const listBox = document.getElementById("reportList");
+  if(listBox) listBox.innerHTML = '<div class="empty">' + tr("loading") + '</div>';
+
+  const res = await Promise.allSettled([
     db.from("analysis_reports").select("*").order("created_at", {ascending:false}).limit(1000),
     db.from("patients").select("*").order("created_at", {ascending:false}).limit(1000)
   ]);
-}
-function applyQueryResults(res){
+
   if(res[0].status === "fulfilled" && !res[0].value.error) reports = res[0].value.data || [];
   if(res[1].status === "fulfilled" && !res[1].value.error) patients = res[1].value.data || [];
-}
-function saveReportCache(){
-  try{
-    if(Array.isArray(reports) && reports.length) localStorage.setItem("dr_analysis_reports", JSON.stringify(reports.slice(0,200)));
-    if(Array.isArray(patients) && patients.length) localStorage.setItem("dr_patients", JSON.stringify(patients.slice(0,500)));
-  }catch(e){}
-}
-function loadReportCache(){
+
+  // fallback: use local cached report/patient data if Supabase returns empty due to session/RLS timing
   try{
     const cachedReports = JSON.parse(localStorage.getItem("dr_analysis_reports") || localStorage.getItem("analysis_reports") || "[]");
     if(!reports.length && Array.isArray(cachedReports)) reports = cachedReports;
@@ -503,35 +363,14 @@ function loadReportCache(){
     const cachedPatients = JSON.parse(localStorage.getItem("dr_patients") || localStorage.getItem("patients") || "[]");
     if(!patients.length && Array.isArray(cachedPatients)) patients = cachedPatients;
   }catch(e){}
-}
-function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
-
-async function loadData(){
-  const listBox = document.getElementById("reportList");
-  if(listBox) listBox.innerHTML = '<div class="empty">' + tr("loading") + '</div>';
-
-  let res = await queryReportsAndPatients();
-  applyQueryResults(res);
-
-  // Supabase auth/session restoration can lag on deployed/mobile browsers.
-  // Retry once before falling back to local cache.
-  if(!reports.length){
-    await sleep(650);
-    res = await queryReportsAndPatients();
-    applyQueryResults(res);
-  }
-
-  if(reports.length || patients.length) saveReportCache();
-  loadReportCache();
 
   let msg = "reports " + reports.length + " / patients " + patients.length;
   if(res[0].status === "fulfilled" && res[0].value.error) msg = "analysis_reports error: " + res[0].value.error.message;
-  if(res[1].status === "fulfilled" && res[1].value.error) msg += " | patients error: " + res[1].value.error.message;
   if(document.getElementById("debugText")) document.getElementById("debugText").textContent = msg;
 
   if(document.getElementById("totalReports")) document.getElementById("totalReports").textContent = reports.length;
-  if(document.getElementById("normalReports")) document.getElementById("normalReports").textContent = reports.filter(r => String(r.severity_result || r.result || "").toLowerCase().includes("no")).length;
-  if(document.getElementById("abnormalReports")) document.getElementById("abnormalReports").textContent = reports.filter(r => !String(r.severity_result || r.result || "").toLowerCase().includes("no")).length;
+  if(document.getElementById("normalReports")) document.getElementById("normalReports").textContent = reports.filter(r => String(finalSeverityOf(r)).toLowerCase().includes("no")).length;
+  if(document.getElementById("abnormalReports")) document.getElementById("abnormalReports").textContent = reports.filter(r => !String(finalSeverityOf(r)).toLowerCase().includes("no")).length;
 
   const rid = new URLSearchParams(location.search).get("report_id");
   if(rid){
@@ -547,6 +386,8 @@ function searchableReportText(r){
   return [
     r.patient_name, r.full_name, r.name,
     r.patient_code, r.hn, r.patient_id, r.report_id, r.id,
+    r.final_severity_result, r.final_binary_result, r.doctor_note,
+    r.ai_severity_result, r.ai_binary_result,
     r.severity_result, r.result, r.diagnosis, r.result_note,
     p.full_name, p.name, p.patient_name, p.patient_code, p.hn, p.id, p.phone
   ].map(x => String(x || "").toLowerCase()).join(" ");
@@ -575,7 +416,7 @@ function renderList(){
     const patientName = patientNameOf(r,p);
     const patientCode = patientCodeOf(r,p);
     const reportNo = reportNoOf(r);
-    return '<div class="item ' + active + '" data-id="' + esc(id) + '"><b>' + esc(patientName) + '</b><span>HN: ' + esc(patientCode) + ' | ' + esc(tr("reportNo")) + ': ' + esc(reportNo) + '</span><span>' + esc(dt(r.created_at || r.report_date || r.exam_date)) + '</span><span class="pill">' + esc(sev(r.severity_result || r.result || r.diagnosis)) + '</span></div>';
+    return '<div class="item ' + active + '" data-id="' + esc(id) + '"><b>' + esc(patientName) + '</b><span>HN: ' + esc(patientCode) + ' | ' + esc(tr("reportNo")) + ': ' + esc(reportNo) + '</span><span>' + esc(dt(r.created_at || r.report_date || r.exam_date)) + '</span><span class="pill">' + esc(sev(finalSeverityOf(r))) + '</span></div>';
   }).join("");
 
   document.querySelectorAll(".item").forEach(el => {
@@ -610,20 +451,15 @@ async function selectReport(id){
     renderPaper(selected);
   }
 }
-function publicReportUrl(reportId){
-  const u = new URL("report-view.html", window.location.href);
-  u.search = "?report_id=" + encodeURIComponent(reportId || "");
-  return u.href;
-}
-
 function paperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(publicReportUrl(r.report_id || r.id || ""));
-  const note = val(r.result_note || "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.");
-  const screening = String(r.severity_result || "").toLowerCase().includes("no") ? "No DR" : "DR";
+  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
+  const finalSeverity = finalSeverityOf(r);
+  const note = val(reportNoteOf(r));
+  const screening = finalBinaryOf(r);
   const imgBlock = img ? '<img class="fundus" src="' + esc(img) + '" onerror="this.outerHTML=\'<div class=&quot;image-note&quot;>'+esc(tr("noImage"))+'</div>\'">' : '<div style="width:94px;height:86px;border:1px dashed #aaa;display:grid;place-items:center;color:#64748b;font-size:11px">' + esc(tr("noImage")) + '</div>';
-  return '<div class="paper"><div class="phead"><img class="seal" src="institution-logo.png"><div class="ptitle"><h1>' + esc(tr("reportTitle")) + '</h1><p>' + esc(tr("screeningTitle")) + '</p><p style="color:#173764;font-weight:900">' + esc(tr("orgName")) + '</p></div><div class="code">' + esc(tr("reportNo")) + '<br>' + esc(reportNoOf(r)) + '<br><br>' + esc(patientCodeOf(r,p)) + '<br><img class="qr" src="' + esc(qr) + '"><br><span style="font-size:10px;color:#64748b">' + esc(tr("onlineScan")) + '</span></div></div><hr class="div"><div class="info"><div><b>' + esc(tr("patientName")) + ' :</b> ' + esc(patientNameOf(r,p)) + '</div><div><b>HN :</b> ' + esc(patientCodeOf(r,p)) + '</div><div><b>' + esc(tr("patientCode")) + ' :</b> ' + esc(patientCodeOf(r,p)) + '</div><div><b>' + esc(tr("reportNo")) + ' :</b> ' + esc(reportNoOf(r)) + '</div><div><b>' + esc(tr("birthDate")) + ' :</b> ' + esc(patientBirth(r,p)) + '</div><div><b>' + esc(tr("age")) + ' :</b> ' + esc(patientAge(r,p)) + '</div><div><b>' + esc(tr("sex")) + ' :</b> ' + esc(patientSex(r,p)) + '</div><div><b>' + esc(tr("phone")) + ' :</b> ' + esc(patientPhone(r,p)) + '</div><div><b>' + esc(tr("weight")) + ' :</b> ' + esc(patientWeight(r,p)) + '</div><div><b>' + esc(tr("height")) + ' :</b> ' + esc(patientHeight(r,p)) + '</div><div><b>BMI :</b> ' + esc(patientBMI(r,p)) + '</div><div><b>' + esc(tr("examDate")) + ' :</b> ' + esc(dt(r.created_at)) + '</div><div><b>' + esc(tr("department")) + ' :</b> Diabetic Retinopathy Screening System</div><div><b>' + esc(tr("disease")) + ' :</b> ' + esc(patientDisease(r,p)) + '</div><div><b>' + esc(tr("doctor")) + ' :</b> ' + esc(examinerName(r)) + '</div><div><b>' + esc(tr("allergy")) + ' :</b> ' + esc(patientAllergy(r,p)) + '</div></div><table class="rt"><thead><tr><th style="width:120px">' + esc(tr("image")) + '</th><th>' + esc(tr("result")) + '</th><th style="width:110px">' + esc(tr("confidence")) + '</th><th style="width:85px">' + esc(tr("screeningResult")) + '</th><th>' + esc(tr("note")) + '</th></tr></thead><tbody><tr><td>' + imgBlock + '<b>ภาพที่ 1</b></td><td><b>' + esc(r.severity_result) + '</b><br>' + esc(sev(r.severity_result)) + '</td><td>Severity: ' + esc(pct(r.confidence || r.severity_confidence)) + '<br>Binary: ' + esc(pct(r.binary_confidence)) + '</td><td><b>' + esc(screening) + '</b></td><td>' + esc(note) + '</td></tr></tbody></table><div class="summary"><h3>' + esc(tr("summary")) + '</h3><p>' + esc((lang === "th" ? "ผลการคัดกรองโดย AI พบว่า: " : "AI screening result: ") + sev(r.severity_result)) + '</p><p>' + esc(note) + '</p></div><div class="sign"><div class="line">' + esc(tr("reporter")) + '<br>(' + esc(examinerName(r)) + ')</div><div class="line">' + esc(tr("reviewer")) + '<br>(............................)</div></div></div>';
+  return '<div class="paper"><div class="phead"><img class="seal" src="institution-logo.png"><div class="ptitle"><h1>' + esc(tr("reportTitle")) + '</h1><p>' + esc(tr("screeningTitle")) + '</p><p style="color:#173764;font-weight:900">' + esc(tr("orgName")) + '</p></div><div class="code">' + esc(tr("reportNo")) + '<br>' + esc(reportNoOf(r)) + '<br><br>' + esc(patientCodeOf(r,p)) + '<br><img class="qr" src="' + esc(qr) + '"><br><span style="font-size:10px;color:#64748b">' + esc(tr("onlineScan")) + '</span></div></div><hr class="div"><div class="info"><div><b>' + esc(tr("patientName")) + ' :</b> ' + esc(patientNameOf(r,p)) + '</div><div><b>HN :</b> ' + esc(patientCodeOf(r,p)) + '</div><div><b>' + esc(tr("patientCode")) + ' :</b> ' + esc(patientCodeOf(r,p)) + '</div><div><b>' + esc(tr("reportNo")) + ' :</b> ' + esc(reportNoOf(r)) + '</div><div><b>' + esc(tr("birthDate")) + ' :</b> ' + esc(patientBirth(r,p)) + '</div><div><b>' + esc(tr("age")) + ' :</b> ' + esc(patientAge(r,p)) + '</div><div><b>' + esc(tr("sex")) + ' :</b> ' + esc(patientSex(r,p)) + '</div><div><b>' + esc(tr("phone")) + ' :</b> ' + esc(patientPhone(r,p)) + '</div><div><b>' + esc(tr("weight")) + ' :</b> ' + esc(patientWeight(r,p)) + '</div><div><b>' + esc(tr("height")) + ' :</b> ' + esc(patientHeight(r,p)) + '</div><div><b>BMI :</b> ' + esc(patientBMI(r,p)) + '</div><div><b>' + esc(tr("examDate")) + ' :</b> ' + esc(dt(r.created_at)) + '</div><div><b>' + esc(tr("department")) + ' :</b> Diabetic Retinopathy Screening System</div><div><b>' + esc(tr("disease")) + ' :</b> ' + esc(patientDisease(r,p)) + '</div><div><b>' + esc(tr("doctor")) + ' :</b> ' + esc(examinerName(r)) + '</div><div><b>' + esc(tr("allergy")) + ' :</b> ' + esc(patientAllergy(r,p)) + '</div></div><table class="rt"><thead><tr><th style="width:120px">' + esc(tr("image")) + '</th><th>' + esc(tr("result")) + '</th><th style="width:110px">' + esc(tr("confidence")) + '</th><th style="width:85px">' + esc(tr("screeningResult")) + '</th><th>' + esc(tr("note")) + '</th></tr></thead><tbody><tr><td>' + imgBlock + '<b>ภาพที่ 1</b></td><td><b>' + esc(r.severity_result) + '</b><br>' + esc(sev(r.severity_result)) + '</td><td>Severity: ' + esc(pct(r.confidence || r.severity_confidence)) + '<br>Binary: ' + esc(pct(r.binary_confidence)) + '</td><td><b>' + esc(screening) + '</b></td><td>' + esc(note) + '</td></tr></tbody></table><div class="summary"><h3>' + esc(tr("summary")) + '</h3><p>' + esc(summaryLeadOf(r)) + '</p><p>' + esc(note) + '</p></div><div class="sign"><div class="line">' + esc(tr("reporter")) + '<br>(' + esc(examinerName(r)) + ')</div><div class="line">' + esc(tr("reviewer")) + '<br>(............................)</div></div></div>';
 }
 function renderPaper(r){
   const c = document.getElementById("paperContainer");
@@ -634,94 +470,59 @@ function renderPaper(r){
   c.innerHTML = paperHTML(r);
 }
 
-
-function absDocUrl(src){
-  if(!src) return "";
-  try { return new URL(src, window.location.href).href; } catch(e) { return src; }
-}
-async function imageForWord(src){
-  if(!src) return "";
-  const raw = String(src || "").trim();
-  if(!raw) return "";
-  // ไม่ใช้ base64: ส่ง URL ตรงให้ Word โหลดรูปจากเว็บ / Supabase Storage
-  return absDocUrl(raw);
-}
-async function waitForPaperImages(){
-  const imgs = Array.from(document.querySelectorAll(".paper img"));
-  await Promise.all(imgs.map(img => {
-    if(img.complete) return Promise.resolve();
-    return new Promise(resolve => {
-      img.onload = resolve;
-      img.onerror = resolve;
-      setTimeout(resolve, 1800);
-    });
-  }));
-}
-
-async function wordPaperHTML(r){
+function wordPaperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(publicReportUrl(r.report_id || r.id || ""));
-  const note = val(r.result_note || "Result from HuggingFace DR model API. AI output is for screening support and should be confirmed by clinical assessment.");
-  const screening = String(r.severity_result || "").toLowerCase().includes("no") ? "No DR" : "DR";
+  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
+  const finalSeverity = finalSeverityOf(r);
+  const note = val(reportNoteOf(r));
+  const screening = finalBinaryOf(r);
   const examiner = examinerName(r);
-
-  const logoSrc = await imageForWord("institution-logo.png");
-  const qrSrc = await imageForWord(qr);
-  const imageSrc = await imageForWord(img);
-
-  const imgTag = imageSrc
-    ? '<img class="wFundus" src="' + esc(imageSrc) + '" width="76" height="70" style="width:76pt;height:70pt;object-fit:cover;">'
-    : '<div style="width:76pt;height:70pt;border:1pt dashed #999;font-size:6.5pt;color:#64748b;text-align:center;padding-top:22pt;">' + esc(tr("noImage")) + '</div>';
-
-  const infoRows = [
-    ['patientName', patientNameOf(r,p), 'HN', patientCodeOf(r,p), true],
-    ['patientCode', patientCodeOf(r,p), 'reportNo', reportNoOf(r), true],
-    ['birthDate', patientBirth(r,p), 'age', patientAge(r,p), true],
-    ['sex', patientSex(r,p), 'phone', patientPhone(r,p), true],
-    ['weight', patientWeight(r,p), 'height', patientHeight(r,p), true],
-    ['BMI', patientBMI(r,p), 'examDate', dt(r.created_at), false],
-    ['department', 'Diabetic Retinopathy Screening System', 'disease', patientDisease(r,p), true],
-    ['doctor', examiner, 'allergy', patientAllergy(r,p), true]
-  ].map(row => {
-    const leftLabel = row[4] ? tr(row[0]) : row[0];
-    const rightLabel = tr(row[2]);
-    return '<tr><td><b>' + esc(leftLabel) + ' :</b> ' + esc(row[1]) + '</td><td><b>' + esc(rightLabel) + ' :</b> ' + esc(row[3]) + '</td></tr>';
-  }).join('');
-
+  const imgTag = img ? '<img src="' + esc(img) + '" width="82" height="70" style="width:82px;height:70px;object-fit:cover;border-radius:6px;background:#020617;">' : '<div style="width:82px;height:70px;border:1px dashed #999;font-size:9px;color:#64748b;text-align:center;padding-top:22px;">' + esc(tr("noImage")) + '</div>';
   return `
   <div class="WordSection1">
-    <table class="wHead" cellspacing="0" cellpadding="0">
+    <table class="wHead" width="100%" cellspacing="0" cellpadding="0">
       <tr>
-        <td class="wLogoCell">${logoSrc ? `<img class="wLogo" src="${esc(logoSrc)}" width="46" height="46" style="width:46pt;height:46pt;object-fit:contain;">` : ""}</td>
-        <td class="wTitleCell">
+        <td width="75" valign="top"><img src="institution-logo.png" width="58" height="58"></td>
+        <td align="center" valign="top">
           <div class="wTitle">${esc(tr("reportTitle"))}</div>
           <div class="wSub">${esc(tr("screeningTitle"))}</div>
           <div class="wOrg">${esc(tr("orgName"))}</div>
         </td>
-        <td class="wQrCell">
+        <td width="120" align="right" valign="top">
           <div class="wSmall">${esc(tr("reportNo"))}</div>
           <div class="wCode">${esc(reportNoOf(r))}</div>
           <div class="wCode">${esc(patientCodeOf(r,p))}</div>
-          ${qrSrc ? `<img class="wQr" src="${esc(qrSrc)}" width="60" height="60" style="width:60pt;height:60pt;object-fit:contain;">` : ""}<br>
+          <img src="${esc(qr)}" width="78" height="78"><br>
           <span class="wTiny">${esc(tr("onlineScan"))}</span>
         </td>
       </tr>
     </table>
 
-    <table class="wInfo" cellspacing="0" cellpadding="0">${infoRows}</table>
+    <div class="wRule"></div>
 
-    <table class="wResult" cellspacing="0" cellpadding="0">
+    <table class="wInfo" width="100%" cellspacing="0" cellpadding="0">
+      <tr><td><b>${esc(tr("patientName"))} :</b> ${esc(patientNameOf(r,p))}</td><td><b>HN :</b> ${esc(patientCodeOf(r,p))}</td></tr>
+      <tr><td><b>${esc(tr("patientCode"))} :</b> ${esc(patientCodeOf(r,p))}</td><td><b>${esc(tr("reportNo"))} :</b> ${esc(reportNoOf(r))}</td></tr>
+      <tr><td><b>${esc(tr("birthDate"))} :</b> ${esc(patientBirth(r,p))}</td><td><b>${esc(tr("age"))} :</b> ${esc(patientAge(r,p))}</td></tr>
+      <tr><td><b>${esc(tr("sex"))} :</b> ${esc(patientSex(r,p))}</td><td><b>${esc(tr("phone"))} :</b> ${esc(patientPhone(r,p))}</td></tr>
+      <tr><td><b>${esc(tr("weight"))} :</b> ${esc(patientWeight(r,p))}</td><td><b>${esc(tr("height"))} :</b> ${esc(patientHeight(r,p))}</td></tr>
+      <tr><td><b>BMI :</b> ${esc(patientBMI(r,p))}</td><td><b>${esc(tr("examDate"))} :</b> ${esc(dt(r.created_at))}</td></tr>
+      <tr><td><b>${esc(tr("department"))} :</b> Diabetic Retinopathy Screening System</td><td><b>${esc(tr("disease"))} :</b> ${esc(patientDisease(r,p))}</td></tr>
+      <tr><td><b>${esc(tr("doctor"))} :</b> ${esc(examiner)}</td><td><b>${esc(tr("allergy"))} :</b> ${esc(patientAllergy(r,p))}</td></tr>
+    </table>
+
+    <table class="wResult" width="100%" cellspacing="0" cellpadding="0">
       <tr>
-        <th class="cImg" style="width:90pt">${esc(tr("image"))}</th>
-        <th class="cResult" style="width:75pt">${esc(tr("result"))}</th>
-        <th class="cConf" style="width:70pt">${esc(tr("confidence"))}</th>
-        <th class="cScreen" style="width:48pt">${esc(tr("screeningResult"))}</th>
+        <th width="100">${esc(tr("image"))}</th>
+        <th width="105">${esc(tr("result"))}</th>
+        <th width="115">${esc(tr("confidence"))}</th>
+        <th width="75">${esc(tr("screeningResult"))}</th>
         <th>${esc(tr("note"))}</th>
       </tr>
       <tr>
-        <td>${imgTag}<div class="wCaption">ภาพที่ 1</div></td>
-        <td><b>${esc(r.severity_result)}</b><br>${esc(sev(r.severity_result))}</td>
+        <td>${imgTag}<br><b>ภาพที่ 1</b></td>
+        <td><b>${esc(finalSeverity)}</b><br>${esc(sev(finalSeverity))}</td>
         <td><b>Severity:</b> ${esc(pct(r.confidence || r.severity_confidence))}<br><b>Binary:</b> ${esc(pct(r.binary_confidence))}</td>
         <td><b>${esc(screening)}</b></td>
         <td>${esc(note)}</td>
@@ -729,15 +530,19 @@ async function wordPaperHTML(r){
     </table>
 
     <div class="wSummary">
-      <b>${esc(tr("summary"))}</b>
-      <p>${esc((lang === "th" ? "ผลการคัดกรองโดย AI พบว่า: " : "AI screening result: ") + sev(r.severity_result))}</p>
-      <p>${esc(note)}</p>
+      <b>${esc(tr("summary"))}</b><br>
+      ${esc(summaryLeadOf(r))}<br>
+      ${esc(note)}
     </div>
 
-    <table class="wSign" cellspacing="0" cellpadding="0">
+    <table class="wSign" width="100%" cellspacing="0" cellpadding="0">
       <tr>
-        <td><div class="wLine"></div><b>${esc(tr("reporter"))}</b><br>(${esc(examiner)})</td>
-        <td><div class="wLine"></div><b>${esc(tr("reviewer"))}</b><br>(............................)</td>
+        <td align="center">....................................................</td>
+        <td align="center">....................................................</td>
+      </tr>
+      <tr>
+        <td align="center"><b>${esc(tr("reporter"))}</b><br>(${esc(examiner)})</td>
+        <td align="center"><b>${esc(tr("reviewer"))}</b><br>(............................)</td>
       </tr>
     </table>
   </div>`;
@@ -749,33 +554,14 @@ async function exportDoc(){
     return;
   }
   await resolveImage(selected);
-  renderPaper(selected);
-  await waitForPaperImages();
-  const body = await wordPaperHTML(selected);
-  const content = '<!doctype html><html><head><meta charset="utf-8"><title>DR Report</title><style>' + WORD_CSS + '</style></head><body>' + body + '</body></html>';
-  const blob = new Blob(["\ufeff" + content], {type:"application/msword;charset=utf-8"});
+  const content = '<!doctype html><html><head><meta charset="utf-8"><title>DR Report</title><style>' + WORD_CSS + '</style></head><body>' + wordPaperHTML(selected) + '</body></html>';
+  const blob = new Blob([content], {type:"application/msword;charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "DR_Report_" + val(patientCodeOf(selected, patientOf(selected))) + "_" + lang + ".doc";
-  document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
   URL.revokeObjectURL(a.href);
 }
-
-async function printReportPdf(){
-  if(!selected){
-    alert(tr("selectReport"));
-    return;
-  }
-  await resolveImage(selected);
-  renderPaper(selected);
-  await waitForPaperImages();
-  setTimeout(() => window.print(), 150);
-}
-
-window.exportDoc = exportDoc;
-window.printReportPdf = printReportPdf;
 
 document.addEventListener("DOMContentLoaded", async () => {
   applyTheme();
@@ -792,7 +578,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   const pdfBtn = document.getElementById("pdfBtn");
-  if(pdfBtn) pdfBtn.onclick = printReportPdf;
+  if(pdfBtn) pdfBtn.onclick = () => window.print();
 
   const docBtn = document.getElementById("docBtn");
   if(docBtn) docBtn.onclick = exportDoc;
