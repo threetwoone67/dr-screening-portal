@@ -368,6 +368,87 @@
   function severityTH(label){ const s=String(label||"").toLowerCase(); if(s.includes("no"))return "ไม่พบเบาหวานขึ้นจอประสาทตา"; if(s.includes("mild"))return "เบาหวานขึ้นจอประสาทตาระยะเล็กน้อย"; if(s.includes("moderate"))return "เบาหวานขึ้นจอประสาทตาระยะปานกลาง"; if(s.includes("severe"))return "เบาหวานขึ้นจอประสาทตาระยะรุนแรง"; if(s.includes("pdr")||s.includes("proliferative"))return "เบาหวานขึ้นจอประสาทตาระยะรุนแรงมาก / PDR"; return label||"-"; }
   function severityLevel(label){ const s=String(label||"").toLowerCase(); if(s.includes("no"))return 0; if(s.includes("mild"))return 1; if(s.includes("moderate"))return 2; if(s.includes("severe"))return 3; if(s.includes("pdr")||s.includes("proliferative"))return 4; return null; }
 
+  /* Doctor review / manual correction: added after AI result only. Layout, Supabase config, PDF/DOC, and QR report pages are untouched. */
+  function reviewLabel(th,en){ return lang==="en" ? en : th; }
+  function canonicalSeverity(label){
+    const s=String(label||"").toLowerCase();
+    if(s.includes("no")) return "No_DR";
+    if(s.includes("mild")) return "Mild";
+    if(s.includes("moderate")) return "Moderate";
+    if(s.includes("severe")) return "Severe";
+    if(s.includes("pdr")||s.includes("proliferative")) return "PDR";
+    return String(label||"No_DR");
+  }
+  function canonicalBinary(label, severity){
+    const b=String(label||"").toLowerCase();
+    if(b.includes("no")) return "No DR";
+    if(b.includes("dr")) return "DR";
+    return canonicalSeverity(severity)==="No_DR" ? "No DR" : "DR";
+  }
+  function severityOptionText(value){
+    const map = {
+      No_DR: reviewLabel("No DR / ไม่พบเบาหวานขึ้นจอประสาทตา","No DR / Normal"),
+      Mild: reviewLabel("Mild NPDR / ระยะเล็กน้อย","Mild NPDR"),
+      Moderate: reviewLabel("Moderate NPDR / ระยะปานกลาง","Moderate NPDR"),
+      Severe: reviewLabel("Severe NPDR / ระยะรุนแรง","Severe NPDR"),
+      PDR: reviewLabel("PDR / ระยะรุนแรงมาก","PDR / Proliferative DR")
+    };
+    return map[value] || value;
+  }
+  function buildSeverityOptions(current){
+    return ["No_DR","Mild","Moderate","Severe","PDR"].map(v => `<option value="${v}" ${v===current?"selected":""}>${severityOptionText(v)}</option>`).join("");
+  }
+  function buildDoctorReviewBlock(aiSeverity, aiBinary){
+    const finalSeverity = canonicalSeverity(aiSeverity);
+    const finalBinary = canonicalBinary(aiBinary, finalSeverity);
+    return `
+        <div class="history-mini" id="doctorReviewBox" style="margin-top:14px">
+          <b>${reviewLabel("การตรวจทานโดยแพทย์ / ผู้ตรวจ","Doctor / Examiner Review")}</b>
+          <span style="display:block;color:var(--muted);font-weight:800;margin-bottom:10px">
+            ${reviewLabel("หากไม่เห็นด้วยกับผล AI สามารถแก้ผลสุดท้ายก่อนบันทึกรายงานได้","If the AI result is questionable, edit the final result before saving the report.")}
+          </span>
+          <div class="patient-details">
+            <div class="field-box">
+              <small>${reviewLabel("ผลคัดกรองสุดท้าย","Final Screening Result")}</small>
+              <select id="finalBinarySelect">
+                <option value="No DR" ${finalBinary==="No DR"?"selected":""}>No DR</option>
+                <option value="DR" ${finalBinary==="DR"?"selected":""}>DR</option>
+              </select>
+            </div>
+            <div class="field-box">
+              <small>${reviewLabel("ระดับความรุนแรงสุดท้าย","Final Severity")}</small>
+              <select id="finalSeveritySelect" onchange="syncDoctorBinaryFromSeverity()">
+                ${buildSeverityOptions(finalSeverity)}
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <small style="display:block;color:var(--muted);font-weight:900;margin-bottom:6px">${reviewLabel("หมายเหตุผู้ตรวจ","Examiner Note")}</small>
+            <textarea id="doctorNoteInput" rows="3" placeholder="${reviewLabel("เช่น ภาพไม่ชัด ต้องตรวจซ้ำ / เห็นรอยโรคเพิ่มเติม / ยืนยันผล AI","e.g., image quality issue, repeat exam needed, additional lesion observed, AI result confirmed")}"></textarea>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--muted);font-weight:900">
+            <input id="doctorConfirmCheck" type="checkbox" style="width:auto;min-height:0">
+            ${reviewLabel("ยืนยันผลโดยผู้ตรวจแล้ว","Reviewed and confirmed by examiner")}
+          </label>
+        </div>`;
+  }
+  window.syncDoctorBinaryFromSeverity = function(){
+    const sev = document.getElementById("finalSeveritySelect")?.value || "No_DR";
+    const bin = document.getElementById("finalBinarySelect");
+    if(bin) bin.value = sev === "No_DR" ? "No DR" : "DR";
+  };
+  function getDoctorReview(aiSeverity, aiBinary){
+    const aiSev = canonicalSeverity(aiSeverity);
+    const aiBin = canonicalBinary(aiBinary, aiSev);
+    const finalSev = document.getElementById("finalSeveritySelect")?.value || aiSev;
+    const finalBin = document.getElementById("finalBinarySelect")?.value || canonicalBinary("", finalSev);
+    const note = (document.getElementById("doctorNoteInput")?.value || "").trim();
+    const confirmed = !!document.getElementById("doctorConfirmCheck")?.checked;
+    const isOverride = finalSev !== aiSev || finalBin !== aiBin || note.length > 0;
+    return { aiSev, aiBin, finalSev, finalBin, note, confirmed, isOverride };
+  }
+
+
   async function checkSession(){ try{ const {data}=await db.auth.getSession(); if(!data.session && !localStorage.getItem("dr_allow_dev")) location.href="index.html"; }catch(e){ console.warn(e); } }
 
   async function loadPatients(){
@@ -639,6 +720,7 @@
           <div class="summary-item"><small>${t("patientCode")}</small><b>${safe(p.patient_code)}</b></div>
           <div class="summary-item"><small>${t("age")}</small><b>${safe(calcAge(p))}</b></div>
         </div>
+        ${buildDoctorReviewBlock(severity, binary)}
         ${grad ? `<div class="grad-grid"><div class="grad-panel"><b>Original Fundus</b><img src="${original}"></div><div class="grad-panel"><b>Grad-CAM Heatmap</b><img src="${grad}"></div></div>` : ""}
       </div>`;
   }
@@ -663,19 +745,35 @@
     if(!aiResult) return toast(lang === "th" ? "กรุณากดวิเคราะห์ด้วย AI ก่อน แล้วค่อยบันทึก" : "Please analyze with AI before saving.");
     const p=selectedPatient, reportId="DR"+Date.now()+"-"+Math.random().toString(36).slice(2,7).toUpperCase();
     const up=await uploadOriginalImage(reportId);
-    const severity=aiResult.severity_result||aiResult.prediction||"-";
+    const severity=aiResult.severity_result||aiResult.prediction||aiResult.severity_label||"-";
+    const aiBinary=aiResult.binary_result||aiResult.binary_label||"";
+    const review=getDoctorReview(severity, aiBinary);
+    const aiConfidence=parsePercent(aiResult.severity_confidence ?? aiResult.confidence)/100;
     const row={
       report_id:reportId,
       patient_code:p.patient_code||p.hn||String(p.id),
       patient_name:p.full_name||p.patient_name||p.name||"-",
       eye_side:aiResult.eye_side||null,
-      severity_level:aiResult.severity_prediction ?? severityLevel(severity),
-      severity_result:severity,
-      confidence:parsePercent(aiResult.severity_confidence ?? aiResult.confidence)/100,
+
+      // Keep old report pages compatible: severity_result stores the examiner-confirmed final result.
+      severity_level:severityLevel(review.finalSev),
+      severity_result:review.finalSev,
+      confidence:aiConfidence,
+
+      // Doctor review fields: use the columns already added in Supabase.
+      ai_severity_result:review.aiSev,
+      ai_binary_result:review.aiBin,
+      ai_confidence:aiConfidence,
+      final_severity_result:review.finalSev,
+      final_binary_result:review.finalBin,
+      doctor_note:review.note || null,
+      is_doctor_override:review.isOverride,
+      reviewed_at:new Date().toISOString(),
+
       image_url:up.url || null,
       image_path:up.path || null,
       image_filename:up.filename || null,
-      result_note:aiResult.note || "AI screening support"
+      result_note:review.note ? (reviewLabel("ผู้ตรวจระบุ: ","Examiner note: ")+review.note) : (aiResult.note || "AI screening support")
     };
     let saved=false, errMsg="";
     try{
