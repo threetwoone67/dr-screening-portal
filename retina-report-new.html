@@ -1,2144 +1,302 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>รายงานผลตรวจจอประสาทตา | DR Screening Portal</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-/* ส่วนที่เติมเข้าไปเพื่อรองรับ Dark Mode */
-body.dark-mode {
-    background-color: #0f172a !important; /* สีพื้นหลังมืด */
-    color: #f1f5f9 !important; /* สีตัวอักษรสว่าง */
-}
-
-body.dark-mode .sidebar {
-    background-color: #1e293b !important;
-    border-right-color: #334155 !important;
-}
-
-body.dark-mode .knowledge-card, 
-body.dark-mode .quick-card, 
-body.dark-mode .stage-card {
-    background-color: #1e293b !important;
-    color: #f1f5f9 !important;
-    border-color: #334155 !important;
-}
-
-body.dark-mode .nav-item:not(.active) {
-    color: #94a3b8 !important;
-}
-
-body.dark-mode h2, body.dark-mode h3, body.dark-mode strong {
-    color: #ffffff !important;
-}
-/* มึงอยากให้ส่วนไหนมืดอีก เติม .dark-mode นำหน้าคลาสตรงนี้ได้เลย */
-    body {
-      font-family: "Noto Sans Thai", Arial, sans-serif;
-      background: #f6f9ff;
-      color: #102a43;
-    }
-
-    .app-layout {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 270px;
-      background: #ffffff;
-      border-right: 1px solid #e6edf7;
-      padding: 24px 18px;
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 8px 0 30px rgba(15, 43, 76, 0.04);
-      overflow-y: auto;
-      z-index: 10;
-    }
-
-    .logo-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding-bottom: 22px;
-      border-bottom: 1px solid #eef3f8;
-      margin-bottom: 20px;
-    }
-
-    .logo-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 18px;
-      background: #ffffff;
-      border: 1px solid #e6edf7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-      box-shadow: 0 10px 22px rgba(15, 43, 76, 0.06);
-    }
-
-    .logo-icon img {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-    }
-
-    .logo-text h2 {
-      color: #2563eb;
-      font-size: 15px;
-      font-weight: 900;
-      line-height: 1.35;
-    }
-
-    .logo-text p {
-      color: #8a94a6;
-      font-size: 12px;
-      margin-top: 2px;
-    }
-
-    .nav-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 16px;
-      border-radius: 16px;
-      color: #64748b;
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 15px;
-      transition: 0.2s;
-    }
-
-    .nav-item span {
-      width: 24px;
-      text-align: center;
-      font-size: 19px;
-    }
-
-    .nav-item:hover {
-      background: #eff6ff;
-      color: #2563eb;
-    }
-
-    .nav-item.active {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.22);
-    }
-
-    .submenu {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-left: 16px;
-      margin-top: 4px;
-      margin-bottom: 4px;
-      padding-left: 10px;
-      border-left: 2px solid #e6edf7;
-    }
-
-    .nav-sub-item {
-      padding: 12px 14px;
-      font-size: 14px;
-      border-radius: 14px;
-      background: #f8fbff;
-      color: #64748b;
-    }
-
-    .nav-sub-item.active {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-    }
-
-    .sidebar-bottom {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-top: 24px;
-    }
-
-    .hospital-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-      border-radius: 18px;
-      background: #f8fbff;
-      border: 1px solid #e6edf7;
-    }
-
-    .hospital-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      background: #ffffff;
-      border: 1px solid #e6edf7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .hospital-icon img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-    }
-
-    .hospital-card strong {
-      display: block;
-      color: #0f2b4c;
-      font-size: 12px;
-      line-height: 1.35;
-      max-width: 170px;
-    }
-
-    .hospital-card p {
-      color: #7b8794;
-      font-size: 11px;
-      margin-top: 2px;
-      line-height: 1.35;
-    }
-
-    .logout-btn {
-      width: 100%;
-      border: 1px solid #fee2e2;
-      background: #ffffff;
-      color: #ef4444;
-      padding: 13px;
-      border-radius: 16px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .page {
-      margin-left: 270px;
-      width: calc(100% - 270px);
-      min-height: 100vh;
-      padding: 28px;
-    }
-
-    .topbar {
-      background: #ffffff;
-      border: 1px solid #e6edf7;
-      border-radius: 24px;
-      padding: 18px 22px;
-      margin-bottom: 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 12px 30px rgba(15, 43, 76, 0.06);
-      gap: 12px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .brand-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 18px;
-      background: #ffffff;
-      border: 1px solid #e6edf7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .brand-icon img {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-    }
-
-    .brand h1 {
-      color: #0f2b4c;
-      font-size: 22px;
-      font-weight: 900;
-    }
-
-    .brand p {
-      color: #64748b;
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-family: "Noto Sans Thai", Arial, sans-serif;
-      font-weight: 900;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-    }
-
-    .btn-secondary {
-      background: #ffffff;
-      color: #2563eb;
-      border: 1px solid #bfdbfe;
-    }
-
-    .report-lang-select {
-      width: auto;
-      min-width: 120px;
-      border: 1px solid #bfdbfe;
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-family: "Noto Sans Thai", Arial, sans-serif;
-      font-weight: 900;
-      color: #2563eb;
-      background: #ffffff;
-      outline: none;
-    }
-
-    .header {
-      margin-bottom: 22px;
-    }
-
-    .header p {
-      color: #2563eb;
-      font-weight: 900;
-      margin-bottom: 6px;
-    }
-
-    .header h2 {
-      color: #0f2b4c;
-      font-size: 32px;
-      font-weight: 900;
-      line-height: 1.25;
-    }
-
-    .header span {
-      display: block;
-      color: #64748b;
-      font-weight: 700;
-      margin-top: 8px;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .summary-card {
-      background: #ffffff;
-      border: 1px solid #e6edf7;
-      border-radius: 22px;
-      padding: 18px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      box-shadow: 0 10px 26px rgba(15, 43, 76, 0.05);
-    }
-
-    .summary-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 18px;
-      background: #eff6ff;
-      color: #2563eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-
-    .summary-card p {
-      color: #64748b;
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 5px;
-    }
-
-    .summary-card strong {
-      color: #0f2b4c;
-      font-size: 24px;
-      font-weight: 900;
-    }
-
-    .content-layout {
-      display: grid;
-      grid-template-columns: 0.75fr 1.4fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .card {
-      background: #ffffff;
-      border: 1px solid #e6edf7;
-      border-radius: 26px;
-      padding: 22px;
-      box-shadow: 0 12px 30px rgba(15, 43, 76, 0.06);
-    }
-
-    .card-title h3 {
-      color: #0f2b4c;
-      font-size: 20px;
-      font-weight: 900;
-    }
-
-    .card-title p {
-      color: #64748b;
-      font-size: 13px;
-      font-weight: 700;
-      margin: 4px 0 16px;
-    }
-
-    input {
-      width: 100%;
-      border: 1px solid #dbe4f0;
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-family: "Noto Sans Thai", Arial, sans-serif;
-      color: #0f2b4c;
-      font-weight: 800;
-      outline: none;
-      background: #ffffff;
-    }
-
-    input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    }
-
-    .report-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 14px;
-      max-height: 620px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .report-row {
-      border: 1px solid #e6edf7;
-      border-radius: 20px;
-      padding: 15px;
-      background: #ffffff;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .report-row:hover,
-    .report-row.active {
-      background: #eff6ff;
-      border-color: #2563eb;
-      transform: translateY(-2px);
-    }
-
-    .report-row strong {
-      display: block;
-      color: #0f2b4c;
-      font-size: 16px;
-      font-weight: 900;
-    }
-
-    .report-row p {
-      color: #64748b;
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-
-    .badge {
-      display: inline-flex;
-      padding: 6px 10px;
-      border-radius: 999px;
-      margin-top: 9px;
-      font-size: 12px;
-      font-weight: 900;
-      background: #e8f1ff;
-      color: #2563eb;
-    }
-
-    .document-shell {
-      background: #ffffff;
-      border: 1px solid #e6edf7;
-      border-radius: 26px;
-      padding: 26px;
-      box-shadow: 0 12px 30px rgba(15, 43, 76, 0.06);
-    }
-
-    .document-paper {
-      background: #ffffff;
-      border: 1px solid #dbe4f0;
-      min-height: 820px;
-      padding: 34px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    .document-empty {
-      border: 1px dashed #cbd5e1;
-      background: #f8fafc;
-      color: #94a3b8;
-      border-radius: 16px;
-      padding: 28px;
-      text-align: center;
-      font-weight: 900;
-    }
-
-    .doc-header {
-      display: grid;
-      grid-template-columns: 110px 1fr 170px;
-      gap: 18px;
-      align-items: center;
-      padding-bottom: 18px;
-      border-bottom: 2px solid #0f2b4c;
-      margin-bottom: 18px;
-    }
-
-    .doc-logo {
-      width: 92px;
-      height: 92px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 1px solid #dbe4f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .doc-logo-img {
-      width: 86px;
-      height: 86px;
-      object-fit: contain;
-      display: block;
-    }
-
-    .doc-title {
-      text-align: center;
-    }
-
-    .doc-title h2 {
-      color: #0f2b4c;
-      font-size: 24px;
-      font-weight: 900;
-    }
-
-    .doc-title p {
-      color: #64748b;
-      font-size: 14px;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-
-    .doc-code {
-      text-align: right;
-      color: #0f2b4c;
-      font-weight: 900;
-      font-size: 13px;
-    }
-
-    .qr-box img {
-      width: 95px;
-      height: 95px;
-      margin-top: 8px;
-      border: 1px solid #dbe4f0;
-      padding: 4px;
-      background: #ffffff;
-    }
-
-    .patient-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 22px;
-      margin-bottom: 18px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid #dbe4f0;
-    }
-
-    .patient-line {
-      color: #0f2b4c;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .patient-line strong {
-      font-weight: 900;
-    }
-
-    .result-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-      font-size: 14px;
-    }
-
-    .result-table th {
-      background: #f1f5f9;
-      color: #0f2b4c;
-      padding: 10px;
-      border: 1px solid #dbe4f0;
-      font-weight: 900;
-      text-align: left;
-    }
-
-    .result-table td {
-      padding: 10px;
-      border: 1px solid #dbe4f0;
-      color: #0f2b4c;
-      font-weight: 700;
-      vertical-align: top;
-    }
-
-    .result-img {
-      width: 130px;
-      height: 130px;
-      border-radius: 12px;
-      object-fit: contain;
-      background: #020617;
-      border: 1px solid #dbe4f0;
-    }
-
-    .interpret-box {
-      margin-top: 18px;
-      border: 1px solid #dbe4f0;
-      border-radius: 16px;
-      padding: 14px;
-      background: #f8fafc;
-    }
-
-    .interpret-box h3 {
-      color: #0f2b4c;
-      font-size: 17px;
-      font-weight: 900;
-      margin-bottom: 6px;
-    }
-
-    .interpret-box p {
-      color: #475569;
-      font-size: 14px;
-      line-height: 1.7;
-      font-weight: 700;
-    }
-
-    .signature-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 36px;
-      margin-top: 50px;
-      color: #0f2b4c;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .signature-box {
-      text-align: center;
-    }
-
-    .signature-line {
-      border-bottom: 1px dotted #0f2b4c;
-      height: 38px;
-      margin-bottom: 8px;
-    }
-
-    .empty-state {
-      padding: 22px;
-      text-align: center;
-      color: #94a3b8;
-      background: #f8fafc;
-      border: 1px dashed #cbd5e1;
-      border-radius: 16px;
-      font-weight: 800;
-    }
-
-    @media print {
-      body {
-        background: #ffffff;
-      }
-
-      .sidebar,
-      .topbar,
-      .header,
-      .summary-grid,
-      .card,
-      .top-actions,
-      .no-print {
-        display: none !important;
-      }
-
-      .page {
-        margin: 0;
-        width: 100%;
-        padding: 0;
-      }
-
-      .content-layout {
-        display: block;
-      }
-
-      .document-shell {
-        box-shadow: none;
-        border: none;
-        padding: 0;
-      }
-
-      .document-paper {
-        border: none;
-        padding: 20px;
-        max-width: none;
-        min-height: auto;
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .content-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .app-layout {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        position: static;
-        width: 100%;
-      }
-
-      .page {
-        margin-left: 0;
-        width: 100%;
-      }
-
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-  </style>
-
-<!-- DR MOBILE ONLY APP SHELL PATCH START -->
-<style id="dr-mobile-only-app-shell">
-  .dr-mobile-bottom-nav,
-  .dr-mobile-more-overlay,
-  .dr-mobile-more-sheet {
-    display: none;
-  }
-
-  @media (max-width: 900px) {
-    html,
-    body {
-      width: 100%;
-      max-width: 100%;
-      overflow-x: hidden !important;
-    }
-
-    body {
-      padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
-    }
-
-    /* Hide only the desktop sidebar on mobile. Desktop rules above 900px stay untouched. */
-    aside.sidebar,
-    aside.side,
-    .sidebar,
-    .side {
-      display: none !important;
-    }
-
-    .app,
-    .layout,
-    .app-layout {
-      display: block !important;
-      min-height: 100vh !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-
-    main,
-    .main,
-    .main-content,
-    .content,
-    .page-content {
-      margin-left: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      padding: 20px 18px 112px !important;
-    }
-
-    .top,
-    .topbar,
-    .page-head,
-    .page-header {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: stretch !important;
-      gap: 12px !important;
-      margin-bottom: 16px !important;
-    }
-
-    .top-actions,
-    .top-tools,
-    .actions {
-      width: 100% !important;
-      display: flex !important;
-      flex-wrap: wrap !important;
-      gap: 10px !important;
-      justify-content: stretch !important;
-      align-items: stretch !important;
-    }
-
-    .top-actions > *,
-    .top-tools > *,
-    .actions > * {
-      min-width: 0 !important;
-    }
-
-    .top-actions .btn,
-    .actions .btn,
-    .top-actions a,
-    .actions a,
-    .top-actions button,
-    .actions button {
-      flex: 1 1 calc(50% - 6px) !important;
-      min-height: 46px !important;
-      justify-content: center !important;
-      text-align: center !important;
-    }
-
-    select.lang,
-    .lang,
-    .select,
-    .language-select,
-    #languageSelect,
-    #langSelect {
-      width: 100% !important;
-      min-height: 46px !important;
-      border-radius: 16px !important;
-      font-size: 15px !important;
-    }
-
-    h1,
-    .title,
-    .page-head h1,
-    .page-header h1 {
-      font-size: clamp(26px, 7.2vw, 34px) !important;
-      line-height: 1.18 !important;
-      letter-spacing: -0.02em !important;
-    }
-
-    h2,
-    .hero h2,
-    .hero h3 {
-      font-size: clamp(20px, 5.7vw, 27px) !important;
-      line-height: 1.28 !important;
-    }
-
-    .sub,
-    .subtitle,
-    .page-head p,
-    .page-header p,
-    .hero p,
-    .card-desc,
-    .panel-desc {
-      font-size: 14px !important;
-      line-height: 1.65 !important;
-    }
-
-    .hero {
-      border-radius: 24px !important;
-      padding: 22px 20px !important;
-      margin: 14px 0 16px !important;
-      min-height: 0 !important;
-    }
-
-    .hero:after,
-    .hero-icon,
-    .hero-art {
-      display: none !important;
-    }
-
-    .stats,
-    .summary-grid,
-    .grid4,
-    .quick-grid {
-      display: grid !important;
-      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      gap: 12px !important;
-    }
-
-    .grid,
-    .grid2,
-    .grid3,
-    .content-grid,
-    .form-grid,
-    .info-grid,
-    .detail-grid,
-    .filters,
-    .patient-summary,
-    .grad-grid {
-      display: grid !important;
-      grid-template-columns: 1fr !important;
-      gap: 14px !important;
-    }
-
-    .card,
-    .panel,
-    .stat,
-    .summary-card,
-    .quick-card,
-    .info,
-    .info-box,
-    .status-item,
-    .guide-item,
-    .report-item,
-    .appt,
-    .patient-item,
-    .row {
-      border-radius: 20px !important;
-      max-width: 100% !important;
-    }
-
-    .card,
-    .panel {
-      padding: 18px !important;
-    }
-
-    .stat,
-    .summary-card {
-      padding: 14px !important;
-      gap: 10px !important;
-      min-width: 0 !important;
-    }
-
-    .stat strong,
-    .summary-card strong,
-    .num {
-      font-size: 24px !important;
-      line-height: 1.05 !important;
-    }
-
-    .stat small,
-    .summary-card p,
-    .stat span {
-      font-size: 12px !important;
-      line-height: 1.25 !important;
-    }
-
-    .ico,
-    .icon,
-    .stat-icon,
-    .summary-icon {
-      width: 44px !important;
-      height: 44px !important;
-      border-radius: 16px !important;
-      flex: 0 0 44px !important;
-    }
-
-    input,
-    select,
-    textarea,
-    button,
-    .btn,
-    .primary-btn,
-    .secondary-btn {
-      font-size: 15px !important;
-    }
-
-    input,
-    select {
-      min-height: 46px !important;
-    }
-
-    textarea {
-      min-height: 104px !important;
-    }
-
-    .searchbar {
-      display: grid !important;
-      grid-template-columns: 1fr !important;
-      gap: 10px !important;
-    }
-
-    .searchbar input,
-    .searchbar button,
-    .btn,
-    .primary-btn,
-    .secondary-btn {
-      width: 100% !important;
-      min-height: 46px !important;
-      border-radius: 16px !important;
-    }
-
-    .action-row,
-    .btn-row {
-      display: grid !important;
-      grid-template-columns: 1fr !important;
-      gap: 10px !important;
-      justify-content: stretch !important;
-    }
-
-    .list,
-    .appointment-list,
-    .search-result,
-    .patient-suggestions {
-      max-height: none !important;
-      overflow: visible !important;
-    }
-
-    .table-wrap {
-      overflow-x: auto !important;
-      -webkit-overflow-scrolling: touch !important;
-      border-radius: 20px !important;
-    }
-
-    .patient-table {
-      min-width: 760px !important;
-    }
-
-    /* Report document/search page */
-    .paperbox,
-    #paperContainer {
-      width: 100% !important;
-      max-width: 100% !important;
-      overflow-x: auto !important;
-      -webkit-overflow-scrolling: touch !important;
-    }
-
-    #reportList .row,
-    .report-item,
-    .appt,
-    .row {
-      align-items: stretch !important;
-    }
-
-    .dr-mobile-bottom-nav {
-      display: grid !important;
-      grid-template-columns: repeat(5, 1fr) !important;
-      position: fixed !important;
-      left: 12px !important;
-      right: 12px !important;
-      bottom: calc(10px + env(safe-area-inset-bottom)) !important;
-      height: 72px !important;
-      z-index: 99990 !important;
-      background: rgba(255, 255, 255, 0.96) !important;
-      border: 1px solid rgba(219, 231, 245, 0.98) !important;
-      border-radius: 26px !important;
-      box-shadow: 0 16px 44px rgba(15, 23, 42, 0.18) !important;
-      backdrop-filter: blur(16px) !important;
-      -webkit-backdrop-filter: blur(16px) !important;
-      overflow: visible !important;
-    }
-
-    .dr-mobile-nav-item {
-      border: 0 !important;
-      background: transparent !important;
-      color: #64748b !important;
-      font-family: inherit !important;
-      font-weight: 950 !important;
-      font-size: 11px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 4px !important;
-      text-decoration: none !important;
-      cursor: pointer !important;
-      min-width: 0 !important;
-      padding: 0 !important;
-      line-height: 1.12 !important;
-    }
-
-    .dr-mobile-nav-item .dr-mobile-ico {
-      font-size: 22px !important;
-      line-height: 1 !important;
-    }
-
-    .dr-mobile-nav-item.active {
-      color: #1d4ed8 !important;
-    }
-
-    .dr-mobile-nav-item.primary {
-      transform: translateY(-13px) !important;
-    }
-
-    .dr-mobile-nav-item.primary .dr-mobile-ico {
-      width: 56px !important;
-      height: 56px !important;
-      border-radius: 21px !important;
-      display: grid !important;
-      place-items: center !important;
-      background: linear-gradient(135deg, #2563eb, #38bdf8) !important;
-      color: white !important;
-      box-shadow: 0 13px 28px rgba(37, 99, 235, 0.34) !important;
-      font-size: 25px !important;
-    }
-
-    .dr-mobile-more-overlay {
-      display: none;
-      position: fixed !important;
-      inset: 0 !important;
-      z-index: 99991 !important;
-      background: rgba(15, 23, 42, 0.46) !important;
-      backdrop-filter: blur(3px) !important;
-      -webkit-backdrop-filter: blur(3px) !important;
-    }
-
-    .dr-mobile-more-sheet {
-      display: block !important;
-      position: fixed !important;
-      left: 12px !important;
-      right: 12px !important;
-      bottom: calc(94px + env(safe-area-inset-bottom)) !important;
-      z-index: 99992 !important;
-      background: #ffffff !important;
-      border: 1px solid #dbe7f5 !important;
-      border-radius: 26px !important;
-      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.26) !important;
-      padding: 16px !important;
-      transform: translateY(140%) !important;
-      transition: transform 0.25s ease !important;
-    }
-
-    body.dr-mobile-more-open .dr-mobile-more-overlay {
-      display: block !important;
-    }
-
-    body.dr-mobile-more-open .dr-mobile-more-sheet {
-      transform: translateY(0) !important;
-    }
-
-    body.dr-mobile-more-open {
-      overflow: hidden !important;
-    }
-
-    .dr-mobile-more-title {
-      font-weight: 1000 !important;
-      color: #0f172a !important;
-      font-size: 19px !important;
-      padding: 4px 6px 14px !important;
-    }
-
-    .dr-mobile-more-grid {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 10px !important;
-    }
-
-    .dr-mobile-more-link,
-    .dr-mobile-more-logout {
-      border: 1px solid #e5edf8 !important;
-      background: #f8fbff !important;
-      color: #17345d !important;
-      border-radius: 17px !important;
-      padding: 13px 12px !important;
-      text-decoration: none !important;
-      font-weight: 950 !important;
-      font-size: 14px !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      cursor: pointer !important;
-      font-family: inherit !important;
-      min-height: 54px !important;
-    }
-
-    .dr-mobile-more-logout {
-      background: #fff5f5 !important;
-      color: #dc2626 !important;
-      border-color: #fecaca !important;
-    }
-  }
-
-  @media (min-width: 901px) {
-    .dr-mobile-bottom-nav,
-    .dr-mobile-more-overlay,
-    .dr-mobile-more-sheet {
-      display: none !important;
-    }
-  }
-
-  html[data-theme="dark"] .dr-mobile-bottom-nav,
-  body.dark-mode .dr-mobile-bottom-nav,
-  body.dark .dr-mobile-bottom-nav {
-    background: rgba(17, 24, 39, 0.96) !important;
-    border-color: #26344d !important;
-  }
-  html[data-theme="dark"] .dr-mobile-nav-item,
-  body.dark-mode .dr-mobile-nav-item,
-  body.dark .dr-mobile-nav-item {
-    color: #cbd5e1 !important;
-  }
-  html[data-theme="dark"] .dr-mobile-nav-item.active,
-  body.dark-mode .dr-mobile-nav-item.active,
-  body.dark .dr-mobile-nav-item.active {
-    color: #93c5fd !important;
-  }
-  html[data-theme="dark"] .dr-mobile-more-sheet,
-  body.dark-mode .dr-mobile-more-sheet,
-  body.dark .dr-mobile-more-sheet {
-    background: #172033 !important;
-    border-color: #26344d !important;
-  }
-  html[data-theme="dark"] .dr-mobile-more-title,
-  body.dark-mode .dr-mobile-more-title,
-  body.dark .dr-mobile-more-title {
-    color: #f8fafc !important;
-  }
-  html[data-theme="dark"] .dr-mobile-more-link,
-  body.dark-mode .dr-mobile-more-link,
-  body.dark .dr-mobile-more-link {
-    background: #111a2c !important;
-    color: #e5eefb !important;
-    border-color: #27364f !important;
-  }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Report | DR Screening Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="report-style.css?v=mobile31">
+
+<style>
+/* report page compatibility patch: keep same layout, only restore images + theme sync */
+.brand .logo{overflow:hidden;display:grid;place-items:center}
+.brand .logo img{width:100%;height:100%;object-fit:cover;display:block}
+.org{display:flex!important;align-items:center;gap:10px}
+.orgLogo{width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid rgba(148,163,184,.25);display:grid;place-items:center;overflow:hidden;flex:0 0 auto}
+.orgLogo img{width:100%;height:100%;object-fit:contain;display:block}
+html[data-theme="light"] body:not(.dark-mode) .side,
+html[data-theme="light"] body:not(.dark-mode) .main{color:#0f172a}
+html[data-theme="dark"] body{background:#08111f;color:#eaf2ff}
 </style>
-<!-- DR MOBILE ONLY APP SHELL PATCH END -->
 
 </head>
-
 <body>
-  <div class="app-layout">
-    <aside class="sidebar">
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo"><img src="logo-new.jpg" alt="DR" onerror="this.style.display='none';this.parentNode.textContent='DR';"></div>
+      <div><b>Diabetic<br>Retinopathy</b><small>DR Screening Portal</small></div>
+    </div>
+    <nav class="nav">
+      <a href="dashboard.html" data-i="navHome">🏠 หน้าหลัก</a>
+      <a href="user.html" data-i="navUser">👤 บัญชีผู้ใช้</a>
+      <a href="patients.html" data-i="navPatients">👥 ข้อมูลผู้ป่วย</a>
+      <div class="group" data-i="navScreeningGroup">การตรวจ</div>
+      <a href="create-patient.html" data-i="navCreate">➕ สร้างคนไข้ใหม่</a>
+      <a href="retina-analysis.html" data-i="navAnalysis">🔬 วิเคราะห์จอประสาทตา</a>
+      <a class="active" href="retina-report-new.html" data-i="navReport">📄 รายงานผล</a>
+      <a href="appointment-followup.html" data-i="navAppointment">📅 การนัดหมาย</a>
+      <a href="patient-transfer.html" data-i="navTransfer">🔁 โอนย้ายผู้ป่วย</a>
+      <a href="knowledge-dr.html" data-i="navKnowledge">💡 เกร็ดความรู้</a>
+      <a href="screening-history.html" data-i="navHistory">🕘 ประวัติการตรวจ</a>
+      <a href="settings.html" data-i="navSettings">⚙️ ตั้งค่า</a>
+    </nav>
+    <div class="org">
+      <div class="orgLogo"><img src="institution-logo.png" alt="KMUTNB" onerror="this.style.display='none';"></div>
+      <div><b data-i="orgName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</b><br><span data-i="orgSub">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</span></div>
+    </div>
+    <button id="logoutBtn" class="logout" data-i="logout">ออกจากระบบ</button>
+  </aside>
+
+  <main class="main">
+    <div class="top">
       <div>
-        <div class="logo-box">
-          <div class="logo-icon">
-            <img src="institution-logo.png" alt="KMUTNB Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='👁️';">
-          </div>
-
-          <div class="logo-text">
-            <h2>มหาวิทยาลัยเทคโนโลยี<br>พระจอมเกล้าพระนครเหนือ</h2>
-            <p>DR Screening Portal</p>
-          </div>
-        </div>
-
-        <nav class="nav-menu">
-          <a href="dashboard.html" class="nav-item">
-            <span>🏠</span> หน้าหลัก
-          </a>
-
-          <a href="dashboard.html#account" class="nav-item">
-            <span>👤</span> บัญชีผู้ใช้
-          </a>
-
-          <a href="dashboard.html#patients" class="nav-item">
-            <span>👥</span> ข้อมูลผู้ป่วย
-          </a>
-
-          <a href="#" class="nav-item active">
-            <span>🩺</span> การตรวจ
-          </a>
-
-          <div class="submenu">
-            <a href="dashboard.html#newPatient" class="nav-item nav-sub-item">
-              <span>➕</span> สร้างคนไข้ใหม่
-            </a>
-
-            <a href="retina-analysis.html" class="nav-item nav-sub-item">
-              <span>🔬</span> วิเคราะห์จอประสาทตา
-            </a>
-
-            <a href="retina-report-new.html" class="nav-item nav-sub-item active">
-              <span>📄</span> รายงานผล
-            </a>
-
-          <a href="appointment-followup.html" class="nav-item nav-sub-item">
-  <span>📅</span> การนัดหมาย
-</a>
-
-          <a href="dashboard.html#settings" class="nav-item">
-            <span>⚙️</span> ตั้งค่า
-          </a>
-        </nav>
+        <div class="crumb" data-i="breadcrumb">รายงานผล / เอกสารผลตรวจ</div>
+        <div class="title" data-i="pageTitle">รายงานผลการตรวจจอประสาทตา</div>
+        <div class="sub" data-i="pageSubtitle">พิมพ์ชื่อหรือ HN เพื่อค้นหารายงาน แล้วเลือกเอกสารเพื่อดูและส่งออก</div>
       </div>
-
-      <div class="sidebar-bottom">
-        <div class="hospital-card">
-          <div class="hospital-icon">
-            <img src="institution-logo.png" alt="KMUTNB Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='🏥';">
-          </div>
-
-          <div>
-            <strong id="sidebarHospitalName">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</strong>
-            <p id="sidebarDepartmentName">ระบบตรวจคัดกรองจอประสาทตาเบาหวาน</p>
-          </div>
-        </div>
-
-        <button class="logout-btn" onclick="window.location.href='index.html'">ออกจากระบบ</button>
+      <div class="actions">
+        <select class="lang" id="langSelect"><option value="th">ไทย</option><option value="en">English</option></select>
+        <a class="btn ghost" href="dashboard.html" data-i="home">หน้าหลัก</a>
+        <a class="btn ghost" href="retina-analysis.html" data-i="newAnalysis">วิเคราะห์ใหม่</a>
+        <button class="btn ghost" id="docBtn" data-i="saveDoc">บันทึกเป็น DOC</button>
+        <button class="btn primary" id="pdfBtn" data-i="printPdf">พิมพ์ / บันทึก PDF</button>
       </div>
-    </aside>
+    </div>
 
-    <main class="page">
-      <div class="topbar">
-        <div class="brand">
-          <div class="brand-icon">
-            <img src="institution-logo.png" alt="KMUTNB Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='📄';">
-          </div>
+    <section class="stats">
+      <div class="stat"><div class="ico">📄</div><div><small data-i="totalReports">รายงานทั้งหมด</small><strong id="totalReports">0</strong></div></div>
+      <div class="stat"><div class="ico">✅</div><div><small>No DR / Normal</small><strong id="normalReports">0</strong></div></div>
+      <div class="stat"><div class="ico">⚠️</div><div><small data-i="abnormalReports">พบความผิดปกติ</small><strong id="abnormalReports">0</strong></div></div>
+      <div class="stat"><div class="ico">🖨️</div><div><small data-i="readyPrint">พร้อมพิมพ์</small><strong>PDF</strong></div></div>
+    </section>
 
-          <div>
-            <h1>DR Screening Portal</h1>
-            <p id="topbarSubtitle">รายงานผลการตรวจจอประสาทตาเบาหวาน</p>
-          </div>
-        </div>
-
-        <div class="top-actions">
-          <select id="reportLangSelect" class="report-lang-select" onchange="setReportLanguage(this.value)">
-            <option value="th">ไทย</option>
-            <option value="en">English</option>
-            <option value="zh">中文</option>
-          </select>
-
-          <button class="btn btn-secondary" onclick="goBack()" id="backBtn">← ย้อนกลับ</button>
-          <a class="btn btn-secondary" href="dashboard.html" id="homeBtn">หน้าหลัก</a>
-          <a class="btn btn-secondary" href="retina-analysis.html" id="newAnalysisBtn">วิเคราะห์ใหม่</a>
-          <button class="btn btn-secondary" onclick="downloadDoc()" id="docBtn">บันทึกเป็น DOC</button>
-          <button class="btn btn-primary" onclick="printReport()" id="printBtn">พิมพ์ / บันทึก PDF</button>
-        </div>
+    <section class="grid">
+      <div class="card">
+        <h3 data-i="reportList">รายการรายงานผล</h3>
+        <p data-i="reportSearchDesc">พิมพ์ชื่อผู้ป่วย / HN / รหัสผู้ป่วย / ผลตรวจ ก่อนเลือกเอกสาร</p>
+        <input id="searchInput" placeholder="พิมพ์เพื่อค้นหา เช่น test1 / HN / PDR">
+        <div class="list" id="reportList"><div class="empty" data-i="typeToSearch">พิมพ์คำค้นหาเพื่อแสดงรายงาน</div></div>
+        <div class="debug" id="debugText"></div>
       </div>
+      <div class="paperbox">
+        <div id="paperContainer"><div class="empty" data-i="selectReport">เลือกรายงานจากรายการด้านซ้าย</div></div>
+      </div>
+    </section>
+  </main>
+</div>
 
-      <section class="header">
-        <p id="breadcrumbText">รายงานผล / เอกสารผลตรวจ</p>
-        <h2 id="pageTitle">รายงานผลการตรวจจอประสาทตา</h2>
-        <span id="pageDesc">แสดงข้อมูลผู้ป่วย รูปภาพ ผลวิเคราะห์ และสามารถพิมพ์หรือบันทึกเป็นเอกสารได้</span>
-      </section>
+<script src="retina-report-new.js?v=30" defer></script>
+<script src="language.js"></script>
+<script src="settings-global.js"></script>
 
-      <section class="summary-grid no-print">
-        <div class="summary-card">
-          <div class="summary-icon">📄</div>
-          <div>
-            <p id="statTotalLabel">รายงานทั้งหมด</p>
-            <strong id="totalReports">0</strong>
-          </div>
-        </div>
+<script id="report-mobile-only-polish-script">
+(function(){
+  function getLang(){
+    const raw =
+      localStorage.getItem("dr_report_language") ||
+      localStorage.getItem("dr_language") ||
+      localStorage.getItem("dr_lang") ||
+      localStorage.getItem("language") ||
+      localStorage.getItem("site_language") ||
+      localStorage.getItem("app_language") ||
+      "th";
+    return String(raw).toLowerCase().startsWith("en") ? "en" : "th";
+  }
 
-        <div class="summary-card">
-          <div class="summary-icon">✅</div>
-          <div>
-            <p id="statNormalLabel">No DR / ปกติ</p>
-            <strong id="normalReports">0</strong>
-          </div>
-        </div>
+  function text(th, en){
+    return getLang() === "en" ? en : th;
+  }
 
-        <div class="summary-card">
-          <div class="summary-icon">⚠️</div>
-          <div>
-            <p id="statAbnormalLabel">พบความผิดปกติ</p>
-            <strong id="abnormalReports">0</strong>
-          </div>
-        </div>
+  function normalizeLanguageSelect(){
+    const select = document.getElementById("langSelect");
+    if (!select) return;
 
-        <div class="summary-card">
-          <div class="summary-icon">🖨️</div>
-          <div>
-            <p id="statPrintLabel">พร้อมพิมพ์</p>
-            <strong>PDF</strong>
-          </div>
-        </div>
-      </section>
+    const current = getLang();
+    select.innerHTML = "";
+    const th = document.createElement("option");
+    th.value = "th";
+    th.textContent = "ไทย";
+    const en = document.createElement("option");
+    en.value = "en";
+    en.textContent = "English";
 
-      <section class="content-layout">
-        <div class="card no-print">
-          <div class="card-title">
-            <h3 id="reportListTitle">รายการรายงานผล</h3>
-            <p id="reportListDesc">ค้นหาด้วยชื่อผู้ป่วย / HN / รหัสผู้ป่วย / ผลตรวจ เช่น PT0008</p>
-          </div>
+    select.appendChild(th);
+    select.appendChild(en);
+    select.value = current;
 
-          <input
-            type="text"
-            id="reportSearchInput"
-            placeholder="ค้นหาชื่อผู้ป่วย / HN / รหัสผู้ป่วย / ผลตรวจ"
-            oninput="filterReports()"
-            autocomplete="off"
-          >
+    select.onchange = function(){
+      const value = select.value === "en" ? "en" : "th";
+      [
+        "dr_report_language",
+        "dr_language",
+        "dr_lang",
+        "language",
+        "site_language",
+        "app_language"
+      ].forEach(function(key){ localStorage.setItem(key, value); });
 
-          <div id="reportList" class="report-list">
-            <div class="empty-state">กำลังโหลดรายงาน...</div>
-          </div>
-        </div>
-
-        <div class="document-shell">
-          <div id="reportDocument" class="document-paper">
-            <div class="document-empty">เลือกรายงานผลจากรายการด้านซ้าย</div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script>
-    const DEFAULT_ORG_NAME = "มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ";
-    const DEFAULT_DEPARTMENT = "ระบบตรวจคัดกรองจอประสาทตาเบาหวาน";
-
-    let reports = [];
-    let filteredReports = [];
-    let selectedReport = null;
-    let reportLanguage = localStorage.getItem("dr_report_language") || "th";
-
-    const reportText = {
-      th: {
-        topbarSubtitle: "รายงานผลการตรวจจอประสาทตาเบาหวาน",
-        breadcrumb: "รายงานผล / เอกสารผลตรวจ",
-        pageTitle: "รายงานผลการตรวจจอประสาทตา",
-        pageDesc: "แสดงข้อมูลผู้ป่วย รูปภาพ ผลวิเคราะห์ และสามารถพิมพ์หรือบันทึกเป็นเอกสารได้",
-        totalReports: "รายงานทั้งหมด",
-        normalReports: "No DR / ปกติ",
-        abnormalReports: "พบความผิดปกติ",
-        readyPrint: "พร้อมพิมพ์",
-        reportList: "รายการรายงานผล",
-        searchDesc: "ค้นหาด้วยชื่อผู้ป่วย / HN / รหัสผู้ป่วย / ผลตรวจ เช่น PT0008",
-        searchPlaceholder: "ค้นหาชื่อผู้ป่วย / HN / รหัสผู้ป่วย / ผลตรวจ",
-        emptySelect: "เลือกรายงานผลจากรายการด้านซ้าย",
-        noReport: "ยังไม่มีรายงานผล หากเพิ่งวิเคราะห์ ให้กลับไปกดปุ่ม “บันทึกและดูรายงาน” ก่อน",
-        notFound: "ไม่พบรายงานที่ตรงกับคำค้น",
-        back: "← ย้อนกลับ",
-        home: "หน้าหลัก",
-        newAnalysis: "วิเคราะห์ใหม่",
-        saveDoc: "บันทึกเป็น DOC",
-        printPdf: "พิมพ์ / บันทึก PDF",
-        reportTitle: "รายงานผลการตรวจจอประสาทตา",
-        reportSubtitle: "Diabetic Retinopathy Screening Report",
-        scanOnline: "สแกนดูผลออนไลน์",
-        reportId: "เลขรายงาน",
-        patientName: "ชื่อผู้ป่วย",
-        hn: "HN",
-        patientCode: "รหัสผู้ป่วย",
-        birthDate: "วันเกิด",
-        age: "อายุ",
-        sex: "เพศ",
-        phone: "เบอร์โทร",
-        weight: "น้ำหนัก",
-        height: "ส่วนสูง",
-        bmi: "BMI",
-        examDate: "วันที่ตรวจ",
-        hospital: "หน่วยงาน",
-        department: "แผนก / ระบบ",
-        doctor: "ผู้ตรวจ",
-        disease: "โรคประจำตัว",
-        allergy: "ประวัติแพ้ยา / ภูมิแพ้",
-        image: "รูปภาพ",
-        result: "ผลตรวจ",
-        confidence: "ความแม่นยำ",
-        screening: "ผลคัดกรอง",
-        note: "หมายเหตุ",
-        pictureNo: "ภาพที่",
-        noAnalysis: "ไม่มีข้อมูลผลวิเคราะห์",
-        summary: "สรุปผลการตรวจ",
-        aiFound: "ผลการคัดกรองโดย AI พบว่า",
-        disclaimer: "หมายเหตุ: ผลจากระบบ AI เป็นผลเพื่อช่วยคัดกรองเบื้องต้น ไม่สามารถใช้แทนการวินิจฉัยโดยแพทย์ได้ ควรให้แพทย์หรือบุคลากรทางการแพทย์ประเมินร่วมกับอาการและข้อมูลทางคลินิกของผู้ป่วย",
-        reporter: "ผู้รายงานผล",
-        reviewer: "ผู้ตรวจสอบผล",
-        years: "ปี",
-        kg: "กก.",
-        cm: "ซม.",
-        normalText: "ไม่พบเบาหวานขึ้นจอประสาทตา",
-        mildText: "เบาหวานขึ้นจอประสาทตาระยะเล็กน้อย",
-        moderateText: "เบาหวานขึ้นจอประสาทตาระยะปานกลาง",
-        severeText: "เบาหวานขึ้นจอประสาทตาระยะรุนแรง",
-        pdrText: "เบาหวานขึ้นจอประสาทตาระยะรุนแรงมาก / PDR",
-        drText: "พบภาวะเบาหวานขึ้นจอประสาทตา"
-      },
-
-      en: {
-        topbarSubtitle: "Diabetic Retinopathy Screening Report",
-        breadcrumb: "Report / Screening Document",
-        pageTitle: "Retinal Screening Report",
-        pageDesc: "Displays patient information, retinal images, AI results, and supports printing or document saving.",
-        totalReports: "Total Reports",
-        normalReports: "No DR / Normal",
-        abnormalReports: "Abnormal Findings",
-        readyPrint: "Ready to Print",
-        reportList: "Report List",
-        searchDesc: "Search by patient name, HN, patient code, or result, e.g., PT0008",
-        searchPlaceholder: "Search patient name / HN / patient code / result",
-        emptySelect: "Please select a report from the left list",
-        noReport: "No reports yet. Please analyze and save a report first.",
-        notFound: "No matching report found",
-        back: "← Back",
-        home: "Home",
-        newAnalysis: "New Analysis",
-        saveDoc: "Save as DOC",
-        printPdf: "Print / Save PDF",
-        reportTitle: "Retinal Screening Report",
-        reportSubtitle: "Diabetic Retinopathy Screening Report",
-        scanOnline: "Scan to view online",
-        reportId: "Report ID",
-        patientName: "Patient Name",
-        hn: "HN",
-        patientCode: "Patient Code",
-        birthDate: "Date of Birth",
-        age: "Age",
-        sex: "Sex",
-        phone: "Phone",
-        weight: "Weight",
-        height: "Height",
-        bmi: "BMI",
-        examDate: "Examination Date",
-        hospital: "Organization",
-        department: "Department / System",
-        doctor: "Examiner",
-        disease: "Underlying Disease",
-        allergy: "Drug Allergy / Allergy History",
-        image: "Image",
-        result: "Result",
-        confidence: "Confidence",
-        screening: "Screening",
-        note: "Note",
-        pictureNo: "Image",
-        noAnalysis: "No analysis data",
-        summary: "Summary",
-        aiFound: "AI screening result",
-        disclaimer: "Note: The AI result is intended for preliminary screening only and cannot replace a diagnosis by a physician. Clinical evaluation by qualified medical personnel is recommended.",
-        reporter: "Reported by",
-        reviewer: "Reviewed by",
-        years: "years",
-        kg: "kg",
-        cm: "cm",
-        normalText: "No diabetic retinopathy detected",
-        mildText: "Mild diabetic retinopathy",
-        moderateText: "Moderate diabetic retinopathy",
-        severeText: "Severe diabetic retinopathy",
-        pdrText: "Proliferative diabetic retinopathy / PDR",
-        drText: "Diabetic retinopathy detected"
-      },
-
-      zh: {
-        topbarSubtitle: "糖尿病视网膜病变筛查报告",
-        breadcrumb: "报告 / 筛查文件",
-        pageTitle: "视网膜筛查报告",
-        pageDesc: "显示患者信息、视网膜图像、AI分析结果，并支持打印或保存文件。",
-        totalReports: "报告总数",
-        normalReports: "无DR / 正常",
-        abnormalReports: "发现异常",
-        readyPrint: "可打印",
-        reportList: "报告列表",
-        searchDesc: "可按患者姓名、HN、患者编号或结果搜索，例如 PT0008",
-        searchPlaceholder: "搜索患者姓名 / HN / 患者编号 / 结果",
-        emptySelect: "请从左侧列表选择报告",
-        noReport: "暂无报告，请先完成分析并保存报告。",
-        notFound: "未找到匹配的报告",
-        back: "← 返回",
-        home: "主页",
-        newAnalysis: "新分析",
-        saveDoc: "保存为 DOC",
-        printPdf: "打印 / 保存 PDF",
-        reportTitle: "视网膜筛查报告",
-        reportSubtitle: "糖尿病视网膜病变筛查报告",
-        scanOnline: "扫码查看在线结果",
-        reportId: "报告编号",
-        patientName: "患者姓名",
-        hn: "病历号",
-        patientCode: "患者编号",
-        birthDate: "出生日期",
-        age: "年龄",
-        sex: "性别",
-        phone: "电话",
-        weight: "体重",
-        height: "身高",
-        bmi: "BMI",
-        examDate: "检查日期",
-        hospital: "机构",
-        department: "科室 / 系统",
-        doctor: "检查人员",
-        disease: "基础疾病",
-        allergy: "药物过敏 / 过敏史",
-        image: "图像",
-        result: "结果",
-        confidence: "置信度",
-        screening: "筛查结果",
-        note: "备注",
-        pictureNo: "图像",
-        noAnalysis: "没有分析数据",
-        summary: "检查总结",
-        aiFound: "AI筛查结果显示",
-        disclaimer: "备注：AI结果仅用于初步筛查，不能替代医生诊断。建议由专业医务人员结合临床资料进一步评估。",
-        reporter: "报告人",
-        reviewer: "审核人",
-        years: "岁",
-        kg: "公斤",
-        cm: "厘米",
-        normalText: "未发现糖尿病视网膜病变",
-        mildText: "轻度糖尿病视网膜病变",
-        moderateText: "中度糖尿病视网膜病变",
-        severeText: "重度糖尿病视网膜病变",
-        pdrText: "增殖性糖尿病视网膜病变 / PDR",
-        drText: "发现糖尿病视网膜病变"
+      if (typeof setLang === "function") {
+        setLang(value);
+      } else {
+        location.reload();
       }
     };
+  }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const langSelect = document.getElementById("reportLangSelect");
+  function closeMore(){
+    document.body.classList.remove("dr-report-mobile-more-open");
+  }
 
-      if (langSelect) {
-        langSelect.value = reportLanguage;
+  function buildMobileNav(){
+    if (document.querySelector(".dr-report-mobile-bottom-nav")) return;
+
+    const nav = document.createElement("nav");
+    nav.className = "dr-report-mobile-bottom-nav";
+    nav.innerHTML = [
+      '<button class="dr-report-mobile-nav-item" data-go="dashboard.html"><span>🏠</span><small>' + text("หน้าหลัก","Home") + '</small></button>',
+      '<button class="dr-report-mobile-nav-item" data-go="patients.html"><span>👥</span><small>' + text("ผู้ป่วย","Patients") + '</small></button>',
+      '<button class="dr-report-mobile-nav-item primary" data-go="retina-analysis.html"><span>🔬</span><small>' + text("ตรวจ","Analyze") + '</small></button>',
+      '<button class="dr-report-mobile-nav-item active" data-go="retina-report-new.html"><span>📄</span><small>' + text("รายงาน","Report") + '</small></button>',
+      '<button class="dr-report-mobile-nav-item" data-more="true"><span>☰</span><small>' + text("เพิ่มเติม","More") + '</small></button>'
+    ].join("");
+
+    nav.addEventListener("click", function(event){
+      const btn = event.target.closest(".dr-report-mobile-nav-item");
+      if (!btn) return;
+      if (btn.dataset.more) {
+        document.body.classList.add("dr-report-mobile-more-open");
+        return;
       }
-
-      applyStaticLanguage();
-      loadReports();
-      renderSummary();
-      renderReportList();
-
-      const params = new URLSearchParams(window.location.search);
-      const reportId = params.get("report_id");
-
-      if (reportId) {
-        selectReport(reportId);
-      } else if (reports.length > 0) {
-        selectReport(reports[0].id);
+      if (btn.dataset.go) {
+        closeMore();
+        location.href = btn.dataset.go;
       }
     });
 
-    function t(key) {
-      return reportText[reportLanguage] && reportText[reportLanguage][key]
-        ? reportText[reportLanguage][key]
-        : reportText.th[key] || key;
-    }
-
-    function setReportLanguage(lang) {
-      reportLanguage = lang;
-      localStorage.setItem("dr_report_language", lang);
-
-      applyStaticLanguage();
-      renderSummary();
-      renderReportList();
-
-      if (selectedReport) {
-        renderReportDocument(selectedReport);
-      }
-    }
-
-    function applyStaticLanguage() {
-      document.documentElement.lang = reportLanguage;
-
-      document.getElementById("topbarSubtitle").textContent = t("topbarSubtitle");
-      document.getElementById("breadcrumbText").textContent = t("breadcrumb");
-      document.getElementById("pageTitle").textContent = t("pageTitle");
-      document.getElementById("pageDesc").textContent = t("pageDesc");
-
-      document.getElementById("statTotalLabel").textContent = t("totalReports");
-      document.getElementById("statNormalLabel").textContent = t("normalReports");
-      document.getElementById("statAbnormalLabel").textContent = t("abnormalReports");
-      document.getElementById("statPrintLabel").textContent = t("readyPrint");
-
-      document.getElementById("reportListTitle").textContent = t("reportList");
-      document.getElementById("reportListDesc").textContent = t("searchDesc");
-      document.getElementById("reportSearchInput").placeholder = t("searchPlaceholder");
-
-      document.getElementById("backBtn").textContent = t("back");
-      document.getElementById("homeBtn").textContent = t("home");
-      document.getElementById("newAnalysisBtn").textContent = t("newAnalysis");
-      document.getElementById("docBtn").textContent = t("saveDoc");
-      document.getElementById("printBtn").textContent = t("printPdf");
-    }
-
-    function goBack() {
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.href = "dashboard.html";
-      }
-    }
-
-    function loadReports() {
-      let saved = [];
-
-      try {
-        saved = JSON.parse(localStorage.getItem("dr_retina_reports") || "[]");
-      } catch (error) {
-        saved = [];
-      }
-
-      reports = Array.isArray(saved) ? saved : [];
-
-      reports.sort(function (a, b) {
-        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-      });
-
-      filteredReports = reports.slice();
-    }
-
-    function renderSummary() {
-      const total = reports.length;
-
-      const normal = reports.filter(function (report) {
-        const result = String(report.overall_result || "").toLowerCase();
-        return result.includes("no dr") || result.includes("normal");
-      }).length;
-
-      const abnormal = total - normal;
-
-      document.getElementById("totalReports").textContent = total;
-      document.getElementById("normalReports").textContent = normal;
-      document.getElementById("abnormalReports").textContent = abnormal;
-    }
-
-    function filterReports() {
-      const keyword = document.getElementById("reportSearchInput").value.trim().toLowerCase();
-
-      if (!keyword) {
-        filteredReports = reports.slice();
-      } else {
-        filteredReports = reports.filter(function (report) {
-          const patient = report.patient || {};
-          const resultText = String(report.overall_result || "").toLowerCase();
-
-          return (
-            String(patient.full_name || "").toLowerCase().includes(keyword) ||
-            String(patient.hn || "").toLowerCase().includes(keyword) ||
-            String(patient.patient_code || "").toLowerCase().includes(keyword) ||
-            resultText.includes(keyword) ||
-            String(report.id || "").toLowerCase().includes(keyword)
-          );
-        });
-      }
-
-      renderReportList();
-
-      if (filteredReports.length === 1) {
-        selectReport(filteredReports[0].id);
-      } else if (filteredReports.length === 0) {
-        document.getElementById("reportDocument").innerHTML =
-          '<div class="document-empty">' + t("notFound") + '</div>';
-      }
-    }
-
-    function renderReportList() {
-      const box = document.getElementById("reportList");
-
-      if (filteredReports.length === 0) {
-        box.innerHTML = '<div class="empty-state">' + t("noReport") + '</div>';
-        document.getElementById("reportDocument").innerHTML =
-          '<div class="document-empty">' + t("emptySelect") + '</div>';
-        return;
-      }
-
-      box.innerHTML = filteredReports.map(function (report) {
-        const patient = report.patient || {};
-        const isActive = selectedReport && String(selectedReport.id) === String(report.id);
-
-        return (
-          '<div class="report-row ' + (isActive ? "active" : "") + '" onclick="selectReport(\'' + escapeForAttr(report.id) + '\')">' +
-            '<strong>' + escapeHtml(patient.full_name || "-") + '</strong>' +
-            '<p>HN: ' + escapeHtml(patient.hn || "-") + ' | ' + t("patientCode") + ': ' + escapeHtml(patient.patient_code || "-") + '</p>' +
-            '<p>' + t("examDate") + ': ' + formatDateByLang(report.created_at) + '</p>' +
-            '<span class="badge">' + escapeHtml(getSeverityText(report.overall_result || "-")) + '</span>' +
-          '</div>'
-        );
-      }).join("");
-    }
-
-    function selectReport(reportId) {
-      selectedReport = reports.find(function (report) {
-        return String(report.id) === String(reportId);
-      });
-
-      if (!selectedReport) return;
-
-      renderReportList();
-      renderReportDocument(selectedReport);
-    }
-
-    function renderReportDocument(report) {
-      const box = document.getElementById("reportDocument");
-      const patient = report.patient || {};
-      const results = Array.isArray(report.results) ? report.results : [];
-
-      const birthDate = patient.birth_date ? formatDateOnlyByLang(patient.birth_date) : "-";
-      const age = patient.age || calculateAge(patient.birth_date) || "-";
-      const bmi = calculateBMI(patient.weight, patient.height);
-      const bmiText = bmi === "-" ? "-" : bmi + " kg/m²";
-
-      const hospitalName = DEFAULT_ORG_NAME;
-      const department = DEFAULT_DEPARTMENT;
-      const doctorName = report.doctor_name || "-";
-
-      const onlineUrl = window.location.origin + window.location.pathname + "?report_id=" + encodeURIComponent(report.id || "");
-      const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=" + encodeURIComponent(onlineUrl);
-
-      let resultRows = "";
-
-      if (results.length === 0) {
-        resultRows = '<tr><td colspan="5">' + t("noAnalysis") + '</td></tr>';
-      } else {
-        resultRows = results.map(function (item, index) {
-          return (
-            '<tr>' +
-              '<td>' +
-                '<img class="result-img" src="' + escapeHtml(item.image_url || item.original_image_url || "") + '" alt="retina image">' +
-                '<div style="font-size: 12px; margin-top: 6px;">' + t("pictureNo") + ' ' + (index + 1) + '</div>' +
-              '</td>' +
-              '<td>' +
-                '<strong>' + escapeHtml(item.prediction || item.severity || "-") + '</strong><br>' +
-                '<span>' + escapeHtml(getSeverityText(item.prediction || item.severity || "-")) + '</span>' +
-              '</td>' +
-              '<td>' +
-                'Severity: ' + escapeHtml(item.confidence || "-") + '%<br>' +
-                'Binary: ' + escapeHtml(item.binary_confidence || "-") + '%' +
-              '</td>' +
-              '<td>' + escapeHtml(item.binary_result || "-") + '</td>' +
-              '<td>' + escapeHtml(item.note || "-") + '</td>' +
-            '</tr>'
-          );
-        }).join("");
-      }
-
-      box.innerHTML =
-        '<div class="doc-header">' +
-          '<div class="doc-logo">' +
-            '<img class="doc-logo-img" src="institution-logo.png" alt="Institution Logo" onerror="this.style.display=\'none\'; this.parentElement.innerHTML=\'🏥\';">' +
-          '</div>' +
-
-          '<div class="doc-title">' +
-            '<h2>' + t("reportTitle") + '</h2>' +
-            '<p>' + t("reportSubtitle") + '</p>' +
-            '<p style="margin-top: 8px; color:#0f2b4c;">' + escapeHtml(hospitalName) + '</p>' +
-          '</div>' +
-
-          '<div class="doc-code">' +
-            '<div>' + t("reportId") + '</div>' +
-            '<div>' + escapeHtml(report.id || "-") + '</div>' +
-            '<div style="margin-top: 8px;">' + escapeHtml(patient.patient_code || "-") + '</div>' +
-            '<div class="qr-box">' +
-              '<img src="' + qrUrl + '" alt="QR Code">' +
-              '<div style="font-size: 11px; color:#64748b;">' + t("scanOnline") + '</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-
-        '<div class="patient-section">' +
-          '<div class="patient-line"><strong>' + t("patientName") + ' :</strong> ' + escapeHtml(patient.full_name || "-") + '</div>' +
-          '<div class="patient-line"><strong>' + t("hn") + ' :</strong> ' + escapeHtml(patient.hn || "-") + '</div>' +
-          '<div class="patient-line"><strong>' + t("patientCode") + ' :</strong> ' + escapeHtml(patient.patient_code || "-") + '</div>' +
-          '<div class="patient-line"><strong>' + t("reportId") + ' :</strong> ' + escapeHtml(report.id || "-") + '</div>' +
-          '<div class="patient-line"><strong>' + t("birthDate") + ' :</strong> ' + escapeHtml(birthDate) + '</div>' +
-          '<div class="patient-line"><strong>' + t("age") + ' :</strong> ' + escapeHtml(age) + ' ' + t("years") + '</div>' +
-          '<div class="patient-line"><strong>' + t("sex") + ' :</strong> ' + escapeHtml(patient.sex || "-") + '</div>' +
-          '<div class="patient-line"><strong>' + t("phone") + ' :</strong> ' + escapeHtml(patient.phone || "-") + '</div>' +
-          '<div class="patient-line"><strong>' + t("weight") + ' :</strong> ' + escapeHtml(patient.weight || "-") + ' ' + t("kg") + '</div>' +
-          '<div class="patient-line"><strong>' + t("height") + ' :</strong> ' + escapeHtml(patient.height || "-") + ' ' + t("cm") + '</div>' +
-          '<div class="patient-line"><strong>' + t("bmi") + ' :</strong> ' + escapeHtml(bmiText) + '</div>' +
-          '<div class="patient-line"><strong>' + t("examDate") + ' :</strong> ' + formatDateByLang(report.created_at) + '</div>' +
-          '<div class="patient-line"><strong>' + t("hospital") + ' :</strong> ' + escapeHtml(hospitalName) + '</div>' +
-          '<div class="patient-line"><strong>' + t("department") + ' :</strong> ' + escapeHtml(department) + '</div>' +
-          '<div class="patient-line"><strong>' + t("doctor") + ' :</strong> ' + escapeHtml(doctorName) + '</div>' +
-          '<div class="patient-line"><strong>' + t("disease") + ' :</strong> ' + escapeHtml(patient.underlying_disease || "-") + '</div>' +
-          '<div class="patient-line"><strong>' + t("allergy") + ' :</strong> ' + escapeHtml(patient.allergies || "-") + '</div>' +
-        '</div>' +
-
-        '<table class="result-table">' +
-          '<thead>' +
-            '<tr>' +
-              '<th style="width: 150px;">' + t("image") + '</th>' +
-              '<th>' + t("result") + '</th>' +
-              '<th>' + t("confidence") + '</th>' +
-              '<th>' + t("screening") + '</th>' +
-              '<th>' + t("note") + '</th>' +
-            '</tr>' +
-          '</thead>' +
-          '<tbody>' + resultRows + '</tbody>' +
-        '</table>' +
-
-        '<div class="interpret-box">' +
-          '<h3>' + t("summary") + '</h3>' +
-          '<p>' + t("aiFound") + ': <strong>' + escapeHtml(getSeverityText(report.overall_result || "-")) + '</strong></p>' +
-          '<p style="margin-top: 8px;">' + t("disclaimer") + '</p>' +
-        '</div>' +
-
-        '<div class="signature-section">' +
-          '<div class="signature-box">' +
-            '<div class="signature-line"></div>' +
-            '<div>' + t("reporter") + '</div>' +
-            '<div>(' + escapeHtml(doctorName || "................................") + ')</div>' +
-          '</div>' +
-
-          '<div class="signature-box">' +
-            '<div class="signature-line"></div>' +
-            '<div>' + t("reviewer") + '</div>' +
-            '<div>(................................)</div>' +
-          '</div>' +
-        '</div>';
-    }
-
-    function printReport() {
-      if (!selectedReport) {
-        alert(t("emptySelect"));
-        return;
-      }
-
-      window.print();
-    }
-
-    function downloadDoc() {
-      if (!selectedReport) {
-        alert(t("emptySelect"));
-        return;
-      }
-
-      const content = document.getElementById("reportDocument").outerHTML;
-      const blob = new Blob(["\ufeff" + content], {
-        type: "application/msword"
-      });
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-
-      const patientCode =
-        selectedReport &&
-        selectedReport.patient &&
-        selectedReport.patient.patient_code
-          ? selectedReport.patient.patient_code
-          : selectedReport.id || "report";
-
-      a.href = url;
-      a.download = "DR_Report_" + patientCode + "_" + reportLanguage + ".doc";
-
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      URL.revokeObjectURL(url);
-    }
-
-    function getSeverityText(label) {
-      const text = String(label || "").toLowerCase();
-
-      if (text.includes("no dr") || text.includes("normal")) return t("normalText");
-      if (text.includes("mild")) return t("mildText");
-      if (text.includes("moderate")) return t("moderateText");
-      if (text.includes("severe")) return t("severeText");
-      if (text.includes("pdr") || text.includes("proliferative")) return t("pdrText");
-      if (text === "dr") return t("drText");
-
-      return label || "-";
-    }
-
-    function formatDateByLang(value) {
-      if (!value) return "-";
-
-      const date = new Date(value);
-      const locale = reportLanguage === "en" ? "en-US" : reportLanguage === "zh" ? "zh-CN" : "th-TH";
-
-      return date.toLocaleString(locale, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
-
-    function formatDateOnlyByLang(value) {
-      if (!value) return "-";
-
-      const date = new Date(value);
-      const locale = reportLanguage === "en" ? "en-US" : reportLanguage === "zh" ? "zh-CN" : "th-TH";
-
-      return date.toLocaleDateString(locale, {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      });
-    }
-
-    function calculateAge(birthDate) {
-      if (!birthDate) return "-";
-
-      const birth = new Date(birthDate);
-      const today = new Date();
-
-      let age = today.getFullYear() - birth.getFullYear();
-      const monthDiff = today.getMonth() - birth.getMonth();
-
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
-      }
-
-      return age;
-    }
-
-    function calculateBMI(weight, height) {
-      const w = Number(weight);
-      const h = Number(height) / 100;
-
-      if (!w || !h || Number.isNaN(w) || Number.isNaN(h)) {
-        return "-";
-      }
-
-      return (w / (h * h)).toFixed(2);
-    }
-
-    function escapeHtml(value) {
-      return String(value || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function escapeForAttr(value) {
-      return String(value || "")
-        .replaceAll("\\", "\\\\")
-        .replaceAll("'", "\\'")
-        .replaceAll('"', "&quot;");
-    }
-  </script>
-  <script>
-    // ฟังก์ชันเช็คธีมจาก localStorage (ใช้ Key เดียวกับ Dashboard มึง)
-    function applyTheme() {
-        const theme = localStorage.getItem("dr_dashboard_theme") || "light";
-        if (theme === "dark") {
-            document.body.classList.add("dark-mode");
-        } else {
-            document.body.classList.remove("dark-mode");
-        }
-    }
-
-    // เรียกทำงานทันทีที่โหลดหน้า
-    applyTheme();
-
-    // เผื่อมึงเปิดหน้า Dashboard กับหน้านี้ไว้พร้อมกัน พอสลับปุ๊บ หน้านี้จะเปลี่ยนตามทันที
-    window.addEventListener('storage', (e) => {
-        if (e.key === 'dr_dashboard_theme') {
-            applyTheme();
-        }
-    });
-</script>
-
-<!-- DR MOBILE ONLY APP SHELL SCRIPT START -->
-<script id="dr-mobile-only-app-shell-script">
-(function(){
-  function page(){ return (location.pathname.split('/').pop() || 'dashboard.html').toLowerCase(); }
-  function isMobile(){ return window.matchMedia && window.matchMedia('(max-width: 900px)').matches; }
-  function lang(){
-    const keys = ['dr_lang','dr_language','language','site_language','dr_dashboard_language','app_language','app_lang'];
-    for(const k of keys){
-      const v = (localStorage.getItem(k) || '').toLowerCase();
-      if(v.startsWith('en')) return 'en';
-      if(v.startsWith('th')) return 'th';
-    }
-    return 'th';
-  }
-  function text(th,en){ return lang()==='en' ? en : th; }
-  function closeMore(){ document.body.classList.remove('dr-mobile-more-open'); }
-  function openMore(){ document.body.classList.add('dr-mobile-more-open'); }
-  function active(keys){ return keys.includes(page()) ? 'active' : ''; }
-  function moreActive(){
-    return ['user.html','appointment-followup.html','patient-transfer.html','knowledge-dr.html','patient-history.html','screening-history.html','settings.html'].includes(page()) ? 'active' : '';
-  }
-  function go(url){ closeMore(); location.href = url; }
-  async function logout(){
-    try{
-      if(window.db && window.db.auth) await window.db.auth.signOut();
-      else if(window.sb && window.sb.auth) await window.sb.auth.signOut();
-      else if(window.supabaseClient && window.supabaseClient.auth) await window.supabaseClient.auth.signOut();
-      else if(window.supabase && window.supabase.auth) await window.supabase.auth.signOut();
-    }catch(e){}
-    location.href = 'index.html';
-  }
-  function build(){
-    if(document.querySelector('.dr-mobile-bottom-nav')) return;
-    const nav = document.createElement('nav');
-    nav.className = 'dr-mobile-bottom-nav';
-    nav.innerHTML = `
-      <button type="button" class="dr-mobile-nav-item ${active(['dashboard.html'])}" data-go="dashboard.html"><span class="dr-mobile-ico">🏠</span><span>${text('หน้าหลัก','Home')}</span></button>
-      <button type="button" class="dr-mobile-nav-item ${active(['patients.html','create-patient.html'])}" data-go="patients.html"><span class="dr-mobile-ico">👥</span><span>${text('ผู้ป่วย','Patients')}</span></button>
-      <button type="button" class="dr-mobile-nav-item primary ${active(['retina-analysis.html'])}" data-go="retina-analysis.html"><span class="dr-mobile-ico">🔬</span><span>${text('ตรวจ','Analyze')}</span></button>
-      <button type="button" class="dr-mobile-nav-item ${active(['retina-report-new.html'])}" data-go="retina-report-new.html"><span class="dr-mobile-ico">📄</span><span>${text('รายงาน','Report')}</span></button>
-      <button type="button" class="dr-mobile-nav-item ${moreActive()}" data-more="1"><span class="dr-mobile-ico">☰</span><span>${text('เพิ่มเติม','More')}</span></button>`;
     document.body.appendChild(nav);
 
-    const overlay = document.createElement('div');
-    overlay.className = 'dr-mobile-more-overlay';
-    overlay.addEventListener('click', closeMore);
+    const overlay = document.createElement("div");
+    overlay.className = "dr-report-mobile-more-overlay";
+    overlay.addEventListener("click", closeMore);
     document.body.appendChild(overlay);
 
-    const sheet = document.createElement('div');
-    sheet.className = 'dr-mobile-more-sheet';
-    sheet.innerHTML = `
-      <div class="dr-mobile-more-title">${text('เมนูเพิ่มเติม','More Menu')}</div>
-      <div class="dr-mobile-more-grid">
-        <a class="dr-mobile-more-link" href="user.html">👤 ${text('บัญชีผู้ใช้','Account')}</a>
-        <a class="dr-mobile-more-link" href="create-patient.html">➕ ${text('สร้างผู้ป่วย','New Patient')}</a>
-        <a class="dr-mobile-more-link" href="appointment-followup.html">📅 ${text('นัดหมาย','Appointment')}</a>
-        <a class="dr-mobile-more-link" href="patient-transfer.html">🔁 ${text('โอนย้าย','Transfer')}</a>
-        <a class="dr-mobile-more-link" href="screening-history.html">🕘 ${text('ประวัติ','History')}</a>
-        <a class="dr-mobile-more-link" href="knowledge-dr.html">💡 ${text('ความรู้','Knowledge')}</a>
-        <a class="dr-mobile-more-link" href="settings.html">⚙️ ${text('ตั้งค่า','Settings')}</a>
-        <button class="dr-mobile-more-logout" type="button" id="drMobileLogout">🚪 ${text('ออกจากระบบ','Logout')}</button>
-      </div>`;
+    const sheet = document.createElement("div");
+    sheet.className = "dr-report-mobile-more-sheet";
+    sheet.innerHTML =
+      '<div class="dr-report-mobile-more-title">' + text("เมนูเพิ่มเติม","More Menu") + '</div>' +
+      '<div class="dr-report-mobile-more-grid">' +
+        '<a class="dr-report-mobile-more-link" href="user.html">👤 ' + text("บัญชีผู้ใช้","Account") + '</a>' +
+        '<a class="dr-report-mobile-more-link" href="create-patient.html">➕ ' + text("สร้างผู้ป่วย","New Patient") + '</a>' +
+        '<a class="dr-report-mobile-more-link" href="appointment-followup.html">📅 ' + text("นัดหมาย","Appointment") + '</a>' +
+        '<a class="dr-report-mobile-more-link" href="patient-transfer.html">🔁 ' + text("โอนย้าย","Transfer") + '</a>' +
+        '<a class="dr-report-mobile-more-link" href="screening-history.html">🕘 ' + text("ประวัติ","History") + '</a>' +
+        '<a class="dr-report-mobile-more-link" href="knowledge-dr.html">💡 ' + text("ความรู้","Knowledge") + '</a>' +
+        '<a class="dr-report-mobile-more-link" href="settings.html">⚙️ ' + text("ตั้งค่า","Settings") + '</a>' +
+        '<button class="dr-report-mobile-more-logout" type="button" id="drReportMobileLogoutBtn">🚪 ' + text("ออกจากระบบ","Logout") + '</button>' +
+      '</div>';
+
     document.body.appendChild(sheet);
 
-    nav.addEventListener('click', function(e){
-      const btn = e.target.closest('.dr-mobile-nav-item');
-      if(!btn) return;
-      if(btn.dataset.more) return openMore();
-      if(btn.dataset.go) return go(btn.dataset.go);
+    const logout = document.getElementById("drReportMobileLogoutBtn");
+    if (logout) {
+      logout.addEventListener("click", async function(){
+        try {
+          if (typeof db !== "undefined" && db.auth) await db.auth.signOut();
+        } catch(e) {}
+        location.href = "index.html";
+      });
+    }
+
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape") closeMore();
     });
-    sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMore));
-    const out = sheet.querySelector('#drMobileLogout');
-    if(out) out.addEventListener('click', logout);
-    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMore(); });
   }
-  function refreshLabels(){
-    document.querySelector('.dr-mobile-bottom-nav')?.remove();
-    document.querySelector('.dr-mobile-more-overlay')?.remove();
-    document.querySelector('.dr-mobile-more-sheet')?.remove();
-    if(isMobile()) build();
+
+  function fitPaperPreview(){
+    if (!window.matchMedia("(max-width: 900px)").matches) {
+      const paper = document.querySelector("#paperContainer .paper");
+      const container = document.getElementById("paperContainer");
+      if (paper) {
+        paper.style.transform = "";
+        paper.style.width = "";
+        paper.style.maxWidth = "";
+        paper.style.margin = "";
+      }
+      if (container) container.style.height = "";
+      return;
+    }
+
+    const container = document.getElementById("paperContainer");
+    const paper = document.querySelector("#paperContainer .paper");
+
+    if (!container || !paper) return;
+
+    const baseWidth = 794;
+    const available = Math.max(280, container.clientWidth - 2);
+    const scale = Math.min(1, available / baseWidth);
+
+    paper.style.width = baseWidth + "px";
+    paper.style.maxWidth = "none";
+    paper.style.transformOrigin = "top left";
+    paper.style.transform = "scale(" + scale + ")";
+    paper.style.margin = "0";
+
+    window.requestAnimationFrame(function(){
+      const height = Math.ceil(paper.offsetHeight * scale + 8);
+      container.style.height = height + "px";
+    });
   }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ if(isMobile()) build(); });
-  else if(isMobile()) build();
-  window.addEventListener('resize', function(){ if(isMobile()) build(); });
-  window.addEventListener('storage', function(e){ if(['dr_lang','dr_language','language','site_language','dr_dashboard_language','app_language','app_lang'].includes(e.key)) refreshLabels(); });
-  document.addEventListener('dr:language-applied', refreshLabels);
+
+  function refreshMobileShell(){
+    normalizeLanguageSelect();
+
+    const nav = document.querySelector(".dr-report-mobile-bottom-nav");
+    const sheet = document.querySelector(".dr-report-mobile-more-sheet");
+    if (nav || sheet) {
+      [nav, sheet].forEach(function(el){ if (el) el.remove(); });
+      const overlay = document.querySelector(".dr-report-mobile-more-overlay");
+      if (overlay) overlay.remove();
+    }
+
+    buildMobileNav();
+    fitPaperPreview();
+  }
+
+  function init(){
+    normalizeLanguageSelect();
+    buildMobileNav();
+    fitPaperPreview();
+
+    const target = document.getElementById("paperContainer");
+    if (target) {
+      new MutationObserver(function(){
+        setTimeout(fitPaperPreview, 80);
+      }).observe(target, { childList: true, subtree: true });
+    }
+  }
+
+  window.addEventListener("resize", function(){
+    setTimeout(fitPaperPreview, 80);
+  });
+
+  window.addEventListener("focus", function(){
+    setTimeout(refreshMobileShell, 150);
+  });
+
+  window.addEventListener("storage", function(event){
+    if (["dr_report_language","dr_language","dr_lang","language","site_language","app_language"].includes(event.key)) {
+      setTimeout(refreshMobileShell, 80);
+    }
+  });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
 </script>
-<!-- DR MOBILE ONLY APP SHELL SCRIPT END -->
 
 </body>
 </html>
