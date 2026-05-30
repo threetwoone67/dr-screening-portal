@@ -130,23 +130,77 @@ function patientOf(r){
            reportNames.some(n => codes.includes(n));
   }) || {};
 }
+function safeJsonParse(x){
+  if(typeof x !== "string") return x;
+  const t = x.trim();
+  if(!t || !(t.startsWith("{") || t.startsWith("["))) return x;
+  try { return JSON.parse(t); } catch(e) { return x; }
+}
+function collectDeepValues(obj, out=[], depth=0){
+  if(obj === null || obj === undefined || depth > 5) return out;
+  obj = safeJsonParse(obj);
+  if(typeof obj === "string") {
+    out.push(obj);
+    return out;
+  }
+  if(Array.isArray(obj)) {
+    obj.forEach(v => collectDeepValues(v, out, depth + 1));
+    return out;
+  }
+  if(typeof obj === "object") {
+    Object.keys(obj).forEach(k => collectDeepValues(obj[k], out, depth + 1));
+  }
+  return out;
+}
 function publicStorageUrl(path){
   if(!path) return "";
   const s = String(path).trim();
-  if(s.startsWith("data:")) return "";
+  if(!s || s === "-" || s.startsWith("data:")) return "";
   if(s.startsWith("http://") || s.startsWith("https://")) return s;
   let key = s.replace(/^\/+/, "");
+  key = key.replace(/^public\//, "");
+  if(key.includes("/object/public/" + IMAGE_BUCKET + "/")) {
+    key = key.split("/object/public/" + IMAGE_BUCKET + "/").pop();
+  }
   if(key.startsWith(IMAGE_BUCKET + "/")) key = key.slice((IMAGE_BUCKET + "/").length);
-  return SUPABASE_URL + "/storage/v1/object/public/" + IMAGE_BUCKET + "/" + key;
+  return SUPABASE_URL + "/storage/v1/object/public/" + IMAGE_BUCKET + "/" + encodeURI(key).replace(/#/g, "%23");
+}
+function looksLikeImagePath(x){
+  const s = String(x || "").trim();
+  if(!s || s.startsWith("data:")) return false;
+  if(/api\.qrserver\.com/i.test(s)) return false;
+  if(/institution-logo|logo-new|logo-kmutnb/i.test(s)) return false;
+  if(/\.(png|jpg|jpeg|webp|gif)(\?|$)/i.test(s)) return true;
+  if(s.includes("/storage/v1/object/")) return true;
+  if(s.includes(IMAGE_BUCKET + "/")) return true;
+  return false;
 }
 function directImageCandidate(r){
-  const candidates = [
+  if(!r) return "";
+  const priority = [
     r.image_url, r.original_image_url, r.image_public_url, r.fundus_image_url, r.retina_image_url,
-    r.storage_url, r.file_url, r.original_url,
-    r.image_path, r.original_image_path, r.storage_path, r.file_path, r.image_storage_path
+    r.storage_url, r.file_url, r.original_url, r.public_url, r.url,
+    r.image_path, r.original_image_path, r.storage_path, r.file_path, r.image_storage_path,
+    r.gradcam_url, r.heatmap_url, r.overlay_url
   ];
-  for(const c of candidates) if(c) return publicStorageUrl(c);
-  return "";
+  for(const c of priority){
+    if(c && looksLikeImagePath(c)) return publicStorageUrl(c);
+  }
+
+  // รองรับกรณีบันทึกรูปไว้ใน JSON เช่น results, images, image_urls, files
+  const deepValues = collectDeepValues({
+    image_urls: r.image_urls,
+    images: r.images,
+    files: r.files,
+    results: r.results,
+    result: r.result,
+    analysis_results: r.analysis_results,
+    prediction_results: r.prediction_results,
+    metadata: r.metadata,
+    data: r.data
+  });
+  const found = deepValues.find(looksLikeImagePath);
+  return found ? publicStorageUrl(found) : "";
 }
 async function fileExists(url){
   if(!url) return false;
@@ -154,7 +208,8 @@ async function fileExists(url){
     const res = await fetch(url, {method:"HEAD", cache:"no-store"});
     return res.ok;
   } catch(e) {
-    return false;
+    // บาง Storage/CDN ไม่ตอบ HEAD หรือโดน CORS block แต่รูปยังแสดงด้วย <img> ได้
+    return true;
   }
 }
 async function listStorage(folder){
@@ -168,7 +223,7 @@ async function listStorage(folder){
 }
 async function firstFileInFolder(folder){
   const items = await listStorage(folder);
-  const img = items.find(f => f && f.name && /\.(png|jpg|jpeg|webp)$/i.test(f.name));
+  const img = items.find(f => f && f.name && /\.(png|jpg|jpeg|webp|gif)$/i.test(f.name));
   if(img) return publicStorageUrl(folder.replace(/^\/+|\/+$/g, "") + "/" + img.name);
   return "";
 }
@@ -177,7 +232,7 @@ async function firstImageRecursive(folder, depth=0){
   const direct = await firstFileInFolder(folder);
   if(direct) return direct;
   const items = await listStorage(folder);
-  const subfolders = items.filter(f => f && f.name && !/\.(png|jpg|jpeg|webp)$/i.test(f.name));
+  const subfolders = items.filter(f => f && f.name && !/\.(png|jpg|jpeg|webp|gif)$/i.test(f.name));
   for(const sub of subfolders){
     const url = await firstImageRecursive(folder.replace(/^\/+|\/+$/g, "") + "/" + sub.name, depth + 1);
     if(url) return url;
@@ -186,11 +241,14 @@ async function firstImageRecursive(folder, depth=0){
 }
 async function resolveImage(r){
   if(r.__resolvedImage !== undefined) return r.__resolvedImage;
+
+  // ใช้ URL/path ที่บันทึกไว้ใน report ก่อน ไม่บังคับ HEAD เพราะมือถือ/Storage บางตัวไม่ตอบ HEAD
   const direct = directImageCandidate(r);
-  if(direct && await fileExists(direct)) {
+  if(direct) {
     r.__resolvedImage = direct;
     return direct;
   }
+
   const code = String(r.patient_code || r.hn || "").trim();
   const rid = String(r.report_id || r.id || "").trim();
   const folders = [];

@@ -53,13 +53,26 @@
   document.addEventListener('dr:language-applied', ()=>{ if(!isPublic()) renderSidebar(); });
 })();
 /* =========================================================
-   MOBILE SIDEBAR TOGGLE - READY
-   เฉพาะมือถือเท่านั้น: Desktop/Web เดิมไม่ถูกแตะ
+   MOBILE SIDEBAR TOGGLE - FINAL HARD FIX
+   ใช้เฉพาะมือถือเท่านั้น ไม่แตะ Desktop/Web เดิม
 ========================================================= */
 
 (function () {
   const MOBILE_WIDTH = 900;
   const publicPages = ["index.html", "register.html", "forgot-password.html", "reset-password.html", "report-view.html"];
+  const sidebarSelector = [
+    "#drSidebarHost",
+    "#sidebar",
+    ".dr-sidebar",
+    ".sidebar",
+    "aside.sidebar",
+    ".side-bar",
+    ".app-sidebar",
+    ".left-sidebar",
+    ".sidenav",
+    ".side-nav",
+    ".sidebar-menu"
+  ].join(", ");
 
   function currentPage() {
     return (location.pathname.split("/").pop() || "index.html").toLowerCase();
@@ -69,136 +82,152 @@
     return publicPages.includes(currentPage());
   }
 
-  function findSidebar() {
-    return document.querySelector(
-      "#drSidebarHost, .dr-sidebar, .sidebar, aside.sidebar, .side-bar, .app-sidebar, .left-sidebar"
-    );
+  function isMobileLike() {
+    const ua = navigator.userAgent || "";
+    return window.innerWidth <= MOBILE_WIDTH ||
+      (window.screen && window.screen.width <= MOBILE_WIDTH) ||
+      /Android|iPhone|iPad|iPod|Mobile|Line\//i.test(ua) ||
+      (window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches);
   }
 
-  function injectMobileSidebarStyle() {
-    if (document.getElementById("drMobileSidebarStyle")) return;
+  function ensureViewportForMobile() {
+    if (!isMobileLike()) return;
+    let meta = document.querySelector('meta[name="viewport"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "viewport");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", "width=device-width, initial-scale=1, viewport-fit=cover");
+  }
 
+  function getSidebars() {
+    return Array.from(document.querySelectorAll(sidebarSelector)).filter(function (el) {
+      if (!el || el.classList.contains("mobile-sidebar-toggle") || el.classList.contains("mobile-sidebar-overlay")) return false;
+      const text = (el.textContent || "").toLowerCase();
+      return el.id === "drSidebarHost" ||
+        el.classList.contains("dr-sidebar") ||
+        el.className.toString().toLowerCase().includes("sidebar") ||
+        text.includes("retinopathy") ||
+        text.includes("screening") ||
+        text.includes("patient") ||
+        text.includes("report");
+    });
+  }
+
+  function injectMobileStyle() {
+    if (document.getElementById("drMobileHardFixStyle")) return;
     const s = document.createElement("style");
-    s.id = "drMobileSidebarStyle";
+    s.id = "drMobileHardFixStyle";
     s.textContent = `
-      .mobile-sidebar-toggle{display:none}
-      .mobile-sidebar-overlay{display:none}
+      .mobile-sidebar-toggle,.mobile-sidebar-overlay{display:none}
 
-      @media (max-width: ${MOBILE_WIDTH}px) {
-        body{overflow-x:hidden!important}
-        body.has-dr-sidebar{padding-left:0!important}
+      html.dr-mobile body{overflow-x:hidden!important}
+      html.dr-mobile body.has-dr-sidebar{padding-left:0!important}
 
-        .mobile-sidebar-toggle{
-          display:inline-flex!important;
-          position:fixed!important;
-          top:calc(12px + env(safe-area-inset-top, 0px))!important;
-          left:14px!important;
-          z-index:100000!important;
-          width:46px!important;
-          height:46px!important;
-          border:0!important;
-          border-radius:14px!important;
-          align-items:center!important;
-          justify-content:center!important;
-          background:#ffffff!important;
-          color:#173764!important;
-          box-shadow:0 8px 24px rgba(15,23,42,.20)!important;
-          font-size:24px!important;
-          font-weight:900!important;
-          cursor:pointer!important;
-          -webkit-tap-highlight-color:transparent!important;
-        }
-
-        .mobile-sidebar-overlay{
-          display:none!important;
-          position:fixed!important;
-          inset:0!important;
-          z-index:99990!important;
-          background:rgba(15,23,42,.45)!important;
-          backdrop-filter:blur(2px)!important;
-        }
-
-        body.sidebar-open .mobile-sidebar-overlay{display:block!important}
-
-        #drSidebarHost.dr-sidebar,
-        .dr-sidebar,
-        .sidebar,
-        aside.sidebar,
-        .side-bar,
-        .app-sidebar,
-        .left-sidebar{
-          position:fixed!important;
-          top:0!important;
-          left:0!important;
-          bottom:auto!important;
-          z-index:99995!important;
-          width:min(86vw, 320px)!important;
-          max-width:320px!important;
-          height:100dvh!important;
-          min-height:100dvh!important;
-          overflow-y:auto!important;
-          -webkit-overflow-scrolling:touch!important;
-          transform:translate3d(-110%,0,0)!important;
-          transition:transform .25s ease!important;
-          box-shadow:16px 0 40px rgba(15,23,42,.24)!important;
-          background:#fff!important;
-        }
-
-        body.sidebar-open #drSidebarHost.dr-sidebar,
-        body.sidebar-open .dr-sidebar,
-        body.sidebar-open .sidebar,
-        body.sidebar-open aside.sidebar,
-        body.sidebar-open .side-bar,
-        body.sidebar-open .app-sidebar,
-        body.sidebar-open .left-sidebar{
-          transform:translate3d(0,0,0)!important;
-        }
-
-        main,
-        .main,
-        .content,
-        .main-content,
-        .page,
-        .page-content,
-        .dashboard,
-        .app-main,
-        .container{
-          margin-left:0!important;
-          width:100%!important;
-          max-width:100%!important;
-        }
-
-        .topbar,
-        .header,
-        .page-header{
-          padding-left:68px!important;
-        }
+      html.dr-mobile .mobile-sidebar-toggle{
+        display:inline-flex!important;
+        position:fixed!important;
+        top:calc(12px + env(safe-area-inset-top, 0px))!important;
+        left:14px!important;
+        z-index:2147483647!important;
+        width:46px!important;
+        height:46px!important;
+        border:0!important;
+        border-radius:14px!important;
+        align-items:center!important;
+        justify-content:center!important;
+        background:#ffffff!important;
+        color:#173764!important;
+        box-shadow:0 8px 24px rgba(15,23,42,.20)!important;
+        font-size:24px!important;
+        font-weight:900!important;
+        line-height:1!important;
+        cursor:pointer!important;
+        -webkit-tap-highlight-color:transparent!important;
       }
 
-      @media (min-width: ${MOBILE_WIDTH + 1}px) {
-        .mobile-sidebar-toggle,
-        .mobile-sidebar-overlay{display:none!important}
+      html.dr-mobile .mobile-sidebar-overlay{
+        display:none!important;
+        position:fixed!important;
+        inset:0!important;
+        z-index:2147483645!important;
+        background:rgba(15,23,42,.45)!important;
+        backdrop-filter:blur(2px)!important;
       }
+
+      html.dr-mobile body.sidebar-open .mobile-sidebar-overlay{display:block!important}
+
+      html.dr-mobile #drSidebarHost,
+      html.dr-mobile #sidebar,
+      html.dr-mobile .dr-sidebar,
+      html.dr-mobile .sidebar,
+      html.dr-mobile aside.sidebar,
+      html.dr-mobile .side-bar,
+      html.dr-mobile .app-sidebar,
+      html.dr-mobile .left-sidebar,
+      html.dr-mobile .sidenav,
+      html.dr-mobile .side-nav,
+      html.dr-mobile .sidebar-menu{
+        position:fixed!important;
+        top:0!important;
+        left:0!important;
+        right:auto!important;
+        bottom:auto!important;
+        z-index:2147483646!important;
+        width:min(86vw, 320px)!important;
+        max-width:320px!important;
+        height:100dvh!important;
+        min-height:100dvh!important;
+        overflow-y:auto!important;
+        -webkit-overflow-scrolling:touch!important;
+        transform:translate3d(-115%,0,0)!important;
+        transition:transform .24s ease!important;
+        box-shadow:16px 0 40px rgba(15,23,42,.24)!important;
+        background:#fff!important;
+      }
+
+      html.dr-mobile body.sidebar-open #drSidebarHost,
+      html.dr-mobile body.sidebar-open #sidebar,
+      html.dr-mobile body.sidebar-open .dr-sidebar,
+      html.dr-mobile body.sidebar-open .sidebar,
+      html.dr-mobile body.sidebar-open aside.sidebar,
+      html.dr-mobile body.sidebar-open .side-bar,
+      html.dr-mobile body.sidebar-open .app-sidebar,
+      html.dr-mobile body.sidebar-open .left-sidebar,
+      html.dr-mobile body.sidebar-open .sidenav,
+      html.dr-mobile body.sidebar-open .side-nav,
+      html.dr-mobile body.sidebar-open .sidebar-menu{
+        transform:translate3d(0,0,0)!important;
+      }
+
+      html.dr-mobile main,
+      html.dr-mobile .main,
+      html.dr-mobile .content,
+      html.dr-mobile .main-content,
+      html.dr-mobile .page,
+      html.dr-mobile .page-content,
+      html.dr-mobile .dashboard,
+      html.dr-mobile .app-main,
+      html.dr-mobile .container{
+        margin-left:0!important;
+        width:100%!important;
+        max-width:100%!important;
+      }
+
+      html.dr-mobile .topbar,
+      html.dr-mobile .header,
+      html.dr-mobile .page-header{
+        padding-left:68px!important;
+      }
+
+      html:not(.dr-mobile) .mobile-sidebar-toggle,
+      html:not(.dr-mobile) .mobile-sidebar-overlay{display:none!important}
     `;
     document.head.appendChild(s);
   }
 
-  function closeSidebar() {
-    document.body.classList.remove("sidebar-open");
-  }
-
-  function toggleSidebar() {
-    document.body.classList.toggle("sidebar-open");
-  }
-
-  function createMobileSidebarControl() {
-    if (isPublicPage()) return;
-
-    injectMobileSidebarStyle();
-
-    const sidebar = findSidebar();
-    if (!sidebar) return;
-
+  function createButtonAndOverlay() {
     if (!document.querySelector(".mobile-sidebar-toggle")) {
       const btn = document.createElement("button");
       btn.className = "mobile-sidebar-toggle";
@@ -206,7 +235,10 @@
       btn.setAttribute("aria-label", "Open menu");
       btn.innerHTML = "☰";
       document.body.appendChild(btn);
-      btn.addEventListener("click", toggleSidebar);
+      btn.addEventListener("click", function () {
+        document.body.classList.toggle("sidebar-open");
+        forceApplyMobileState();
+      });
     }
 
     if (!document.querySelector(".mobile-sidebar-overlay")) {
@@ -215,14 +247,57 @@
       document.body.appendChild(overlay);
       overlay.addEventListener("click", closeSidebar);
     }
+  }
 
-    sidebar.querySelectorAll("a").forEach(function (link) {
-      if (link.dataset.mobileSidebarBound === "1") return;
-      link.dataset.mobileSidebarBound = "1";
-      link.addEventListener("click", function () {
-        if (window.innerWidth <= MOBILE_WIDTH) closeSidebar();
+  function forceApplyMobileState() {
+    const mobile = isMobileLike() && !isPublicPage();
+    document.documentElement.classList.toggle("dr-mobile", mobile);
+    if (!mobile) {
+      document.body.classList.remove("sidebar-open");
+      return;
+    }
+
+    ensureViewportForMobile();
+    injectMobileStyle();
+    createButtonAndOverlay();
+
+    const open = document.body.classList.contains("sidebar-open");
+    getSidebars().forEach(function (el) {
+      el.style.position = "fixed";
+      el.style.top = "0";
+      el.style.left = "0";
+      el.style.right = "auto";
+      el.style.bottom = "auto";
+      el.style.zIndex = "2147483646";
+      el.style.width = "min(86vw, 320px)";
+      el.style.maxWidth = "320px";
+      el.style.height = "100dvh";
+      el.style.minHeight = "100dvh";
+      el.style.overflowY = "auto";
+      el.style.webkitOverflowScrolling = "touch";
+      el.style.transition = "transform .24s ease";
+      el.style.transform = open ? "translate3d(0,0,0)" : "translate3d(-115%,0,0)";
+      el.style.boxShadow = "16px 0 40px rgba(15,23,42,.24)";
+      el.style.background = "#fff";
+
+      el.querySelectorAll("a").forEach(function (link) {
+        if (link.dataset.mobileSidebarBound === "1") return;
+        link.dataset.mobileSidebarBound = "1";
+        link.addEventListener("click", closeSidebar);
       });
     });
+  }
+
+  function closeSidebar() {
+    document.body.classList.remove("sidebar-open");
+    forceApplyMobileState();
+  }
+
+  function bootMobileSidebar() {
+    if (isPublicPage()) return;
+    forceApplyMobileState();
+    setTimeout(forceApplyMobileState, 150);
+    setTimeout(forceApplyMobileState, 600);
   }
 
   document.addEventListener("keydown", function (e) {
@@ -230,18 +305,20 @@
   });
 
   window.addEventListener("resize", function () {
-    if (window.innerWidth > MOBILE_WIDTH) closeSidebar();
+    forceApplyMobileState();
+  });
+
+  window.addEventListener("orientationchange", function () {
+    setTimeout(forceApplyMobileState, 250);
   });
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
-      setTimeout(createMobileSidebarControl, 0);
-    });
+    document.addEventListener("DOMContentLoaded", bootMobileSidebar);
   } else {
-    setTimeout(createMobileSidebarControl, 0);
+    bootMobileSidebar();
   }
 
   document.addEventListener("dr:language-applied", function () {
-    setTimeout(createMobileSidebarControl, 50);
+    setTimeout(forceApplyMobileState, 80);
   });
 })();

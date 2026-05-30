@@ -516,3 +516,119 @@ body {
     overflow: auto;
   }
 }
+
+/* =========================================================
+   MOBILE SIDEBAR HARD FIX - FINAL
+   ใช้เฉพาะมือถือ/จอสัมผัส ไม่กระทบ Desktop
+========================================================= */
+
+html.dr-mobile body {
+  overflow-x: hidden !important;
+}
+
+html.dr-mobile body.has-dr-sidebar {
+  padding-left: 0 !important;
+}
+
+html.dr-mobile .mobile-sidebar-toggle {
+  display: inline-flex !important;
+  position: fixed !important;
+  top: calc(12px + env(safe-area-inset-top, 0px)) !important;
+  left: 14px !important;
+  z-index: 2147483647 !important;
+  width: 46px !important;
+  height: 46px !important;
+  border: 0 !important;
+  border-radius: 14px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #ffffff !important;
+  color: #173764 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.20) !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+html.dr-mobile .mobile-sidebar-overlay {
+  display: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483645 !important;
+  background: rgba(15, 23, 42, 0.45) !important;
+  backdrop-filter: blur(2px) !important;
+}
+
+html.dr-mobile body.sidebar-open .mobile-sidebar-overlay {
+  display: block !important;
+}
+
+html.dr-mobile #drSidebarHost,
+html.dr-mobile #sidebar,
+html.dr-mobile .dr-sidebar,
+html.dr-mobile .sidebar,
+html.dr-mobile aside.sidebar,
+html.dr-mobile .side-bar,
+html.dr-mobile .app-sidebar,
+html.dr-mobile .left-sidebar,
+html.dr-mobile .sidenav,
+html.dr-mobile .side-nav,
+html.dr-mobile .sidebar-menu {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 2147483646 !important;
+  width: min(86vw, 320px) !important;
+  max-width: 320px !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  transform: translate3d(-115%, 0, 0) !important;
+  transition: transform 0.24s ease !important;
+  box-shadow: 16px 0 40px rgba(15, 23, 42, 0.24) !important;
+  background: #ffffff !important;
+}
+
+html.dr-mobile body.sidebar-open #drSidebarHost,
+html.dr-mobile body.sidebar-open #sidebar,
+html.dr-mobile body.sidebar-open .dr-sidebar,
+html.dr-mobile body.sidebar-open .sidebar,
+html.dr-mobile body.sidebar-open aside.sidebar,
+html.dr-mobile body.sidebar-open .side-bar,
+html.dr-mobile body.sidebar-open .app-sidebar,
+html.dr-mobile body.sidebar-open .left-sidebar,
+html.dr-mobile body.sidebar-open .sidenav,
+html.dr-mobile body.sidebar-open .side-nav,
+html.dr-mobile body.sidebar-open .sidebar-menu {
+  transform: translate3d(0, 0, 0) !important;
+}
+
+html.dr-mobile main,
+html.dr-mobile .main,
+html.dr-mobile .content,
+html.dr-mobile .main-content,
+html.dr-mobile .page,
+html.dr-mobile .page-content,
+html.dr-mobile .dashboard,
+html.dr-mobile .app-main,
+html.dr-mobile .container {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+html.dr-mobile .topbar,
+html.dr-mobile .header,
+html.dr-mobile .page-header {
+  padding-left: 68px !important;
+}
+
+html:not(.dr-mobile) .mobile-sidebar-toggle,
+html:not(.dr-mobile) .mobile-sidebar-overlay {
+  display: none !important;
+}
