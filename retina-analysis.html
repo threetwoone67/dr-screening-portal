@@ -78,6 +78,131 @@
     [data-theme="dark"] .footer-card .uni-emblem{background:#182235}
 
     @media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.grid,.stats{grid-template-columns:1fr}.main{padding:18px}.patient-details,.grad-grid,.result-grid{grid-template-columns:1fr}.topbar{flex-direction:column}}
+
+
+    /* Mobile bottom navigation only: desktop layout, Supabase, model API, camera, doctor review, PDF/DOC/QR are untouched */
+    .dr-mobile-bottom-nav,.dr-mobile-more-overlay,.dr-mobile-more-sheet{display:none}
+
+    @media(max-width:768px){
+      .app{display:block!important;min-height:100vh!important}
+      .sidebar{display:none!important}
+      .main{
+        padding:18px 18px calc(128px + env(safe-area-inset-bottom,0px))!important;
+        max-width:100%!important;
+        width:100%!important;
+        margin:0!important;
+      }
+      .dr-mobile-bottom-nav{
+        position:fixed;
+        left:18px;
+        right:18px;
+        bottom:calc(14px + env(safe-area-inset-bottom,0px));
+        height:84px;
+        display:grid!important;
+        grid-template-columns:repeat(5,1fr);
+        align-items:center;
+        gap:0;
+        padding:8px 10px;
+        background:rgba(255,255,255,.94);
+        border:1px solid rgba(184,205,245,.72);
+        border-radius:28px;
+        box-shadow:0 18px 45px rgba(24,44,92,.16);
+        backdrop-filter:blur(18px);
+        -webkit-backdrop-filter:blur(18px);
+        z-index:45;
+      }
+      [data-theme="dark"] .dr-mobile-bottom-nav{background:rgba(23,32,51,.94);border-color:#26354f}
+      .dr-mobile-bottom-nav a,
+      .dr-mobile-bottom-nav button{
+        appearance:none;
+        border:0;
+        background:transparent;
+        color:var(--muted);
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:3px;
+        min-width:0;
+        height:64px;
+        padding:0;
+        font-family:var(--font-main)!important;
+        font-weight:900;
+        font-size:12px;
+        line-height:1.05;
+        cursor:pointer;
+        text-decoration:none;
+      }
+      .dr-mobile-bottom-nav i{font-style:normal;font-size:25px;line-height:1;filter:drop-shadow(0 6px 10px rgba(15,23,42,.08))}
+      .dr-mobile-bottom-nav span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px}
+      .dr-mobile-bottom-nav a.active,
+      .dr-mobile-bottom-nav button.active{color:var(--blue)}
+      .dr-mobile-bottom-nav .center{
+        height:74px;
+        width:74px;
+        margin:0 auto;
+        border-radius:24px;
+        transform:translateY(-16px);
+        background:linear-gradient(135deg,#28b8ff,var(--blue));
+        color:#fff!important;
+        box-shadow:0 16px 32px rgba(49,91,232,.30);
+      }
+      .dr-mobile-bottom-nav .center i{font-size:30px}
+      .dr-mobile-bottom-nav .center span{color:#fff;max-width:72px}
+      .dr-mobile-more-overlay{
+        position:fixed;
+        inset:0;
+        display:block!important;
+        background:rgba(15,23,42,.44);
+        opacity:0;
+        pointer-events:none;
+        transition:opacity .18s ease;
+        z-index:46;
+      }
+      .dr-mobile-more-sheet{
+        position:fixed;
+        left:18px;
+        right:18px;
+        bottom:calc(110px + env(safe-area-inset-bottom,0px));
+        display:block!important;
+        background:var(--card);
+        border:1px solid var(--line);
+        border-radius:26px;
+        padding:20px;
+        box-shadow:0 24px 70px rgba(15,23,42,.24);
+        transform:translateY(24px) scale(.98);
+        opacity:0;
+        pointer-events:none;
+        transition:transform .2s ease,opacity .2s ease;
+        z-index:47;
+      }
+      body.dr-mobile-more-open .dr-mobile-more-overlay{opacity:1;pointer-events:auto}
+      body.dr-mobile-more-open .dr-mobile-more-sheet{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
+      .dr-mobile-more-sheet h3{margin:0 0 14px;font-size:22px;font-weight:900;color:var(--text)}
+      .dr-mobile-more-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .dr-mobile-more-grid a,
+      .dr-mobile-more-grid button{
+        min-height:56px;
+        border-radius:16px;
+        border:1px solid var(--line);
+        background:#f8fbff;
+        color:var(--text);
+        display:flex;
+        align-items:center;
+        justify-content:flex-start;
+        gap:8px;
+        padding:0 12px;
+        font-weight:900;
+        font-size:14px;
+        text-align:left;
+        font-family:var(--font-main)!important;
+        cursor:pointer;
+      }
+      [data-theme="dark"] .dr-mobile-more-grid a,
+      [data-theme="dark"] .dr-mobile-more-grid button{background:#111827}
+      .dr-mobile-more-grid .logout-mobile{background:#fff1f2;color:#dc2626;border-color:#fecaca}
+      body.dr-mobile-more-open{overflow:hidden}
+    }
   </style>
 </head>
 <body>
@@ -188,6 +313,29 @@
       </div>
     </section>
   </main>
+</div>
+
+
+<nav class="dr-mobile-bottom-nav" aria-label="Mobile navigation">
+  <a href="dashboard.html"><i>🏠</i><span data-mobile-label="home">หน้าหลัก</span></a>
+  <a href="patients.html"><i>👥</i><span data-mobile-label="patients">ผู้ป่วย</span></a>
+  <a href="retina-analysis.html" class="active center"><i>🔬</i><span data-mobile-label="analysis">ตรวจ</span></a>
+  <a href="retina-report-new.html"><i>📄</i><span data-mobile-label="report">รายงาน</span></a>
+  <button type="button" id="mobileMoreBtn"><i>☰</i><span data-mobile-label="more">เพิ่มเติม</span></button>
+</nav>
+<div class="dr-mobile-more-overlay" id="mobileMoreOverlay"></div>
+<div class="dr-mobile-more-sheet" id="mobileMoreSheet" aria-hidden="true">
+  <h3 data-mobile-label="moreTitle">เมนูเพิ่มเติม</h3>
+  <div class="dr-mobile-more-grid">
+    <a href="user.html">👤 <span data-mobile-label="account">บัญชีผู้ใช้</span></a>
+    <a href="create-patient.html">➕ <span data-mobile-label="create">สร้างผู้ป่วย</span></a>
+    <a href="appointment-followup.html">📅 <span data-mobile-label="appointment">นัดหมาย</span></a>
+    <a href="patient-transfer.html">🔁 <span data-mobile-label="transfer">โอนย้าย</span></a>
+    <a href="screening-history.html">🕘 <span data-mobile-label="history">ประวัติ</span></a>
+    <a href="knowledge-dr.html">💡 <span data-mobile-label="knowledge">ความรู้</span></a>
+    <a href="settings.html">⚙️ <span data-mobile-label="settings">ตั้งค่า</span></a>
+    <button type="button" class="logout-mobile" id="mobileLogoutBtn">🚪 <span data-mobile-label="logout">ออกจากระบบ</span></button>
+  </div>
 </div>
 
 <div class="camera-modal" id="cameraModal">
@@ -308,6 +456,7 @@
     if (select) select.value = lang;
     if (typeof renderPatients === "function") renderPatients();
     if (typeof renderSelectedPatient === "function") renderSelectedPatient();
+    if (typeof applyMobileNavText === "function") applyMobileNavText();
   }
   function setLang(v){
     lang = normalizeLang(v);
@@ -824,6 +973,29 @@
   document.getElementById("analyzeBtn").onclick=analyzeReal;
   document.getElementById("saveBtn").onclick=saveReport;
   document.getElementById("logoutBtn").onclick=async()=>{ try{await db.auth.signOut();}catch(e){} location.href="index.html"; };
+
+
+  function applyMobileNavText(){
+    const labels = {
+      th:{home:"หน้าหลัก",patients:"ผู้ป่วย",analysis:"ตรวจ",report:"รายงาน",more:"เพิ่มเติม",moreTitle:"เมนูเพิ่มเติม",account:"บัญชีผู้ใช้",create:"สร้างผู้ป่วย",appointment:"นัดหมาย",transfer:"โอนย้าย",history:"ประวัติ",knowledge:"ความรู้",settings:"ตั้งค่า",logout:"ออกจากระบบ"},
+      en:{home:"Home",patients:"Patients",analysis:"Analyze",report:"Report",more:"More",moreTitle:"More Menu",account:"Account",create:"Create Patient",appointment:"Appointment",transfer:"Transfer",history:"History",knowledge:"Knowledge",settings:"Settings",logout:"Logout"}
+    };
+    const map = labels[lang] || labels.th;
+    document.querySelectorAll("[data-mobile-label]").forEach(el=>{
+      const key = el.getAttribute("data-mobile-label");
+      if(map[key]) el.textContent = map[key];
+    });
+  }
+  function openMobileMore(){ document.body.classList.add("dr-mobile-more-open"); }
+  function closeMobileMore(){ document.body.classList.remove("dr-mobile-more-open"); }
+  const mobileMoreBtn = document.getElementById("mobileMoreBtn");
+  const mobileMoreOverlay = document.getElementById("mobileMoreOverlay");
+  const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+  if(mobileMoreBtn) mobileMoreBtn.onclick = openMobileMore;
+  if(mobileMoreOverlay) mobileMoreOverlay.onclick = closeMobileMore;
+  document.querySelectorAll(".dr-mobile-more-sheet a").forEach(a => a.addEventListener("click", closeMobileMore));
+  if(mobileLogoutBtn) mobileLogoutBtn.onclick = async()=>{ try{await db.auth.signOut();}catch(e){} location.href="index.html"; };
+  window.addEventListener("resize",()=>{ if(!window.matchMedia("(max-width:768px)").matches) closeMobileMore(); });
 
   (async function init(){
     applyTheme();

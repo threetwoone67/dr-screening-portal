@@ -451,10 +451,16 @@ async function selectReport(id){
     renderPaper(selected);
   }
 }
+function publicReportUrl(reportId){
+  const u = new URL("report-view.html", window.location.href);
+  u.search = "?report_id=" + encodeURIComponent(reportId || "");
+  return u.href;
+}
+
 function paperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
+  const qr = QR_API + encodeURIComponent(publicReportUrl(r.report_id || r.id || ""));
   const finalSeverity = finalSeverityOf(r);
   const note = val(reportNoteOf(r));
   const screening = finalBinaryOf(r);
@@ -473,7 +479,7 @@ function renderPaper(r){
 function wordPaperHTML(r){
   const p = patientOf(r);
   const img = r.__resolvedImage || directImageCandidate(r);
-  const qr = QR_API + encodeURIComponent(location.origin + location.pathname + "?report_id=" + encodeURIComponent(r.report_id || r.id || ""));
+  const qr = QR_API + encodeURIComponent(publicReportUrl(r.report_id || r.id || ""));
   const finalSeverity = finalSeverityOf(r);
   const note = val(reportNoteOf(r));
   const screening = finalBinaryOf(r);
