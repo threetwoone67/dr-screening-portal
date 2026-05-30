@@ -273,135 +273,30 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
-/* =========================================================
-   MOBILE SIDEBAR RESPONSIVE FIX
-   - Desktop: ใช้ Sidebar เดิม
-   - Mobile: ซ่อน Sidebar และกดปุ่มเพื่อเปิดได้
-========================================================= */
-
-.mobile-sidebar-toggle {
-  display: none;
-}
-
-.mobile-sidebar-overlay {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  body {
-    overflow-x: hidden;
-  }
-
-  .mobile-sidebar-toggle {
-    display: inline-flex;
-    position: fixed;
-    top: 14px;
-    left: 14px;
-    z-index: 99999;
-    width: 44px;
-    height: 44px;
-    border: 0;
-    border-radius: 14px;
-    align-items: center;
-    justify-content: center;
-    background: #ffffff;
-    color: #173764;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
-    font-size: 22px;
-    font-weight: 900;
-    cursor: pointer;
-  }
-
-  body.dark .mobile-sidebar-toggle,
-  body.dark-mode .mobile-sidebar-toggle,
-  html[data-theme="dark"] .mobile-sidebar-toggle {
-    background: #0f172a;
-    color: #ffffff;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.38);
-  }
-
-  .mobile-sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 99990;
-    background: rgba(15, 23, 42, 0.45);
-    backdrop-filter: blur(2px);
-  }
-
-  body.sidebar-open .mobile-sidebar-overlay {
-    display: block;
-  }
-
-  .sidebar,
-  aside.sidebar,
-  .side-bar,
-  .app-sidebar,
-  .left-sidebar {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    z-index: 99995 !important;
-    width: min(82vw, 310px) !important;
-    max-width: 310px !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    overflow-y: auto !important;
-    transform: translateX(-105%) !important;
-    transition: transform 0.25s ease !important;
-    box-shadow: 16px 0 40px rgba(15, 23, 42, 0.22) !important;
-  }
-
-  body.sidebar-open .sidebar,
-  body.sidebar-open aside.sidebar,
-  body.sidebar-open .side-bar,
-  body.sidebar-open .app-sidebar,
-  body.sidebar-open .left-sidebar {
-    transform: translateX(0) !important;
-  }
-
-  main,
-  .main,
-  .content,
-  .main-content,
-  .page,
-  .page-content,
-  .dashboard,
-  .app-main,
-  .container {
-    margin-left: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .topbar,
-  .header,
-  .page-header {
-    padding-left: 68px !important;
-  }
-}
-
-@media (min-width: 769px) {
-  body.sidebar-open {
-    overflow: auto;
-  }
-}
 
 /* =========================================================
-   MOBILE DR SIDEBAR OVERRIDE - READY
-   ใช้เฉพาะหน้าจอมือถือ/แท็บเล็ตเล็ก ไม่กระทบ Desktop
+   MOBILE APP SHELL v1 - READY
+   Desktop >= 901px: ไม่เปลี่ยน Layout เดิม
+   Mobile <= 900px: ซ่อน Sidebar เดิม + ใช้ Bottom Navigation
 ========================================================= */
 
-.mobile-sidebar-toggle {
+.dr-mobile-bottom-nav,
+.dr-mobile-more-overlay,
+.dr-mobile-more-sheet {
   display: none;
 }
 
+/* ปิดปุ่ม sidebar มือถือแบบเก่า ถ้ามีค้างอยู่ */
+.mobile-sidebar-toggle,
 .mobile-sidebar-overlay {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 900px) {
+  html,
   body {
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden !important;
   }
 
@@ -409,80 +304,17 @@ body {
     padding-left: 0 !important;
   }
 
-  .mobile-sidebar-toggle {
-    display: inline-flex !important;
-    position: fixed !important;
-    top: calc(12px + env(safe-area-inset-top, 0px)) !important;
-    left: 14px !important;
-    z-index: 100000 !important;
-    width: 46px !important;
-    height: 46px !important;
-    border: 0 !important;
-    border-radius: 14px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: #ffffff !important;
-    color: #173764 !important;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.20) !important;
-    font-size: 24px !important;
-    font-weight: 900 !important;
-    cursor: pointer !important;
-    -webkit-tap-highlight-color: transparent !important;
+  body:not([data-report-view="true"]):not(.dr-public-page) {
+    padding-bottom: 96px !important;
   }
 
-  body.dark .mobile-sidebar-toggle,
-  body.dark-mode .mobile-sidebar-toggle,
-  html[data-theme="dark"] .mobile-sidebar-toggle {
-    background: #0f172a !important;
-    color: #ffffff !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.38) !important;
-  }
-
-  .mobile-sidebar-overlay {
+  /* ซ่อน Sidebar เดิมบนมือถือเท่านั้น */
+  body:not([data-report-view="true"]) #drSidebarHost,
+  body:not([data-report-view="true"]) #drSidebarHost.dr-sidebar,
+  body:not([data-report-view="true"]) .dr-sidebar {
     display: none !important;
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 99990 !important;
-    background: rgba(15, 23, 42, 0.45) !important;
-    backdrop-filter: blur(2px) !important;
-  }
-
-  body.sidebar-open .mobile-sidebar-overlay {
-    display: block !important;
-  }
-
-  #drSidebarHost.dr-sidebar,
-  .dr-sidebar,
-  .sidebar,
-  aside.sidebar,
-  .side-bar,
-  .app-sidebar,
-  .left-sidebar {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    bottom: auto !important;
-    z-index: 99995 !important;
-    width: min(86vw, 320px) !important;
-    max-width: 320px !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    transform: translate3d(-110%, 0, 0) !important;
-    transition: transform 0.25s ease !important;
-    box-shadow: 16px 0 40px rgba(15, 23, 42, 0.24) !important;
-    background: #ffffff !important;
-  }
-
-  body.sidebar-open #drSidebarHost.dr-sidebar,
-  body.sidebar-open .dr-sidebar,
-  body.sidebar-open .sidebar,
-  body.sidebar-open aside.sidebar,
-  body.sidebar-open .side-bar,
-  body.sidebar-open .app-sidebar,
-  body.sidebar-open .left-sidebar {
-    transform: translate3d(0, 0, 0) !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 
   main,
@@ -493,7 +325,10 @@ body {
   .page-content,
   .dashboard,
   .app-main,
-  .container {
+  .container,
+  .wrap,
+  .layout,
+  .dashboard-wrap {
     margin-left: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -502,133 +337,180 @@ body {
   .topbar,
   .header,
   .page-header {
-    padding-left: 68px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .card,
+  .panel,
+  .box,
+  .section,
+  .stat-card {
+    max-width: 100% !important;
+  }
+
+  table {
+    max-width: 100% !important;
+  }
+
+  .dr-mobile-bottom-nav {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    height: 72px;
+    z-index: 2147483600;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid #dbe7f5;
+    border-radius: 24px;
+    box-shadow: 0 14px 42px rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(12px);
+    overflow: visible;
+  }
+
+  .dr-mobile-nav-item {
+    border: 0;
+    background: transparent;
+    color: #64748b;
+    font-family: var(--font-main, 'Sarabun', Arial, sans-serif);
+    font-weight: 900;
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    cursor: pointer;
+    min-width: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .dr-mobile-nav-item span:first-child {
+    font-size: 21px;
+    line-height: 1;
+  }
+
+  .dr-mobile-nav-item small {
+    font-size: 11px;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  .dr-mobile-nav-item.active {
+    color: #1d4ed8;
+  }
+
+  .dr-mobile-nav-item.primary {
+    transform: translateY(-12px);
+    color: #1d4ed8;
+  }
+
+  .dr-mobile-nav-item.primary span:first-child {
+    width: 54px;
+    height: 54px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #2563eb, #38bdf8);
+    color: white;
+    box-shadow: 0 12px 26px rgba(37, 99, 235, 0.35);
+    font-size: 24px;
+  }
+
+  .dr-mobile-more-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483601;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(2px);
+  }
+
+  .dr-mobile-more-sheet {
+    display: block;
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: calc(94px + env(safe-area-inset-bottom, 0px));
+    z-index: 2147483602;
+    background: #ffffff;
+    border: 1px solid #dbe7f5;
+    border-radius: 24px;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.24);
+    padding: 14px;
+    transform: translateY(130%);
+    transition: transform 0.25s ease;
+  }
+
+  body.dr-mobile-more-open .dr-mobile-more-overlay {
+    display: block;
+  }
+
+  body.dr-mobile-more-open .dr-mobile-more-sheet {
+    transform: translateY(0);
+  }
+
+  .dr-mobile-more-title {
+    font-weight: 1000;
+    color: #0f172a;
+    font-size: 16px;
+    padding: 6px 8px 12px;
+  }
+
+  .dr-mobile-more-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .dr-mobile-more-link,
+  .dr-mobile-more-logout {
+    border: 1px solid #e5edf8;
+    background: #f8fbff;
+    color: #17345d;
+    border-radius: 16px;
+    padding: 13px 12px;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-family: var(--font-main, 'Sarabun', Arial, sans-serif);
+  }
+
+  .dr-mobile-more-logout {
+    background: #fff5f5;
+    color: #dc2626;
+    border-color: #fecaca;
   }
 }
 
 @media (min-width: 901px) {
+  .dr-mobile-bottom-nav,
+  .dr-mobile-more-overlay,
+  .dr-mobile-more-sheet,
   .mobile-sidebar-toggle,
   .mobile-sidebar-overlay {
     display: none !important;
   }
 
-  body.sidebar-open {
-    overflow: auto;
+  body.dr-mobile-more-open {
+    overflow: auto !important;
   }
-}
-
-/* =========================================================
-   MOBILE SIDEBAR HARD FIX - FINAL
-   ใช้เฉพาะมือถือ/จอสัมผัส ไม่กระทบ Desktop
-========================================================= */
-
-html.dr-mobile body {
-  overflow-x: hidden !important;
-}
-
-html.dr-mobile body.has-dr-sidebar {
-  padding-left: 0 !important;
-}
-
-html.dr-mobile .mobile-sidebar-toggle {
-  display: inline-flex !important;
-  position: fixed !important;
-  top: calc(12px + env(safe-area-inset-top, 0px)) !important;
-  left: 14px !important;
-  z-index: 2147483647 !important;
-  width: 46px !important;
-  height: 46px !important;
-  border: 0 !important;
-  border-radius: 14px !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: #ffffff !important;
-  color: #173764 !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.20) !important;
-  font-size: 24px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-  cursor: pointer !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-html.dr-mobile .mobile-sidebar-overlay {
-  display: none !important;
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 2147483645 !important;
-  background: rgba(15, 23, 42, 0.45) !important;
-  backdrop-filter: blur(2px) !important;
-}
-
-html.dr-mobile body.sidebar-open .mobile-sidebar-overlay {
-  display: block !important;
-}
-
-html.dr-mobile #drSidebarHost,
-html.dr-mobile #sidebar,
-html.dr-mobile .dr-sidebar,
-html.dr-mobile .sidebar,
-html.dr-mobile aside.sidebar,
-html.dr-mobile .side-bar,
-html.dr-mobile .app-sidebar,
-html.dr-mobile .left-sidebar,
-html.dr-mobile .sidenav,
-html.dr-mobile .side-nav,
-html.dr-mobile .sidebar-menu {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  z-index: 2147483646 !important;
-  width: min(86vw, 320px) !important;
-  max-width: 320px !important;
-  height: 100dvh !important;
-  min-height: 100dvh !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  transform: translate3d(-115%, 0, 0) !important;
-  transition: transform 0.24s ease !important;
-  box-shadow: 16px 0 40px rgba(15, 23, 42, 0.24) !important;
-  background: #ffffff !important;
-}
-
-html.dr-mobile body.sidebar-open #drSidebarHost,
-html.dr-mobile body.sidebar-open #sidebar,
-html.dr-mobile body.sidebar-open .dr-sidebar,
-html.dr-mobile body.sidebar-open .sidebar,
-html.dr-mobile body.sidebar-open aside.sidebar,
-html.dr-mobile body.sidebar-open .side-bar,
-html.dr-mobile body.sidebar-open .app-sidebar,
-html.dr-mobile body.sidebar-open .left-sidebar,
-html.dr-mobile body.sidebar-open .sidenav,
-html.dr-mobile body.sidebar-open .side-nav,
-html.dr-mobile body.sidebar-open .sidebar-menu {
-  transform: translate3d(0, 0, 0) !important;
-}
-
-html.dr-mobile main,
-html.dr-mobile .main,
-html.dr-mobile .content,
-html.dr-mobile .main-content,
-html.dr-mobile .page,
-html.dr-mobile .page-content,
-html.dr-mobile .dashboard,
-html.dr-mobile .app-main,
-html.dr-mobile .container {
-  margin-left: 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-html.dr-mobile .topbar,
-html.dr-mobile .header,
-html.dr-mobile .page-header {
-  padding-left: 68px !important;
-}
-
-html:not(.dr-mobile) .mobile-sidebar-toggle,
-html:not(.dr-mobile) .mobile-sidebar-overlay {
-  display: none !important;
 }
