@@ -1126,7 +1126,14 @@
 <script>
   const SUPABASE_URL = "https://pncgbphbcmtlzrmwnhcy.supabase.co";
   const SUPABASE_KEY = "sb_publishable_jOwAmvtqBPKPd7uyGqvaBQ_c4UEhh1K";
-  const API_URL = "http://127.0.0.1:8000/predict";
+  // API endpoint fix for production/mobile only:
+  // - Local development keeps using uvicorn on 127.0.0.1:8000
+  // - Deployed Render/mobile uses the same origin as the web app, so phones can reach the model API
+  const API_URL = (() => {
+    const host = window.location.hostname;
+    const isLocal = host === "127.0.0.1" || host === "localhost" || host === "0.0.0.0";
+    return isLocal ? "http://127.0.0.1:8000/predict" : `${window.location.origin}/predict`;
+  })();
   const BUCKET = "retina-images";
   const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -1473,7 +1480,14 @@
       aiResult=await res.json();
       renderAIResult();
       document.getElementById("statAnalysis").textContent="1";
-    }catch(err){ console.error(err); document.getElementById("resultBox").innerHTML=`<h3>${t("apiFail")}</h3><p>${err.message}</p><p style="color:var(--muted)">ให้รัน: uvicorn app:app --host 127.0.0.1 --port 8000 --reload</p>`; }
+    }catch(err){
+      console.error(err);
+      const isLocalApi = API_URL.includes("127.0.0.1") || API_URL.includes("localhost");
+      const apiHelp = isLocalApi
+        ? "ให้รัน: uvicorn app:app --host 127.0.0.1 --port 8000 --reload"
+        : (lang === "th" ? "ไม่สามารถเชื่อมต่อ API บน Render ได้ กรุณาลองใหม่อีกครั้งหรือตรวจสอบว่า Backend Deploy เสร็จแล้ว" : "Cannot connect to the Render API. Please retry or check that the backend deployment is live.");
+      document.getElementById("resultBox").innerHTML=`<h3>${t("apiFail")}</h3><p>${err.message}</p><p style="color:var(--muted)">${apiHelp}</p>`;
+    }
   }
 
   function renderAIResult(){
