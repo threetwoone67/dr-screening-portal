@@ -79,6 +79,602 @@
 
     @media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.grid,.stats{grid-template-columns:1fr}.main{padding:18px}.patient-details,.grad-grid,.result-grid{grid-template-columns:1fr}.topbar{flex-direction:column}}
   </style>
+
+<!-- RETINA ANALYSIS MOBILE APP PATCH START -->
+<style id="retina-analysis-mobile-app-patch">
+  .dr-mobile-bottom-nav,
+  .dr-mobile-more-overlay,
+  .dr-mobile-more-sheet,
+  .dr-mobile-steps,
+  .dr-camera-1x-badge {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden !important;
+    }
+
+    body {
+      padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+      background:
+        radial-gradient(circle at top left, rgba(49,91,232,.10), transparent 38%),
+        linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%) !important;
+    }
+
+    .app {
+      display: block !important;
+      min-height: 100vh !important;
+    }
+
+    /* Mobile only: hide the desktop sidebar completely. Desktop is not affected. */
+    .sidebar {
+      display: none !important;
+    }
+
+    .main {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 20px 14px 22px !important;
+    }
+
+    .topbar {
+      display: block !important;
+      margin-bottom: 14px !important;
+    }
+
+    .breadcrumb {
+      font-size: 13px !important;
+      margin-bottom: 8px !important;
+    }
+
+    h2 {
+      font-size: clamp(27px, 7vw, 38px) !important;
+      line-height: 1.12 !important;
+      letter-spacing: -.7px !important;
+      margin-bottom: 8px !important;
+    }
+
+    .subtitle {
+      font-size: 14px !important;
+      line-height: 1.55 !important;
+    }
+
+    .top-actions {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      justify-content: stretch !important;
+      margin-top: 14px !important;
+    }
+
+    .top-actions .lang {
+      grid-column: 1 / -1 !important;
+      width: 100% !important;
+      height: 46px !important;
+      border-radius: 16px !important;
+      background: rgba(255,255,255,.92) !important;
+    }
+
+    .top-actions .top-btn {
+      min-width: 0 !important;
+      width: 100% !important;
+      height: 46px !important;
+      border-radius: 16px !important;
+      box-shadow: 0 10px 24px rgba(15,23,42,.06) !important;
+      font-size: 14px !important;
+      padding: 0 12px !important;
+    }
+
+    .hero {
+      border-radius: 26px !important;
+      padding: 22px 20px !important;
+      margin-bottom: 14px !important;
+      box-shadow: 0 18px 42px rgba(37,99,235,.18) !important;
+    }
+
+    .hero h3 {
+      font-size: 22px !important;
+      line-height: 1.25 !important;
+    }
+
+    .hero p {
+      font-size: 14px !important;
+      line-height: 1.55 !important;
+    }
+
+    .dr-mobile-steps {
+      display: grid !important;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0 0 14px !important;
+    }
+
+    .dr-mobile-step {
+      background: rgba(255,255,255,.96);
+      border: 1px solid #dbe7f5;
+      border-radius: 18px;
+      padding: 11px 8px;
+      text-align: center;
+      color: #17345d;
+      box-shadow: 0 10px 26px rgba(15,23,42,.06);
+      min-width: 0;
+    }
+
+    .dr-mobile-step span {
+      display: block;
+      font-size: 20px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .dr-mobile-step b {
+      display: block;
+      font-size: 11px;
+      line-height: 1.2;
+      font-weight: 950;
+    }
+
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+      margin-bottom: 14px !important;
+    }
+
+    .stat {
+      padding: 13px !important;
+      border-radius: 20px !important;
+      gap: 10px !important;
+      min-width: 0 !important;
+      box-shadow: 0 10px 28px rgba(15,23,42,.06) !important;
+    }
+
+    .stat .icon {
+      width: 42px !important;
+      height: 42px !important;
+      border-radius: 15px !important;
+      flex: 0 0 42px !important;
+      font-size: 21px !important;
+    }
+
+    .stat small {
+      font-size: 11px !important;
+      line-height: 1.25 !important;
+    }
+
+    .stat strong {
+      font-size: 18px !important;
+      line-height: 1.25 !important;
+      display: block !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 118px !important;
+    }
+
+    .grid {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 14px !important;
+    }
+
+    .card {
+      border-radius: 24px !important;
+      padding: 16px !important;
+      box-shadow: 0 12px 34px rgba(15,23,42,.07) !important;
+    }
+
+    .card h3 {
+      font-size: 19px !important;
+      line-height: 1.3 !important;
+    }
+
+    .card p {
+      font-size: 13px !important;
+      line-height: 1.55 !important;
+    }
+
+    input, select, textarea {
+      min-height: 48px !important;
+      border-radius: 16px !important;
+      font-size: 16px !important; /* prevent iOS zoom */
+    }
+
+    .patient-list {
+      max-height: 270px !important;
+      gap: 9px !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    .patient-item {
+      padding: 13px !important;
+      border-radius: 18px !important;
+    }
+
+    .patient-item .avatar {
+      width: 42px !important;
+      height: 42px !important;
+      border-radius: 15px !important;
+      flex: 0 0 42px !important;
+    }
+
+    .patient-item b {
+      font-size: 15px !important;
+    }
+
+    .patient-item span {
+      font-size: 12px !important;
+      line-height: 1.35 !important;
+    }
+
+    .patient-details {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 9px !important;
+    }
+
+    .field-box {
+      min-height: 62px !important;
+      padding: 11px !important;
+      border-radius: 16px !important;
+    }
+
+    .field-box small {
+      font-size: 11px !important;
+      margin-bottom: 4px !important;
+    }
+
+    .field-box b {
+      font-size: 13px !important;
+      word-break: break-word !important;
+    }
+
+    .history-mini {
+      border-radius: 18px !important;
+      padding: 13px !important;
+    }
+
+    /* Analysis card: camera/upload first-class on mobile */
+    .preview-wrap {
+      min-height: 360px !important;
+      height: min(58vh, 470px) !important;
+      border-radius: 24px !important;
+      background: #020617 !important;
+    }
+
+    .preview-wrap img,
+    .preview-wrap video {
+      max-height: 100% !important;
+      object-fit: contain !important;
+    }
+
+    .empty-preview {
+      padding: 28px 18px !important;
+      font-size: 14px !important;
+      line-height: 1.55 !important;
+    }
+
+    .image-toolbar {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      margin-top: 12px !important;
+    }
+
+    .image-toolbar .btn {
+      width: 100% !important;
+      height: 52px !important;
+      border-radius: 18px !important;
+      font-size: 15px !important;
+      padding: 0 10px !important;
+    }
+
+    #deleteCurrentBtn {
+      grid-column: 1 / -1 !important;
+      height: 44px !important;
+      background: #fff1f2 !important;
+    }
+
+    .thumbs {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      padding: 2px 2px 8px !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    .thumb-wrap {
+      flex: 0 0 84px !important;
+      width: 84px !important;
+      height: 68px !important;
+    }
+
+    .thumb {
+      width: 84px !important;
+      height: 68px !important;
+    }
+
+    .action-row {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+      margin-top: 12px !important;
+    }
+
+    .action-row .btn {
+      width: 100% !important;
+      min-height: 52px !important;
+      border-radius: 18px !important;
+      font-size: 15px !important;
+    }
+
+    .save-hint {
+      text-align: left !important;
+      font-size: 12px !important;
+      line-height: 1.45 !important;
+      background: #f8fbff !important;
+      border: 1px solid var(--line) !important;
+      border-radius: 16px !important;
+      padding: 10px 12px !important;
+    }
+
+    .result-head,
+    .result-grid,
+    .metric-grid,
+    .patient-summary,
+    .grad-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .result-head {
+      display: grid !important;
+    }
+
+    .metric-grid,
+    .patient-summary {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .mini-fundus {
+      width: 100% !important;
+      height: auto !important;
+      max-height: 240px !important;
+      object-fit: contain !important;
+    }
+
+    .camera-modal {
+      padding: 0 !important;
+      align-items: stretch !important;
+      justify-content: stretch !important;
+      z-index: 100000 !important;
+      background: #020617 !important;
+    }
+
+    .camera-box {
+      width: 100vw !important;
+      height: 100dvh !important;
+      border-radius: 0 !important;
+      padding: 12px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      background: #020617 !important;
+      color: #fff !important;
+    }
+
+    .camera-head {
+      flex: 0 0 auto !important;
+      color: #fff !important;
+      padding: calc(8px + env(safe-area-inset-top)) 4px 8px !important;
+    }
+
+    .camera-head h3 {
+      color: #fff !important;
+      font-size: 18px !important;
+    }
+
+    #cameraVideo {
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      width: 100% !important;
+      max-height: none !important;
+      border-radius: 22px !important;
+      object-fit: contain !important;
+      background: #000 !important;
+    }
+
+    .camera-box > .action-row {
+      flex: 0 0 auto !important;
+      grid-template-columns: 1fr 1fr !important;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .camera-box p[data-i18n="cameraHint"] {
+      font-size: 12px !important;
+      margin: 6px 0 0 !important;
+      color: rgba(255,255,255,.72) !important;
+    }
+
+    .dr-camera-1x-badge {
+      display: inline-flex !important;
+      position: absolute;
+      left: 22px;
+      top: calc(74px + env(safe-area-inset-top));
+      z-index: 100002;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      background: rgba(15,23,42,.72);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.22);
+      padding: 8px 12px;
+      font-weight: 950;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+    }
+
+    .dr-mobile-bottom-nav {
+      display: grid !important;
+      grid-template-columns: repeat(5, 1fr);
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: calc(10px + env(safe-area-inset-bottom));
+      height: 70px;
+      z-index: 99990;
+      background: rgba(255,255,255,.96);
+      border: 1px solid #dbe7f5;
+      border-radius: 24px;
+      box-shadow: 0 14px 42px rgba(15,23,42,.18);
+      backdrop-filter: blur(12px);
+    }
+
+    .dr-mobile-nav-item {
+      border: 0;
+      background: transparent;
+      color: #64748b;
+      font-family: var(--font-main);
+      font-weight: 950;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-decoration: none;
+      cursor: pointer;
+      min-width: 0;
+    }
+
+    .dr-mobile-nav-item span:first-child {
+      font-size: 21px;
+      line-height: 1;
+    }
+
+    .dr-mobile-nav-item.active {
+      color: #1d4ed8;
+    }
+
+    .dr-mobile-nav-item.primary {
+      transform: translateY(-12px);
+    }
+
+    .dr-mobile-nav-item.primary span:first-child {
+      width: 54px;
+      height: 54px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(37,99,235,.35);
+      font-size: 24px;
+    }
+
+    .dr-mobile-more-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99991;
+      background: rgba(15,23,42,.45);
+      backdrop-filter: blur(3px);
+    }
+
+    .dr-mobile-more-sheet {
+      display: block;
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: calc(92px + env(safe-area-inset-bottom));
+      z-index: 99992;
+      background: #fff;
+      border: 1px solid #dbe7f5;
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(15,23,42,.24);
+      padding: 14px;
+      transform: translateY(130%);
+      transition: transform .25s ease;
+    }
+
+    body.dr-mobile-more-open .dr-mobile-more-overlay {
+      display: block;
+    }
+
+    body.dr-mobile-more-open .dr-mobile-more-sheet {
+      transform: translateY(0);
+    }
+
+    .dr-mobile-more-title {
+      font-weight: 1000;
+      color: #0f172a;
+      font-size: 17px;
+      padding: 8px 8px 12px;
+    }
+
+    .dr-mobile-more-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .dr-mobile-more-link,
+    .dr-mobile-more-logout {
+      border: 1px solid #e5edf8;
+      background: #f8fbff;
+      color: #17345d;
+      border-radius: 16px;
+      min-height: 58px;
+      padding: 12px;
+      text-decoration: none;
+      font-weight: 950;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-family: var(--font-main);
+    }
+
+    .dr-mobile-more-logout {
+      background: #fff5f5;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+
+    [data-theme="dark"] .dr-mobile-bottom-nav,
+    [data-theme="dark"] .dr-mobile-more-sheet {
+      background: rgba(23,32,51,.96);
+      border-color: #26354f;
+    }
+
+    [data-theme="dark"] .dr-mobile-nav-item,
+    [data-theme="dark"] .dr-mobile-more-link {
+      color: #cbd5e1;
+    }
+
+    [data-theme="dark"] .dr-mobile-more-title {
+      color: #f8fafc;
+    }
+
+    [data-theme="dark"] .dr-mobile-more-link {
+      background: #111827;
+      border-color: #26354f;
+    }
+  }
+
+  @media (min-width: 901px) {
+    .dr-mobile-bottom-nav,
+    .dr-mobile-more-overlay,
+    .dr-mobile-more-sheet,
+    .dr-mobile-steps,
+    .dr-camera-1x-badge {
+      display: none !important;
+    }
+  }
+</style>
+<!-- RETINA ANALYSIS MOBILE APP PATCH END -->
+
 </head>
 <body>
 <div class="app">
@@ -700,5 +1296,254 @@
     renderImages();
   })();
 </script>
+
+<!-- RETINA ANALYSIS MOBILE APP PATCH SCRIPT START -->
+<script id="retina-analysis-mobile-app-patch-script">
+(function(){
+  function mobileLang(){
+    const v =
+      localStorage.getItem("dr_lang") ||
+      localStorage.getItem("dr_language") ||
+      localStorage.getItem("language") ||
+      localStorage.getItem("app_lang") ||
+      "th";
+    return String(v).toLowerCase().startsWith("en") ? "en" : "th";
+  }
+
+  function label(th, en){
+    return mobileLang() === "en" ? en : th;
+  }
+
+  function closeMore(){
+    document.body.classList.remove("dr-mobile-more-open");
+  }
+
+  function go(url){
+    closeMore();
+    location.href = url;
+  }
+
+  function makeMobileShell(){
+    if (document.querySelector(".dr-mobile-bottom-nav")) return;
+
+    const hero = document.querySelector(".hero");
+    if (hero && !document.querySelector(".dr-mobile-steps")) {
+      const steps = document.createElement("section");
+      steps.className = "dr-mobile-steps";
+      steps.innerHTML = `
+        <div class="dr-mobile-step"><span>👤</span><b>${label("เลือกผู้ป่วย","Patient")}</b></div>
+        <div class="dr-mobile-step"><span>📷</span><b>${label("ถ่าย/เลือกรูป","Capture")}</b></div>
+        <div class="dr-mobile-step"><span>🔬</span><b>${label("วิเคราะห์","Analyze")}</b></div>
+        <div class="dr-mobile-step"><span>📄</span><b>${label("บันทึกรายงาน","Report")}</b></div>
+      `;
+      hero.insertAdjacentElement("afterend", steps);
+    }
+
+    const nav = document.createElement("nav");
+    nav.className = "dr-mobile-bottom-nav";
+    nav.innerHTML = `
+      <button class="dr-mobile-nav-item" data-go="dashboard.html"><span>🏠</span><small>${label("หน้าหลัก","Home")}</small></button>
+      <button class="dr-mobile-nav-item" data-go="patients.html"><span>👥</span><small>${label("ผู้ป่วย","Patients")}</small></button>
+      <button class="dr-mobile-nav-item primary active" data-go="retina-analysis.html"><span>🔬</span><small>${label("ตรวจ","Analyze")}</small></button>
+      <button class="dr-mobile-nav-item" data-go="retina-report-new.html"><span>📄</span><small>${label("รายงาน","Report")}</small></button>
+      <button class="dr-mobile-nav-item" data-more="true"><span>☰</span><small>${label("เพิ่มเติม","More")}</small></button>
+    `;
+    nav.addEventListener("click", function(e){
+      const btn = e.target.closest(".dr-mobile-nav-item");
+      if (!btn) return;
+      if (btn.dataset.more) {
+        document.body.classList.add("dr-mobile-more-open");
+        return;
+      }
+      if (btn.dataset.go) go(btn.dataset.go);
+    });
+    document.body.appendChild(nav);
+
+    const overlay = document.createElement("div");
+    overlay.className = "dr-mobile-more-overlay";
+    overlay.addEventListener("click", closeMore);
+    document.body.appendChild(overlay);
+
+    const sheet = document.createElement("div");
+    sheet.className = "dr-mobile-more-sheet";
+    sheet.innerHTML = `
+      <div class="dr-mobile-more-title">${label("เมนูเพิ่มเติม","More Menu")}</div>
+      <div class="dr-mobile-more-grid">
+        <a class="dr-mobile-more-link" href="user.html">👤 ${label("บัญชีผู้ใช้","Account")}</a>
+        <a class="dr-mobile-more-link" href="create-patient.html">➕ ${label("สร้างผู้ป่วย","New Patient")}</a>
+        <a class="dr-mobile-more-link" href="appointment-followup.html">📅 ${label("นัดหมาย","Appointment")}</a>
+        <a class="dr-mobile-more-link" href="patient-transfer.html">🔁 ${label("โอนย้าย","Transfer")}</a>
+        <a class="dr-mobile-more-link" href="screening-history.html">🕘 ${label("ประวัติ","History")}</a>
+        <a class="dr-mobile-more-link" href="knowledge-dr.html">💡 ${label("ความรู้","Knowledge")}</a>
+        <a class="dr-mobile-more-link" href="settings.html">⚙️ ${label("ตั้งค่า","Settings")}</a>
+        <button class="dr-mobile-more-logout" type="button" id="drMobileLogoutBtn">🚪 ${label("ออกจากระบบ","Logout")}</button>
+      </div>
+    `;
+    document.body.appendChild(sheet);
+
+    const logout = document.getElementById("drMobileLogoutBtn");
+    if (logout) {
+      logout.addEventListener("click", async function(){
+        try {
+          if (typeof db !== "undefined" && db.auth) await db.auth.signOut();
+        } catch(e) {}
+        location.href = "index.html";
+      });
+    }
+
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape") closeMore();
+    });
+  }
+
+  async function chooseMainBackCamera1x(){
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return null;
+
+    let devices = [];
+    try {
+      devices = await navigator.mediaDevices.enumerateDevices();
+    } catch(e) {}
+
+    const hasLabels = devices.some(d => d.kind === "videoinput" && d.label);
+    if (!hasLabels) {
+      let temp = null;
+      try {
+        temp = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "environment" } },
+          audio: false
+        });
+      } catch(e) {}
+      if (temp) temp.getTracks().forEach(t => t.stop());
+      try {
+        devices = await navigator.mediaDevices.enumerateDevices();
+      } catch(e) {}
+    }
+
+    const videos = devices.filter(d => d.kind === "videoinput");
+    if (!videos.length) return null;
+
+    const lower = d => String(d.label || "").toLowerCase();
+    const isBack = d => /(back|rear|environment|ด้านหลัง|กล้องหลัง)/i.test(d.label || "");
+    const isFront = d => /(front|user|face|ด้านหน้า|กล้องหน้า)/i.test(d.label || "");
+    const isUltraWide = d => /(ultra|0\.5|0,5|ultrawide|super wide|กว้างพิเศษ)/i.test(d.label || "");
+    const isTele = d => /(tele|telephoto|2x|3x|ซูม)/i.test(d.label || "");
+    const isMain = d => /(main|standard|1x|back camera|rear camera|กล้องหลัก|กล้องหลัง)/i.test(d.label || "");
+
+    const backs = videos.filter(d => isBack(d) && !isFront(d));
+    const pool = backs.length ? backs : videos;
+
+    return (
+      pool.find(d => isMain(d) && !isUltraWide(d) && !isTele(d)) ||
+      pool.find(d => !isUltraWide(d) && !isTele(d)) ||
+      pool[0]
+    ).deviceId || null;
+  }
+
+  async function applyTrack1x(track){
+    if (!track || !track.applyConstraints) return;
+    try {
+      const caps = track.getCapabilities ? track.getCapabilities() : {};
+      const advanced = [{ focusMode: "continuous" }];
+
+      if (caps.zoom) {
+        const z = Math.max(1, Number(caps.zoom.min || 1));
+        advanced.unshift({ zoom: z });
+      } else {
+        advanced.unshift({ zoom: 1 });
+      }
+
+      await track.applyConstraints({
+        width: { ideal: 1920 },
+        height: { ideal: 1080 },
+        frameRate: { ideal: 30 },
+        advanced
+      });
+    } catch(e) {
+      try { await track.applyConstraints({ advanced: [{ zoom: 1 }] }); } catch(err) {}
+    }
+  }
+
+  async function openCamera1x(){
+    try {
+      if (typeof stopCameraStream === "function") stopCameraStream();
+
+      const deviceId = await chooseMainBackCamera1x();
+
+      const constraints = {
+        video: deviceId ? {
+          deviceId: { exact: deviceId },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          frameRate: { ideal: 30 },
+          advanced: [{ zoom: 1 }, { focusMode: "continuous" }]
+        } : {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          frameRate: { ideal: 30 },
+          advanced: [{ zoom: 1 }, { focusMode: "continuous" }]
+        },
+        audio: false
+      };
+
+      stream = await navigator.mediaDevices.getUserMedia(constraints);
+      const track = stream.getVideoTracks()[0];
+      await applyTrack1x(track);
+
+      const video = document.getElementById("cameraVideo");
+      video.srcObject = stream;
+
+      const modal = document.getElementById("cameraModal");
+      modal.classList.add("show");
+
+      if (!document.querySelector(".dr-camera-1x-badge")) {
+        const badge = document.createElement("div");
+        badge.className = "dr-camera-1x-badge";
+        badge.textContent = "📷 1x Main Camera";
+        modal.appendChild(badge);
+      }
+    } catch(e) {
+      alert((typeof t === "function" ? t("cameraError") : "Cannot open camera") + "\n" + e.message);
+    }
+  }
+
+  function patchCameraButtons(){
+    const cameraBtn = document.getElementById("cameraBtn");
+    if (cameraBtn) cameraBtn.onclick = openCamera1x;
+
+    const switchBtn = document.getElementById("switchCamera");
+    if (switchBtn) {
+      switchBtn.onclick = async function(){
+        /* For the clinical mobile workflow with 20D lens, keep the rear main camera at 1x. */
+        await openCamera1x();
+      };
+      switchBtn.textContent = label("ใช้กล้องหลัง 1x", "Rear 1x");
+    }
+
+    const hint = document.querySelector('[data-i18n="cameraHint"]');
+    if (hint) {
+      hint.textContent = label(
+        "ระบบจะพยายามใช้กล้องหลังตัวหลัก 1x และหลีกเลี่ยงเลนส์ 0.5x",
+        "The system tries to use the rear main 1x camera and avoid 0.5x ultra-wide."
+      );
+    }
+  }
+
+  function initMobilePatch(){
+    makeMobileShell();
+    patchCameraButtons();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMobilePatch);
+  } else {
+    initMobilePatch();
+  }
+
+  window.addEventListener("focus", patchCameraButtons);
+})();
+</script>
+<!-- RETINA ANALYSIS MOBILE APP PATCH SCRIPT END -->
+
 </body>
 </html>
