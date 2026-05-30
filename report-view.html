@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Report Document | DR Screening Portal</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="report-style.css?v=mobilepdf1">
@@ -20,7 +20,6 @@
       display:flex;
       justify-content:center;
       align-items:flex-start;
-      overflow-x:hidden;
     }
     .reportOnlyBox{
       width:100%;
@@ -32,23 +31,19 @@
       box-shadow:none!important;
       padding:0!important;
       border-radius:0!important;
+      display:block!important;
       width:100%;
-      overflow:hidden!important;
+      overflow:visible;
     }
     #paperContainer{
       width:100%;
-      overflow:hidden!important;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
+      overflow:visible;
+      margin:0 auto;
     }
-    #paperContainer .paper{
-      flex:0 0 auto;
+    .paper{
       margin:0 auto!important;
-      max-width:none!important;
       overflow:hidden;
       box-shadow:0 18px 44px rgba(15,23,42,.08);
-      transform-origin:top center!important;
     }
     .empty{
       background:#fff;
@@ -92,30 +87,59 @@
       display:none!important;
     }
     body.has-dr-sidebar{padding-left:0!important;}
+
     @media(max-width:768px){
+      body{background:#eef4ff!important;}
       .reportOnlyWrap{
-        padding:8px 0 14px;
+        padding:8px 0 22px!important;
+        width:100vw!important;
+        max-width:100vw!important;
+        overflow:hidden!important;
+        display:block!important;
       }
       .reportOnlyBox{
-        max-width:100vw;
+        width:100vw!important;
+        max-width:100vw!important;
+        overflow:hidden!important;
+        margin:0!important;
       }
-      .publicOnlyNote{
-        display:none;
+      .staffOpenSystem{
+        width:calc(100vw - 18px)!important;
+        max-width:none!important;
+        margin:0 auto 8px!important;
+        padding:0 8px!important;
+        box-sizing:border-box!important;
+      }
+      .publicOnlyNote{display:none!important;}
+      .paperbox{
+        width:100vw!important;
+        max-width:100vw!important;
+        margin:0!important;
+        padding:0!important;
+        overflow:hidden!important;
+        display:block!important;
       }
       #paperContainer{
-        padding:0 4px;
-        box-sizing:border-box;
+        display:block!important;
+        overflow:hidden!important;
+        margin-left:auto!important;
+        margin-right:auto!important;
       }
       #paperContainer .paper{
-        border-radius:14px;
-        box-shadow:none!important;
+        width:794px!important;
+        max-width:none!important;
+        min-width:794px!important;
+        transform-origin:top left!important;
+        margin:0!important;
+        box-shadow:0 12px 30px rgba(15,23,42,.06)!important;
       }
     }
+
     @media print{
       .publicOnlyNote,.staffOpenSystem{display:none!important;}
-      .reportOnlyWrap{padding:0;background:#fff;}
-      .paper{box-shadow:none!important;transform:none!important;}
-      #paperContainer{display:block!important;overflow:visible!important;padding:0!important;height:auto!important;}
+      .reportOnlyWrap{padding:0;background:#fff;display:block!important;}
+      .reportOnlyBox,.paperbox,#paperContainer{width:auto!important;max-width:none!important;overflow:visible!important;margin:0!important;height:auto!important;}
+      .paper{box-shadow:none!important;transform:none!important;margin:0 auto!important;}
     }
   </style>
 </head>
@@ -129,20 +153,18 @@
       </div>
     </div>
   </div>
-  <script src="retina-report-new.js?v=qr_public_report_only_43" defer></script>
+  <script src="retina-report-new.js?v=qr_public_report_only_44" defer></script>
   <script>
     (function(){
       function getReportId(){
         return new URLSearchParams(location.search).get('report_id') || '';
       }
-
       function updateSystemLink(){
         var link = document.getElementById('openSystemReport');
         if(!link) return;
         var id = getReportId();
         link.href = 'retina-report-new.html' + (id ? ('?report_id=' + encodeURIComponent(id)) : '');
       }
-
       function markLoggedInIfSession(){
         updateSystemLink();
         try{
@@ -156,68 +178,96 @@
         }catch(e){}
       }
 
-      function fitPublicReportPaper(){
+      function isMobile(){
+        return window.matchMedia('(max-width: 768px)').matches || /iPhone|Android|Mobile|Line\//i.test(navigator.userAgent || '');
+      }
+
+      function fitQrReportToMobile(){
         var container = document.getElementById('paperContainer');
         if(!container) return;
-
         var paper = container.querySelector('.paper');
-        if(!paper){
-          container.style.height = '';
-          return;
-        }
+        var box = document.querySelector('.paperbox');
 
-        if(!window.matchMedia('(max-width: 900px)').matches){
+        if(!paper) return;
+
+        if(!isMobile()){
+          container.style.width = '';
+          container.style.maxWidth = '';
+          container.style.height = '';
+          container.style.marginLeft = '';
+          container.style.marginRight = '';
+          container.style.overflow = '';
           paper.style.width = '';
           paper.style.maxWidth = '';
+          paper.style.minWidth = '';
           paper.style.transform = '';
           paper.style.transformOrigin = '';
           paper.style.margin = '';
-          container.style.height = '';
+          if(box){
+            box.style.width = '';
+            box.style.maxWidth = '';
+            box.style.marginLeft = '';
+            box.style.marginRight = '';
+            box.style.overflow = '';
+          }
           return;
         }
 
         var baseWidth = 794;
-        var available = Math.max(280, container.clientWidth - 8);
+        var viewport = Math.min(window.innerWidth || 390, document.documentElement.clientWidth || window.innerWidth || 390);
+        var available = Math.max(300, viewport - 16);
         var scale = Math.min(1, available / baseWidth);
+        var scaledWidth = Math.ceil(baseWidth * scale);
+
+        if(box){
+          box.style.width = '100vw';
+          box.style.maxWidth = '100vw';
+          box.style.marginLeft = 'calc(50% - 50vw)';
+          box.style.marginRight = 'calc(50% - 50vw)';
+          box.style.overflow = 'hidden';
+        }
 
         paper.style.width = baseWidth + 'px';
         paper.style.maxWidth = 'none';
-        paper.style.margin = '0 auto';
-        paper.style.transformOrigin = 'top center';
+        paper.style.minWidth = baseWidth + 'px';
+        paper.style.transformOrigin = 'top left';
         paper.style.transform = 'scale(' + scale + ')';
+        paper.style.margin = '0';
 
-        window.requestAnimationFrame(function(){
-          container.style.height = Math.ceil(paper.offsetHeight * scale + 10) + 'px';
+        container.style.width = scaledWidth + 'px';
+        container.style.maxWidth = scaledWidth + 'px';
+        container.style.marginLeft = 'auto';
+        container.style.marginRight = 'auto';
+        container.style.overflow = 'hidden';
+
+        requestAnimationFrame(function(){
+          container.style.height = Math.ceil(paper.offsetHeight * scale) + 'px';
         });
       }
 
-      function init(){
-        markLoggedInIfSession();
-        fitPublicReportPaper();
-
+      function initFitObserver(){
         var target = document.getElementById('paperContainer');
         if(target){
           new MutationObserver(function(){
-            setTimeout(fitPublicReportPaper, 80);
-            setTimeout(fitPublicReportPaper, 420);
-          }).observe(target, {childList:true, subtree:true});
+            setTimeout(fitQrReportToMobile, 80);
+            setTimeout(fitQrReportToMobile, 350);
+            setTimeout(fitQrReportToMobile, 900);
+          }).observe(target,{childList:true,subtree:true});
         }
+        window.addEventListener('resize', function(){ setTimeout(fitQrReportToMobile, 80); });
+        window.addEventListener('orientationchange', function(){ setTimeout(fitQrReportToMobile, 300); });
+        window.addEventListener('load', function(){ setTimeout(fitQrReportToMobile, 300); });
+        setTimeout(fitQrReportToMobile, 300);
+        setTimeout(fitQrReportToMobile, 900);
       }
 
-      window.addEventListener('resize', function(){
-        setTimeout(fitPublicReportPaper, 80);
-      });
+      function boot(){
+        markLoggedInIfSession();
+        initFitObserver();
+      }
 
-      window.addEventListener('orientationchange', function(){
-        setTimeout(fitPublicReportPaper, 250);
-      });
-
-      window.addEventListener('load', function(){
-        setTimeout(fitPublicReportPaper, 250);
-      });
-
-      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-      else init();
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+      else boot();
     })();
   </script>
 </body>
