@@ -139,6 +139,7 @@ const sidebar = document.getElementById("adminSidebar");
 if (!sidebar) return;
 
 sidebar.innerHTML = `
+<button class="admin-sidebar-close" type="button" aria-label="ปิดเมนู" onclick="toggleAdminSidebar(false)">×</button>
 <div class="brand">
 <div class="logo">DR</div>
 <div>
@@ -158,6 +159,36 @@ sidebar.innerHTML = `
 
 <button class="logout" onclick="logout()">${tAdmin("logout")}</button>
 `;
+
+installAdminMobileSidebar();
+}
+
+function toggleAdminSidebar(forceOpen) {
+const open = typeof forceOpen === "boolean" ? forceOpen : !document.body.classList.contains("admin-sidebar-open");
+document.body.classList.toggle("admin-sidebar-open", open);
+}
+
+function installAdminMobileSidebar() {
+if (!document.querySelector(".admin-mobile-toggle")) {
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "admin-mobile-toggle";
+  toggle.setAttribute("aria-label", "เปิดเมนูแอดมิน");
+  toggle.innerHTML = "☰";
+  toggle.onclick = () => toggleAdminSidebar(true);
+  document.body.appendChild(toggle);
+}
+
+if (!document.querySelector(".admin-sidebar-backdrop")) {
+  const backdrop = document.createElement("div");
+  backdrop.className = "admin-sidebar-backdrop";
+  backdrop.onclick = () => toggleAdminSidebar(false);
+  document.body.appendChild(backdrop);
+}
+
+document.querySelectorAll("#adminSidebar .menu a").forEach(link => {
+  link.addEventListener("click", () => toggleAdminSidebar(false));
+});
 }
 
 async function loadPatientsFromSupabase() {
