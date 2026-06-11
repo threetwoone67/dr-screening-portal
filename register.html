@@ -256,8 +256,6 @@
       <select data-language-select class="language-select">
         <option value="th">ไทย</option>
         <option value="en">English</option>
-        <option value="zh">中文</option>
-        <option value="es">Español</option>
       </select>
 
       <a href="index.html" class="back-link" data-i18n="login">
@@ -268,87 +266,87 @@
 
   <div class="wrapper">
     <div class="register-box">
-      <h2>สร้างบัญชีผู้ใช้งาน</h2>
-      <p class="subtitle">
+      <h2 data-i18n="registerTitle">สร้างบัญชีผู้ใช้งาน</h2>
+      <p class="subtitle" data-i18n="registerSub">
         สำหรับแพทย์ พยาบาล/ผู้ช่วยแพทย์ และแอดมินที่ใช้งานระบบตรวจคัดกรองจอประสาทตาเบาหวาน
       </p>
 
       <div id="message" class="message"></div>
 
       <div class="form-grid">
-        <div class="form-section-title">ข้อมูลเข้าสู่ระบบ</div>
+        <div class="form-section-title" data-i18n="loginInfo">ข้อมูลเข้าสู่ระบบ</div>
 
         <div class="form-group">
-          <label>อีเมล <span class="required">*</span></label>
-          <input type="email" id="email" placeholder="example@email.com" autocomplete="email">
+          <label><span data-i18n="email">อีเมล</span> <span class="required">*</span></label>
+          <input type="email" id="email" placeholder="example@email.com" data-i18n-placeholder="emailExample" autocomplete="email">
         </div>
 
         <div class="form-group">
-          <label>บทบาทผู้ใช้งาน <span class="required">*</span></label>
+          <label><span data-i18n="role">บทบาทผู้ใช้งาน</span> <span class="required">*</span></label>
           <select id="role">
-            <option value="">-- เลือกบทบาท --</option>
-            <option value="doctor">แพทย์</option>
-            <option value="nurse_assistant">พยาบาล / ผู้ช่วยแพทย์</option>
+            <option value="" data-i18n="selectRole">-- เลือกบทบาท --</option>
+            <option value="doctor" data-i18n="doctor">แพทย์</option>
+            <option value="nurse_assistant" data-i18n="nurse">พยาบาล / ผู้ช่วยแพทย์</option>
             
           </select>
         </div>
 
         <div class="form-group">
-          <label>รหัสผ่าน <span class="required">*</span></label>
-          <input type="password" id="password" placeholder="อย่างน้อย 6 ตัวอักษร" autocomplete="new-password">
-          <div class="hint">ควรมีอย่างน้อย 6 ตัวอักษร</div>
+          <label><span data-i18n="password">รหัสผ่าน</span> <span class="required">*</span></label>
+          <input type="password" id="password" placeholder="อย่างน้อย 6 ตัวอักษร" data-i18n-placeholder="passwordPlaceholder" autocomplete="new-password">
+          <div class="hint" data-i18n="passHint">ควรมีอย่างน้อย 6 ตัวอักษร</div>
         </div>
 
         <div class="form-group">
-          <label>ยืนยันรหัสผ่าน <span class="required">*</span></label>
-          <input type="password" id="confirmPassword" placeholder="กรอกรหัสผ่านอีกครั้ง" autocomplete="new-password">
+          <label><span data-i18n="confirmPassword">ยืนยันรหัสผ่าน</span> <span class="required">*</span></label>
+          <input type="password" id="confirmPassword" placeholder="กรอกรหัสผ่านอีกครั้ง" data-i18n-placeholder="confirmPasswordPlaceholder" autocomplete="new-password">
         </div>
 
-        <div class="form-section-title">ข้อมูลประวัติส่วนตัว</div>
+        <div class="form-section-title" data-i18n="profileInfo">ข้อมูลประวัติส่วนตัว</div>
 
         <div class="form-group">
-          <label>ชื่อ-นามสกุล <span class="required">*</span></label>
-          <input type="text" id="fullName" placeholder="เช่น นพ. สมชาย ใจดี">
-        </div>
-
-        <div class="form-group">
-          <label>ตำแหน่ง</label>
-          <input type="text" id="position" placeholder="เช่น จักษุแพทย์ / พยาบาลวิชาชีพ">
+          <label><span data-i18n="fullName">ชื่อ-นามสกุล</span> <span class="required">*</span></label>
+          <input type="text" id="fullName" placeholder="เช่น นพ. สมชาย ใจดี" data-i18n-placeholder="fullNamePlaceholder">
         </div>
 
         <div class="form-group">
-          <label>แผนก <span class="required">*</span></label>
-          <input type="text" id="department" placeholder="เช่น จักษุวิทยา">
+          <label data-i18n="position">ตำแหน่ง</label>
+          <input type="text" id="position" placeholder="เช่น จักษุแพทย์ / พยาบาลวิชาชีพ" data-i18n-placeholder="positionPlaceholder">
         </div>
 
         <div class="form-group">
-          <label>โรงพยาบาล / หน่วยงาน <span class="required">*</span></label>
-          <input type="text" id="hospitalName" placeholder="เช่น โรงพยาบาลนครเวช">
+          <label><span data-i18n="department">แผนก</span> <span class="required">*</span></label>
+          <input type="text" id="department" placeholder="เช่น จักษุวิทยา" data-i18n-placeholder="departmentPlaceholder">
         </div>
 
         <div class="form-group">
-          <label>รหัสโรงพยาบาล</label>
-          <input type="text" id="hospitalCode" placeholder="ถ้ามี">
+          <label><span data-i18n="hospital">โรงพยาบาล / หน่วยงาน</span> <span class="required">*</span></label>
+          <input type="text" id="hospitalName" placeholder="เช่น โรงพยาบาลนครเวช" data-i18n-placeholder="hospitalPlaceholder">
         </div>
 
         <div class="form-group">
-          <label>เบอร์โทร</label>
-          <input type="text" id="phone" placeholder="เช่น 0812345678">
+          <label data-i18n="hospitalCode">รหัสโรงพยาบาล</label>
+          <input type="text" id="hospitalCode" placeholder="ถ้ามี" data-i18n-placeholder="hospitalCodePlaceholder">
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="phone">เบอร์โทร</label>
+          <input type="text" id="phone" placeholder="เช่น 0812345678" data-i18n-placeholder="phonePlaceholder">
         </div>
 
         <div class="form-group full">
-          <label>เลขใบประกอบวิชาชีพ / เลขประจำตัวบุคลากร</label>
-          <input type="text" id="licenseNo" placeholder="กรอกเฉพาะกรณีที่มี">
+          <label data-i18n="licenseNo">เลขใบประกอบวิชาชีพ / เลขประจำตัวบุคลากร</label>
+          <input type="text" id="licenseNo" placeholder="กรอกเฉพาะกรณีที่มี" data-i18n-placeholder="licenseNoPlaceholder">
         </div>
       </div>
 
-      <button id="registerBtn" class="register-btn" onclick="createUser()">
+      <button id="registerBtn" class="register-btn" onclick="createUser()" data-i18n="registerBtn">
         สร้างบัญชีผู้ใช้งาน
       </button>
 
       <div class="login-note">
-        มีบัญชีแล้ว?
-        <a href="index.html">กลับไปเข้าสู่ระบบ</a>
+        <span data-i18n="haveAccount">มีบัญชีแล้ว?</span>
+        <a href="index.html" data-i18n="backToLogin">กลับไปเข้าสู่ระบบ</a>
       </div>
     </div>
   </div>
@@ -371,7 +369,7 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
     function setLoading(isLoading) {
       const btn = document.getElementById("registerBtn");
       btn.disabled = isLoading;
-      btn.textContent = isLoading ? "กำลังสร้างบัญชี..." : "สร้างบัญชีผู้ใช้งาน";
+      btn.textContent = isLoading ? (window.t ? t("loadingCreateAccount") : "กำลังสร้างบัญชี...") : (window.t ? t("registerBtn") : "สร้างบัญชีผู้ใช้งาน");
     }
 
     function validateEmail(email) {
@@ -392,22 +390,22 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
       const licenseNo = document.getElementById("licenseNo").value.trim();
 
       if (!email || !password || !confirmPassword || !role || !fullName || !department || !hospitalName) {
-        showMessage("กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบ", "error");
+        showMessage(window.t ? t("requiredMessage") : "กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบ", "error");
         return;
       }
 
       if (!validateEmail(email)) {
-        showMessage("รูปแบบอีเมลไม่ถูกต้อง", "error");
+        showMessage(window.t ? t("invalidEmail") : "รูปแบบอีเมลไม่ถูกต้อง", "error");
         return;
       }
 
       if (password.length < 6) {
-        showMessage("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร", "error");
+        showMessage(window.t ? t("passwordMin") : "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร", "error");
         return;
       }
 
       if (password !== confirmPassword) {
-        showMessage("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน", "error");
+        showMessage(window.t ? t("passwordMismatch") : "รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน", "error");
         return;
       }
 
@@ -432,23 +430,22 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
         });
 
         if (error) {
-          showMessage("สร้างบัญชีไม่สำเร็จ: " + error.message, "error");
+          showMessage((window.t ? t("signUpFailed") : "สร้างบัญชีไม่สำเร็จ: ") + error.message, "error");
           setLoading(false);
           return;
         }
 
-        showMessage("สร้างบัญชีผู้ใช้งานสำเร็จ ระบบจะบันทึกข้อมูลบุคลากรให้อัตโนมัติ กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชี", "success");
+        showMessage(window.t ? t("signUpSuccess") : "สร้างบัญชีผู้ใช้งานสำเร็จ ระบบจะบันทึกข้อมูลบุคลากรให้อัตโนมัติ กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชี", "success");
 
         setTimeout(() => {
           window.location.href = "index.html";
         }, 2000);
 
       } catch (err) {
-        showMessage("เกิดข้อผิดพลาด: " + err.message, "error");
+        showMessage((window.t ? t("errorPrefix") : "เกิดข้อผิดพลาด: ") + err.message, "error");
         setLoading(false);
       }
     }
   </script>
-<script src="language.js"></script>
 </body>
 </html>
